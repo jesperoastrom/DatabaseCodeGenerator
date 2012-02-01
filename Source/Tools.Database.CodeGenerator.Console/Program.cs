@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Flip.Tools.Database.CodeGenerator.Configuration;
+using Flip.Tools.Database.CodeGenerator.IO;
 using NDesk.Options;
 
 
@@ -23,6 +24,10 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 				{
 					System.Console.WriteLine("Missing command line argument 'file'. Type --help for help text.");
 				}
+				else if (string.IsNullOrWhiteSpace(arguments.Output))
+				{
+					System.Console.WriteLine("Missing command line argument 'output'. Type --help for help text.");
+				}
 				else
 				{
 					var configurationReader = new ConfigurationReader(arguments.File, System.Console.Out);
@@ -30,13 +35,12 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 					DatabaseConfiguration configuration;
 					if (configurationReader.TryRead(out configuration))
 					{
-						System.Console.WriteLine("SP ns:" + configuration.StoredProcedures.Namespace);
-						System.Console.WriteLine("UDT ns:" + configuration.UserDefinedTypes.Namespace);
+						var writer = new DatabaseWriter(configuration);
 
-						System.Console.WriteLine("SPs:" + configuration.StoredProcedures.Elements.Count);
-						System.Console.WriteLine("UDTs:" + configuration.UserDefinedTypes.Elements.Count);
+						writer.WriteFile(arguments.Output, "\t");//TODO: parameterize indentation
 					}
 				}
+				System.Console.WriteLine("Finished! Press the any-key to continue");
 				System.Console.ReadKey();
 			}
 		}
@@ -49,8 +53,9 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 
 			var optionSet = new OptionSet() 
 			{
-				{ "f|file=",      value => parsedArguments.File = value },
-				{ "h|?|help",   value => parsedArguments.ShowHelp = value != null },
+				{ "f|file=", value => parsedArguments.File = value },
+				{ "o|output=", value => parsedArguments.Output = value },
+				{ "h|?|help", value => parsedArguments.ShowHelp = value != null },
 			};
 
 			try
@@ -70,7 +75,7 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 
 		private static void ShowHelp()
 		{
-			System.Console.WriteLine("TODO");
+			System.Console.WriteLine("--f|file=<path to configuration file> --o|output=<path to output file> [--h|help]");
 		}
 
 
@@ -79,6 +84,7 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 		{
 
 			public string File { get; set; }
+			public string Output { get; set; }
 			public bool ShowHelp { get; set; }
 			public List<string> Extra { get; set; }
 

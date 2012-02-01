@@ -47,10 +47,14 @@
     <Compile Include="Configuration\StoredProcedures.cs" />
     <Compile Include="Configuration\UserDefinedTypeElement.cs" />
     <Compile Include="Configuration\UserDefinedTypes.cs" />
-    <Compile Include="Data\CodeGenerator.cs" />
+    <Compile Include="IO\DatabaseWriter.cs" />
+    <Compile Include="IO\StoredProcedureWriter.cs" />
+    <Compile Include="IO\Writer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
