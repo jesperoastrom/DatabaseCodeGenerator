@@ -3,10 +3,10 @@ using System.IO;
 
 
 
-namespace Flip.Tools.Database.Extractor.Configuration
+namespace Flip.Tools.Database.CodeGenerator.Configuration
 {
 
-	internal sealed class ConfigurationReader
+	public sealed class ConfigurationReader
 	{
 
 		public ConfigurationReader(string file, System.IO.TextWriter errorOutput)

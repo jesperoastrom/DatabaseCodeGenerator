@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Flip.Tools.Database.Extractor.Configuration;
+using Flip.Tools.Database.CodeGenerator.Configuration;
 using NDesk.Options;
 
 
 
-namespace Flip.Tools.Database.Extractor
+namespace Flip.Tools.Database.CodeGenerator.Console
 {
 
 	internal class Program
@@ -35,8 +35,6 @@ namespace Flip.Tools.Database.Extractor
 					}
 				}
 			}
-			System.Console.WriteLine("Press any key to continue...");
-			System.Console.ReadKey();
 		}
 
 

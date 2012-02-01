@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools.Database.CodeGenerator", "Tools.Database.CodeGenerator\Tools.Database.CodeGenerator.csproj", "{D099CC02-B23F-4AC6-BF0E-0B3080DC1C01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools.Database.CodeGenerator.Console", "Tools.Database.CodeGenerator.Console\Tools.Database.CodeGenerator.Console.csproj", "{884D27EB-3138-46D5-AD2C-7C210C617CE3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D099CC02-B23F-4AC6-BF0E-0B3080DC1C01}.Debug|x86.ActiveCfg = Debug|x86
+		{D099CC02-B23F-4AC6-BF0E-0B3080DC1C01}.Debug|x86.Build.0 = Debug|x86
+		{D099CC02-B23F-4AC6-BF0E-0B3080DC1C01}.Release|x86.ActiveCfg = Release|x86
+		{D099CC02-B23F-4AC6-BF0E-0B3080DC1C01}.Release|x86.Build.0 = Release|x86
+		{884D27EB-3138-46D5-AD2C-7C210C617CE3}.Debug|x86.ActiveCfg = Debug|x86
+		{884D27EB-3138-46D5-AD2C-7C210C617CE3}.Debug|x86.Build.0 = Debug|x86
+		{884D27EB-3138-46D5-AD2C-7C210C617CE3}.Release|x86.ActiveCfg = Release|x86
+		{884D27EB-3138-46D5-AD2C-7C210C617CE3}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

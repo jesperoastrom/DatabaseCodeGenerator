@@ -6,10 +6,10 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D099CC02-B23F-4AC6-BF0E-0B3080DC1C01}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Flip.Tools.Database</RootNamespace>
-    <AssemblyName>Flip.Tools.Database.Extractor</AssemblyName>
+    <RootNamespace>Flip.Tools.Database.CodeGenerator</RootNamespace>
+    <AssemblyName>Flip.Tools.Database.CodeGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDesk.Options">
-      <HintPath>..\..\..\Dependencies\NDesk.Options\0.2.1\NDesk.Options.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.XML" />
@@ -45,16 +42,9 @@
   <ItemGroup>
     <Compile Include="Configuration\ConfigurationReader.cs" />
     <Compile Include="Configuration\DatabaseConfiguration.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Data\Generator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

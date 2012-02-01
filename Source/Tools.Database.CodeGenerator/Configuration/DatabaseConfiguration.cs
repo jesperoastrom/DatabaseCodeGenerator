@@ -2,11 +2,11 @@
 
 
 
-namespace Flip.Tools.Database.Extractor.Configuration
+namespace Flip.Tools.Database.CodeGenerator.Configuration
 {
 
 	[System.Xml.Serialization.XmlRoot("Database")]
-	internal sealed class DatabaseConfiguration
+	public sealed class DatabaseConfiguration
 	{
 
 		[System.Xml.Serialization.XmlArray("StoredProcedures")]
