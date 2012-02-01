@@ -9,17 +9,15 @@ namespace Flip.Tools.Database.CodeGenerator.Configuration
 	public sealed class DatabaseConfiguration
 	{
 
-		[System.Xml.Serialization.XmlArray("StoredProcedures")]
-		[System.Xml.Serialization.XmlArrayItem("Procedure", typeof(StoredProcedureElement))]
-		public List<StoredProcedureElement> StoredProcedures { get; set; }
+		[System.Xml.Serialization.XmlElement("StoredProcedures", typeof(StoredProcedures))]
+		public StoredProcedures StoredProcedures { get; set; }
 
-		[System.Xml.Serialization.XmlArray("UserDefinedTypes")]
-		[System.Xml.Serialization.XmlArrayItem("Type", typeof(UserDefinedTypeElement))]
-		public List<UserDefinedTypeElement> UserDefinedTypes { get; set; }
+		[System.Xml.Serialization.XmlElement("UserDefinedTypes", typeof(UserDefinedTypes))]
+		public UserDefinedTypes UserDefinedTypes { get; set; }
 
 	}
 
-	public static class StringExtensions
+	internal static class StringExtensions
 	{
 
 		public static string EscapeDatabaseName(this string name)
@@ -100,6 +98,28 @@ namespace Flip.Tools.Database.CodeGenerator.Configuration
 
 		private string schemaName;
 		private string name;
+
+	}
+
+	public sealed class StoredProcedures
+	{
+
+		[System.Xml.Serialization.XmlAttribute("Namespace")]
+		public string Namespace { get; set; }
+
+		[System.Xml.Serialization.XmlElementAttribute("Procedure")]
+		public List<StoredProcedureElement> Elements { get; set; }
+
+	}
+
+	public sealed class UserDefinedTypes
+	{
+
+		[System.Xml.Serialization.XmlAttribute("Namespace")]
+		public string Namespace { get; set; }
+
+		[System.Xml.Serialization.XmlElementAttribute("Type")]
+		public List<UserDefinedTypeElement> Elements { get; set; }
 
 	}
 

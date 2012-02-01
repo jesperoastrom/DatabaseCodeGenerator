@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="Configuration\ConfigurationReader.cs" />
     <Compile Include="Configuration\DatabaseConfiguration.cs" />
-    <Compile Include="Data\Generator.cs" />
+    <Compile Include="Data\CodeGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

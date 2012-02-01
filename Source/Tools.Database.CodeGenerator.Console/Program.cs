@@ -30,10 +30,14 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 					DatabaseConfiguration configuration;
 					if (configurationReader.TryRead(out configuration))
 					{
-						System.Console.WriteLine("SPs:" + configuration.StoredProcedures.Count);
-						System.Console.WriteLine("UDTs:" + configuration.UserDefinedTypes.Count);
+						System.Console.WriteLine("SP ns:" + configuration.StoredProcedures.Namespace);
+						System.Console.WriteLine("UDT ns:" + configuration.UserDefinedTypes.Namespace);
+
+						System.Console.WriteLine("SPs:" + configuration.StoredProcedures.Elements.Count);
+						System.Console.WriteLine("UDTs:" + configuration.UserDefinedTypes.Elements.Count);
 					}
 				}
+				System.Console.ReadKey();
 			}
 		}
 

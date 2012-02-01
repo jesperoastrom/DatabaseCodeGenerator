@@ -5,7 +5,7 @@
 namespace Flip.Tools.CodeGenerator.Data
 {
 
-	public sealed class Generator
+	internal sealed class Generator
 	{
 
 		public Generator(DatabaseConfiguration configuration)
@@ -15,7 +15,7 @@ namespace Flip.Tools.CodeGenerator.Data
 
 
 
-		//public Extract(string outputFile)
+		//public Generate(string outputFile)
 
 
 
