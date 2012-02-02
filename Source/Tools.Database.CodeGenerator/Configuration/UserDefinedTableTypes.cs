@@ -5,7 +5,7 @@
 namespace Flip.Tools.Database.CodeGenerator.Configuration
 {
 
-	public sealed class UserDefinedTypes
+	public sealed class UserDefinedTableTypes
 	{
 
 		[System.Xml.Serialization.XmlAttribute("Namespace")]

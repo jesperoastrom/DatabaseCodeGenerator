@@ -16,19 +16,7 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 			Arguments arguments;
 			if (TryParseArguments(args, out arguments))
 			{
-				if (arguments.ShowHelp)
-				{
-					ShowHelp();
-				}
-				else if (string.IsNullOrWhiteSpace(arguments.File))
-				{
-					System.Console.WriteLine("Missing command line argument 'file'. Type --help for help text.");
-				}
-				else if (string.IsNullOrWhiteSpace(arguments.Output))
-				{
-					System.Console.WriteLine("Missing command line argument 'output'. Type --help for help text.");
-				}
-				else
+				if (ValidateArguments(arguments))
 				{
 					var configurationReader = new ConfigurationReader(arguments.File, System.Console.Out);
 
@@ -37,7 +25,7 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 					{
 						var writer = new DatabaseWriter(configuration);
 
-						writer.WriteFile(arguments.Output, "\t");//TODO: parameterize indentation
+						writer.WriteFile(arguments.Output, "\t"); //TODO: parameterize indentation
 					}
 				}
 				System.Console.WriteLine("Finished! Press the any-key to continue");
@@ -53,6 +41,7 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 
 			var optionSet = new OptionSet() 
 			{
+				{ "c|connectionString=", value => parsedArguments.ConnectionString = value },
 				{ "f|file=", value => parsedArguments.File = value },
 				{ "o|output=", value => parsedArguments.Output = value },
 				{ "h|?|help", value => parsedArguments.ShowHelp = value != null },
@@ -75,7 +64,38 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 
 		private static void ShowHelp()
 		{
-			System.Console.WriteLine("--f|file=<path to configuration file> --o|output=<path to output file> [--h|help]");
+			System.Console.WriteLine("--c|connectionString=<connection string> --f|file=<path to configuration file> --o|output=<path to output file> [--h|help]");
+		}
+
+		private static bool ValidateArguments(Arguments arguments)
+		{
+			bool isValid = true;
+
+			if (arguments.ShowHelp)
+			{
+				ShowHelp();
+				isValid = false;
+			}
+
+			if (string.IsNullOrWhiteSpace(arguments.Output))
+			{
+				System.Console.WriteLine("Missing command line argument 'output'. Type --help for help text.");
+				isValid = false;
+			}
+
+			if (string.IsNullOrWhiteSpace(arguments.ConnectionString))
+			{
+				System.Console.WriteLine("Missing command line argument 'connectionString'. Type --help for help text.");
+				isValid = false;
+			}
+
+			if (string.IsNullOrWhiteSpace(arguments.Output))
+			{
+				System.Console.WriteLine("Missing command line argument 'output'. Type --help for help text.");
+				isValid = false;
+			}
+
+			return isValid;
 		}
 
 
@@ -83,6 +103,7 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 		private sealed class Arguments
 		{
 
+			public string ConnectionString { get; set; }
 			public string File { get; set; }
 			public string Output { get; set; }
 			public bool ShowHelp { get; set; }

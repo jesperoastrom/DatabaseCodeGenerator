@@ -11,8 +11,8 @@ namespace Flip.Tools.Database.CodeGenerator.Configuration
 		[System.Xml.Serialization.XmlElement("StoredProcedures", typeof(StoredProcedures))]
 		public StoredProcedures StoredProcedures { get; set; }
 
-		[System.Xml.Serialization.XmlElement("UserDefinedTypes", typeof(UserDefinedTypes))]
-		public UserDefinedTypes UserDefinedTypes { get; set; }
+		[System.Xml.Serialization.XmlElement("UserDefinedTableTypes", typeof(UserDefinedTableTypes))]
+		public UserDefinedTableTypes UserDefinedTableTypes { get; set; }
 
 	}
 

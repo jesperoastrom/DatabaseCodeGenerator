@@ -11,7 +11,8 @@
     <RootNamespace>Flip.Tools.Database.CodeGenerator</RootNamespace>
     <AssemblyName>Flip.Tools.Database.CodeGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -35,9 +36,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo" />
+    <Reference Include="Microsoft.SqlServer.Smo" />
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\ConfigurationReader.cs" />
@@ -46,15 +52,22 @@
     <Compile Include="Configuration\StoredProcedureElement.cs" />
     <Compile Include="Configuration\StoredProcedures.cs" />
     <Compile Include="Configuration\UserDefinedTypeElement.cs" />
-    <Compile Include="Configuration\UserDefinedTypes.cs" />
+    <Compile Include="Configuration\UserDefinedTableTypes.cs" />
+    <Compile Include="Data\DatabaseName.cs" />
+    <Compile Include="Data\Extractors\DatabaseExtractor.cs" />
+    <Compile Include="Data\Extractors\StoredProcedureExtractor.cs" />
+    <Compile Include="Data\Extractors\UserDefinedTableTypeExtractor.cs" />
+    <Compile Include="Data\Models\ColumnModel.cs" />
+    <Compile Include="Data\Models\DatabaseModel.cs" />
+    <Compile Include="Data\Models\ParameterModel.cs" />
+    <Compile Include="Data\Models\StoredProcedureModel.cs" />
+    <Compile Include="Data\Models\UserDefinedTableTypeModel.cs" />
     <Compile Include="IO\DatabaseWriter.cs" />
     <Compile Include="IO\StoredProcedureWriter.cs" />
     <Compile Include="IO\Writer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

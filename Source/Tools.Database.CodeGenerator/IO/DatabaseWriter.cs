@@ -29,7 +29,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			using (FileStream stream = File.Open(outputFile, FileMode.Create))
 			{
 				var writer = new Writer(stream, indentation);
-				
+
 				StoredProcedureWriter procedureWriter = new StoredProcedureWriter(writer);
 				procedureWriter.Write(this.configuration.StoredProcedures);
 			}
