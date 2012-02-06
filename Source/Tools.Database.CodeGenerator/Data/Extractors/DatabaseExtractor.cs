@@ -39,7 +39,7 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 				}
 				if (configuration.StoredProcedures != null)
 				{
-					var storedProceduresExtractor = new StoredProcedureExtractor(database.StoredProcedures);
+					var storedProceduresExtractor = new StoredProcedureExtractor(this.connectionString, database.StoredProcedures);
 					model.StoredProcedures = storedProceduresExtractor.Extract(configuration.StoredProcedures);
 				}
 

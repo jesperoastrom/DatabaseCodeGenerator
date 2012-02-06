@@ -1,17 +1,24 @@
-﻿using System.Data;
-
-
-
-namespace Flip.Tools.Database.CodeGenerator.Data.Models
+﻿namespace Flip.Tools.Database.CodeGenerator.Data.Models
 {
 
 	internal sealed class ColumnModel
 	{
 
-		public string DatabaseName { get; set; }
-		public SqlDbType SqlDbType { get; set; }
-		public string ParameterName { get; set; }
-		public string PropertyName { get; set; }
+		public string DatabaseName
+		{
+			get
+			{
+				return this.databaseName;
+			}
+			set
+			{
+				this.databaseName = value;
+				this.ParameterName = value.ToParameterName();
+				this.PropertyName = value.ToPropertyName();
+			}
+		}
+		public string ParameterName { get; private set; }
+		public string PropertyName { get; private set; }
 		public string ClrType { get; set; }
 
 
@@ -20,6 +27,10 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Models
 		{
 			return this.DatabaseName;
 		}
+
+
+
+		private string databaseName;
 
 	}
 

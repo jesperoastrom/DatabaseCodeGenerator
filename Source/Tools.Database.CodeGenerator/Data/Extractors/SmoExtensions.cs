@@ -63,7 +63,20 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 		public static string ToClrString(this Smo.DataType dataType)
 		{
 			Type type = GetType(dataType.ToString());
-			return ToString(type);
+			return type.ToClrString();
+		}
+
+		public static string ToClrString(this Type type)
+		{
+			if (prettyTypeLook.ContainsKey(type))
+			{
+				return prettyTypeLook[type];
+			}
+			if (type.Assembly.FullName == "System")
+			{
+				return type.Name;
+			}
+			return type.AssemblyQualifiedName;
 		}
 
 
@@ -75,19 +88,6 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 				return sqlTypeLookup[sqlType];
 			}
 			throw new ArgumentException("Unknown sql type '" + sqlType + "'.");
-		}
-
-		private static string ToString(Type type)
-		{
-			if (prettyTypeLook.ContainsKey(type))
-			{
-				return prettyTypeLook[type];
-			}
-			if (type.Assembly.FullName == "System")
-			{
-				return type.Name;
-			}
-			return type.AssemblyQualifiedName;
 		}
 
 

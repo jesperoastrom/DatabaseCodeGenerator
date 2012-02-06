@@ -129,14 +129,13 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 		{
 			this.writer
 				.WriteIndentedLine("public partial class Result")
-				.WriteIndentedLine("{")
-				.WriteNewLine();
+				.WriteIndentedLine("{");
 
 			this.writer.Indent++;
 			{
 				//TODO
 			}
-			WriteBlockEnd();
+			WriteBlockEnd(false);
 		}
 
 		private void WriteParameterClass(StoredProcedureModel procedure)
@@ -145,8 +144,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			{
 				this.writer
 					.WriteIndentedLine("public partial class Parameters")
-					.WriteIndentedLine("{")
-					.WriteNewLine();
+					.WriteIndentedLine("{");
 
 				this.writer.Indent++;
 				{
@@ -156,7 +154,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 					WriteParameterClassProperties(procedure);
 				}
-				WriteBlockEnd();
+				WriteBlockEnd(false);
 
 				this.writer.WriteNewLine();
 			}
@@ -230,7 +228,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 		{
 			this.writer
 				.WriteIndentation()
-				.Write("public Result ExecuteResult(SqlCommand c");
+				.Write("public Result ExecuteResult(SqlCommand command");
 
 			if (procedure.Parameters.Count > 0)
 			{
@@ -246,14 +244,14 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			{
 				this.writer
 					.WriteIndentation()
-					.Write("c.CommandText = \"")
+					.Write("command.CommandText = \"")
 					.Write(procedure.DatabaseName.EscapedFullName)
 					.Write("\";")
 					.WriteNewLine();
 
 				this.writer
 					.WriteIndentation()
-					.Write("c.CommandType = CommandType.StoredProcedure;")
+					.Write("command.CommandType = CommandType.StoredProcedure;")
 					.WriteNewLine();
 
 				if (procedure.Parameters.Count > 0)
@@ -264,19 +262,19 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 						.WriteNewLine();
 
 					WriteExecuteParameters(procedure);
-
-					this.writer
-						.WriteIndentation()
-						.Write("using(var r = c.ExecuteReader())")
-						.WriteNewLine()
-						.WriteIndentedLine("{");
-
-					this.writer.Indent++;
-					{
-						//TODO
-					}
-					WriteBlockEnd();
 				}
+
+				this.writer
+					.WriteIndentation()
+					.Write("using(var reader = command.ExecuteReader())")
+					.WriteNewLine()
+					.WriteIndentedLine("{");
+
+				this.writer.Indent++;
+				{
+					//TODO
+				}
+				WriteBlockEnd();
 
 			}
 			this.WriteBlockEnd();
@@ -288,30 +286,46 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			{
 				this.writer
 					.WriteIndentation()
-					.Write("p = new SqlParameter();")
+					.Write("p = new SqlParameter(\"")
+					.Write(parameter.Column.DatabaseName)
+					.Write("\", SqlDbType.")
+					.Write(parameter.SqlDbType.ToString())
+					.Write(");")
 					.WriteNewLine();
+
+				if (parameter.IsOutput)
+				{
+					this.writer
+						.WriteIndentation()
+						.Write("p.Direction = ParameterDirection.Output;")
+						.WriteNewLine();
+				}
 
 				this.writer
 					.WriteIndentation()
-					.Write("p.SqlDbType = SqlDbType.")
-					.Write(parameter.Column.SqlDbType.ToString())
+					.Write("p.Value = parameters.")
+					.Write(parameter.Column.PropertyName)
 					.Write(";")
 					.WriteNewLine();
 
 				this.writer
 					.WriteIndentation()
-					.Write("c.Parameters.Add(p);")
+					.Write("command.Parameters.Add(p);")
 					.WriteNewLine();
 			}
 		}
 
 		private void Test()
 		{
-			SqlCommand c;
-
+			//SqlCommand c;
 			//c.CommandText = "";
 			//c.CommandType = CommandType.StoredProcedure;
 			SqlParameter p;
+			//p.Precision
+			//p.Scale
+			//p.Size
+			//p.UdtTypeName
+			//p.Value
 			//p.
 		}
 
