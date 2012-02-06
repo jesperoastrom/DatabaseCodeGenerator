@@ -6,7 +6,7 @@ using System.IO;
 namespace Flip.Tools.Database.CodeGenerator.Configuration
 {
 
-	public sealed class ConfigurationReader
+	internal sealed class ConfigurationReader
 	{
 
 		public ConfigurationReader(string file, System.IO.TextWriter errorOutput)

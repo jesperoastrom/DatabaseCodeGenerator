@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Flip.Tools.Database.CodeGenerator.Data.Models;
 using Smo = Microsoft.SqlServer.Management.Smo;
+using System.Data;
 
 
 
@@ -21,16 +22,16 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 
 
 
-		public IEnumerable<StoredProcedureModel> Extract(IEnumerable<Configuration.StoredProcedureElement> elements)
+		public SchemaCollection<StoredProcedureModel> Extract(Configuration.StoredProcedures storedProcedures)
 		{
-			var list = new List<StoredProcedureModel>(elements.Count());
+			var collection = new SchemaCollection<StoredProcedureModel>(storedProcedures.Namespace);
 
-			foreach (var element in elements)
+			foreach (var element in storedProcedures.Elements)
 			{
 				if (this.storedProcedureLookup.ContainsKey(element.EscapedFullName))
 				{
 					Smo.StoredProcedure procedure = this.storedProcedureLookup[element.EscapedFullName];
-					list.Add(ToModel(procedure));
+					collection.AddElement(procedure.Schema, ToModel(storedProcedures.Namespace, procedure));
 				}
 				else
 				{
@@ -38,25 +39,64 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 				}
 			}
 
-			return list;
+			return collection;
 		}
 
 
 
-		private StoredProcedureModel ToModel(Smo.StoredProcedure procedure)
+		private StoredProcedureModel ToModel(string procedureNamespace, Smo.StoredProcedure procedure)
 		{
 			var model = new StoredProcedureModel();
-			model.Name = new DatabaseName(procedure.Schema, procedure.Name);
+			model.DatabaseName = new DatabaseName(procedure.Schema, procedure.Name);
+			model.TypeName = new TypeName(procedureNamespace, procedure.Name);
 			model.Parameters = ToModel(procedure.Parameters);
 			return model;
 		}
 
-		private IEnumerable<ParameterModel> ToModel(Smo.StoredProcedureParameterCollection parameters)
+		private List<ParameterModel> ToModel(Smo.StoredProcedureParameterCollection parameters)
 		{
-			return parameters.Cast<Smo.StoredProcedureParameter>().Select(c => new ParameterModel()
+			return parameters.Cast<Smo.StoredProcedureParameter>().Select(p => new ParameterModel()
 			{
-				
-			});
+				Column = new ColumnModel()
+				{
+					DatabaseName = p.Name,
+					SqlDbType = ToDbType(p.DataType.SqlDataType),
+					ParameterName = p.Name.ToParameterName(),
+					PropertyName = p.Name.ToPropertyName(),
+					ClrType = p.DataType.ToClrString()
+				}
+			}).ToList();
+		}
+
+		private SqlDbType ToDbType(Smo.SqlDataType sqlDataType)
+		{
+			SqlDbType sqlDbType;
+			switch (sqlDataType)
+			{
+				case Smo.SqlDataType.UserDefinedType:
+					sqlDbType = System.Data.SqlDbType.Udt;
+					break;
+				//TODO
+				//case Smo.SqlDataType.None:
+				//case Smo.SqlDataType.NVarCharMax:
+				//case Smo.SqlDataType.UserDefinedDataType:
+				//case Smo.SqlDataType.VarBinaryMax:
+				//case Smo.SqlDataType.VarCharMax:
+				//case Smo.SqlDataType.SysName:
+				//case Smo.SqlDataType.Numeric:
+				//case Smo.SqlDataType.UserDefinedTableType:
+				//case Smo.SqlDataType.HierarchyId:
+				//case Smo.SqlDataType.Geometry:
+				case Smo.SqlDataType.Geography:
+					throw new NotSupportedException("Unable to convert to SqlDbType:" + sqlDataType);
+				default:
+					if (!Enum.TryParse<SqlDbType>(sqlDataType.ToString(), out sqlDbType))
+					{
+						throw new NotSupportedException("Unable to convert to SqlDbType:" + sqlDataType);
+					}
+					break;
+			}
+			return sqlDbType;
 		}
 
 

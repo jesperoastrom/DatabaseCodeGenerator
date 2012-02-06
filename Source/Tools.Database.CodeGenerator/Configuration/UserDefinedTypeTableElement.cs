@@ -1,7 +1,7 @@
 ﻿namespace Flip.Tools.Database.CodeGenerator.Configuration
 {
 
-	public sealed class UserDefinedTypeElement : SchemaElement
+	public sealed class UserDefinedTypeTableElement : SchemaElement
 	{
 	}
 

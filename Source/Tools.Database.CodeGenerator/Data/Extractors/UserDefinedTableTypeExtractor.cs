@@ -21,16 +21,16 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 
 
 
-		public IEnumerable<UserDefinedTableTypeModel> Extract(IEnumerable<Configuration.UserDefinedTypeElement> elements)
+		public SchemaCollection<UserDefinedTableTypeModel> Extract(Configuration.UserDefinedTableTypes userDefinedTableTypes)
 		{
-			var list = new List<UserDefinedTableTypeModel>(elements.Count());
+			var collection = new SchemaCollection<UserDefinedTableTypeModel>(userDefinedTableTypes.Namespace);
 
-			foreach (var element in elements)
+			foreach (var element in userDefinedTableTypes.Elements)
 			{
 				if (this.tableTypeLookup.ContainsKey(element.EscapedFullName))
 				{
 					Smo.UserDefinedTableType tableType = this.tableTypeLookup[element.EscapedFullName];
-					list.Add(ToModel(tableType));
+					collection.AddElement(tableType.Schema, ToModel(tableType));
 				}
 				else
 				{
@@ -38,7 +38,7 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 				}
 			}
 
-			return list;
+			return collection;
 		}
 
 
@@ -55,7 +55,8 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 		{
 			return columns.Cast<Smo.Column>().Select(c => new ColumnModel()
 			{
-				Name = c.Name
+				DatabaseName = c.Name,
+				//TODO
 			});
 		}
 

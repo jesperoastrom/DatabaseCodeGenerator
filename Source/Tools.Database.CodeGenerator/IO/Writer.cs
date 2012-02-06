@@ -9,7 +9,7 @@ using System.Text;
 namespace Flip.Tools.Database.CodeGenerator.IO
 {
 
-	internal class Writer
+	internal class Writer : IDisposable
 	{
 
 		public Writer(Stream stream, string indentation)
@@ -23,21 +23,42 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 		public byte Indent { get; set; }
 
-		public void WriteIndentation()
+		public Writer WriteIndentation()
 		{
+			AssertNotDisposed();
+
 			this.writer.Write(GetIndentation());
+
+			return this;
 		}
 
-		public void Write(string s)
+		public Writer Write(string s)
 		{
+			AssertNotDisposed();
+
 			this.writer.Write(s);
+
+			return this;
 		}
 
-		public void WriteLine(string s)
+		public Writer WriteNewLine()
 		{
+			AssertNotDisposed();
+
+			this.Write(System.Environment.NewLine);
+
+			return this;
+		}
+
+		public Writer WriteIndentedLine(string s)
+		{
+			AssertNotDisposed();
+
 			this.WriteIndentation();
 			this.writer.Write(s);
 			this.writer.Write(Environment.NewLine);
+
+			return this;
 		}
 
 
@@ -56,11 +77,45 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			}
 		}
 
+		private void AssertNotDisposed()
+		{
+			if (this.disposed)
+			{
+				throw new ObjectDisposedException("Object has been disposed");
+			}
+		}
+
+		private void Dispose(bool disposing)
+		{
+			if (!this.disposed)
+			{
+				if (disposing)
+				{
+					if (this.writer != null)
+					{
+						this.writer.Flush();
+						this.writer.Dispose();
+					}
+				}
+				this.writer = null;
+				this.disposed = true;
+			}
+		}
 
 
+
+		void IDisposable.Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+
+
+		private bool disposed;
+		private StreamWriter writer;
 		private readonly Dictionary<byte, string> indentLookup;
 		private readonly string indentation;
-		private readonly StreamWriter writer;
 
 	}
 

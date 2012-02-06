@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Flip.Tools.Database.CodeGenerator.Configuration;
 using Flip.Tools.Database.CodeGenerator.IO;
 using NDesk.Options;
 
@@ -18,19 +17,14 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 			{
 				if (ValidateArguments(arguments))
 				{
-					var configurationReader = new ConfigurationReader(arguments.File, System.Console.Out);
-
-					DatabaseConfiguration configuration;
-					if (configurationReader.TryRead(out configuration))
+					var writer = new DatabaseWriter(System.Console.Out);
+					if (writer.WriteFile(arguments.File, arguments.Output, arguments.ConnectionString, "\t")) //TODO: parameterize indentation
 					{
-						var writer = new DatabaseWriter(configuration);
-
-						writer.WriteFile(arguments.Output, "\t"); //TODO: parameterize indentation
+						System.Console.WriteLine("Finished! Press the any-key to continue");
 					}
 				}
-				System.Console.WriteLine("Finished! Press the any-key to continue");
-				System.Console.ReadKey();
 			}
+			System.Console.ReadKey();
 		}
 
 
