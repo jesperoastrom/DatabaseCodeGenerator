@@ -33,6 +33,21 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Models
 
 
 
+
+		public static string GetFullyQualifiedTypeName(string ns, string schemaName, string name)
+		{
+			if (string.IsNullOrEmpty(ns))
+			{
+				return string.Join(".", schemaName.ToTypeName(), name.ToTypeName());
+			}
+			else
+			{
+				return string.Join(".", ns, schemaName.ToTypeName(), name.ToTypeName());
+			}
+		}
+
+
+
 		int IComparable<TypeName>.CompareTo(TypeName other)
 		{
 			if (other == null)

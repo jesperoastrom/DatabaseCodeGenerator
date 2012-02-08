@@ -9,19 +9,17 @@ using Flip.Tools.Database.CodeGenerator.Data.Models;
 namespace Flip.Tools.Database.CodeGenerator.IO
 {
 
-	public sealed class StoredProcedureWriter
+	public sealed class StoredProcedureWriter : ElementWriterBase
 	{
 
-		public StoredProcedureWriter(ICodeWriter writer)
+		public StoredProcedureWriter(ICodeWriter writer) : base(writer)
 		{
-			this.writer = writer;
 		}
 
 
 
 		public void Write(SchemaCollection<StoredProcedureModel> storedProcedures)
 		{
-			WriteUsings();
 			WriteNamespaceStart(storedProcedures.ElementNamespace);
 
 			foreach (var schema in storedProcedures.SchemaElementCollections.OrderBy(s => s.SchemaName))
@@ -45,57 +43,6 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 
 
-		private void BeginWriteStaticClass(string className)
-		{
-			this.writer
-				.WriteIndentation()
-				.Write("public static class ")
-				.Write(className)
-				.WriteNewLine()
-				.WriteIndentedLine("{")
-				.WriteNewLine();
-
-			this.writer.Indent++;
-		}
-
-		private void WriteUsings()
-		{
-			this.writer
-				.WriteIndentedLine("using System;")
-				.WriteIndentedLine("using System.Data;")
-				.WriteIndentedLine("using System.Data.SqlClient;")
-				.WriteNewLine()
-				.WriteNewLine()
-				.WriteNewLine();
-		}
-
-		private void WriteNamespaceStart(string ns)
-		{
-			if (string.IsNullOrEmpty(ns))
-			{
-				throw new ArgumentException("Namespace may not be empty");
-			}
-
-			this.writer
-				.Write("namespace ")
-				.Write(ns)
-				.WriteNewLine()
-				.WriteIndentedLine("{")
-				.WriteNewLine();
-
-			this.writer.Indent++;
-		}
-
-		private void WriteBlockEnd(bool newLine = true)
-		{
-			this.writer.Indent--;
-
-			if (newLine)
-			{
-				this.writer.WriteNewLine();
-			}
-			this.writer.WriteIndentedLine("}");
-		}
 
 		private void WriteProcedure(StoredProcedureModel procedure, bool isLast)
 		{
@@ -134,7 +81,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			{
 				//TODO
 			}
-			WriteBlockEnd(false);
+			WriteBlockEnd();
 		}
 
 		private void WriteParameterClass(StoredProcedureModel procedure)
@@ -153,7 +100,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 					WriteParameterClassProperties(procedure);
 				}
-				WriteBlockEnd(false);
+				WriteBlockEnd();
 
 				this.writer.WriteNewLine();
 			}
@@ -186,7 +133,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 						.WriteNewLine();
 				}
 			}
-			WriteBlockEnd(false);
+			WriteBlockEnd();
 		}
 
 		private void WriteParameterClassConstructorArguments(StoredProcedureModel procedure)
@@ -272,6 +219,10 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 				this.writer.Indent++;
 				{
 					//TODO
+					this.writer
+						.WriteIndentation()
+						.Write("return null;")
+						.WriteNewLine();
 				}
 				WriteBlockEnd();
 
@@ -313,24 +264,6 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 					.WriteNewLine();
 			}
 		}
-
-		private void Test()
-		{
-			//SqlCommand c;
-			//c.CommandText = "";
-			//c.CommandType = CommandType.StoredProcedure;
-			SqlParameter p;
-			//p.Precision
-			//p.Scale
-			//p.Size
-			//p.UdtTypeName
-			//p.Value
-			//p.
-		}
-
-
-
-		private readonly ICodeWriter writer;
 
 	}
 

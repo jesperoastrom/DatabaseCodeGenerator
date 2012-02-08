@@ -78,6 +78,7 @@
     <Compile Include="Data\Models\UserDefinedTableTypeModel.cs" />
     <Compile Include="IO\ConsoleTextWriter.cs" />
     <Compile Include="IO\DatabaseWriter.cs" />
+    <Compile Include="IO\ElementWriterBase.cs" />
     <Compile Include="IO\ICodeWriter.cs" />
     <Compile Include="IO\IDatabaseWriter.cs" />
     <Compile Include="IO\IStorageProvider.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="IO\StoredProcedureWriter.cs" />
     <Compile Include="IO\StreamCodeWriter.cs" />
     <Compile Include="IO\StringCodeWriter.cs" />
+    <Compile Include="IO\UserDefinedTableTypeWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>

@@ -34,6 +34,8 @@ namespace Flip.Tools.Database.CodeGenerator.Configuration
 				using (var stream = this.storageProvider.OpenConfigurationFile(file))
 				{
 					configuration = (DatabaseConfiguration)serializer.Deserialize(stream);
+					configuration.TableTypeNamespaceFromStoredProcedure =
+						configuration.StoredProcedures.Namespace.GetShortestNamespace(configuration.UserDefinedTableTypes.Namespace);
 					return true;
 				}
 			}

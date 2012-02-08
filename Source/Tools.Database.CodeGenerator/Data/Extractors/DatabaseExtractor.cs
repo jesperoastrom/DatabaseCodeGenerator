@@ -35,11 +35,11 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 				if (configuration.UserDefinedTableTypes != null)
 				{
 					var userDefinedTypesExtractor = new UserDefinedTableTypeExtractor(database.UserDefinedTableTypes);
-					model.UserDefinedTableTypes = userDefinedTypesExtractor.Extract(configuration.UserDefinedTableTypes);
+					model.UserDefinedTableTypes = userDefinedTypesExtractor.Extract(configuration);
 				}
 				if (configuration.StoredProcedures != null)
 				{
-					model.StoredProcedures = new StoredProcedureExtractor().Extract(this.connectionStringProvider, configuration.StoredProcedures, database.StoredProcedures);
+					model.StoredProcedures = new StoredProcedureExtractor().Extract(this.connectionStringProvider, configuration, database.StoredProcedures);
 				}
 
 				return model;

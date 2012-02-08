@@ -68,7 +68,7 @@ namespace Flip.Tools.Database.CodeGenerator
 				throw new ArgumentNullException("name");
 			}
 
-			if(name.StartsWith("@"))
+			if (name.StartsWith("@"))
 			{
 				name = name.Substring(1);
 			}
@@ -85,6 +85,23 @@ namespace Flip.Tools.Database.CodeGenerator
 			}
 		}
 
+		public static string GetShortestNamespace(this string fromNs, string toNs)
+		{
+			string[] fromParts = fromNs.Split('.');
+			string[] toParts = toNs.Split('.');
+
+			for (int i = 0; i < toParts.Length; i++)
+			{
+				if (fromParts[i] != toParts[i])
+				{
+					var resultParts = new string[toParts.Length - i];
+					Array.Copy(toParts, i, resultParts, 0, resultParts.Length);
+					return string.Join(".", resultParts);
+				}
+			}
+			return string.Empty;
+		}
+
 
 
 		private static string CreateValidIdentifier(string value)
@@ -94,7 +111,7 @@ namespace Flip.Tools.Database.CodeGenerator
 
 
 
-		//TODO Choose provider
+		//TODO Mutiple code providers?
 		private static readonly Microsoft.CSharp.CSharpCodeProvider codeProvider = new Microsoft.CSharp.CSharpCodeProvider();
 
 	}

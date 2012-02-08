@@ -15,7 +15,10 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 	internal sealed class StoredProcedureExtractor
 	{
 
-		public SchemaCollection<StoredProcedureModel> Extract(IConnectionStringProvider connectionStringProvider, Configuration.StoredProcedures storedProcedures, Smo.StoredProcedureCollection procedures)
+		public SchemaCollection<StoredProcedureModel> Extract(
+			IConnectionStringProvider connectionStringProvider,
+			Configuration.DatabaseConfiguration configuration,
+			Smo.StoredProcedureCollection procedures)
 		{
 			Dictionary<string, Smo.StoredProcedure> storedProcedureLookup = procedures
 				.Cast<Smo.StoredProcedure>()
@@ -25,14 +28,15 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			{
 				connection.Open();
 
-				var collection = new SchemaCollection<StoredProcedureModel>(storedProcedures.Namespace);
+				var collection = new SchemaCollection<StoredProcedureModel>(configuration.StoredProcedures.Namespace);
 
-				foreach (var element in storedProcedures.Elements)
+				foreach (var element in configuration.StoredProcedures.Elements)
 				{
 					if (storedProcedureLookup.ContainsKey(element.EscapedFullName))
 					{
 						Smo.StoredProcedure procedure = storedProcedureLookup[element.EscapedFullName];
-						collection.AddElement(procedure.Schema, ToModel(connection, storedProcedures.Namespace, procedure));
+						StoredProcedureModel model = ToModel(connection, configuration, procedure);
+						collection.AddElement(procedure.Schema, model);
 					}
 					else
 					{
@@ -46,12 +50,12 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 
 
 
-		private StoredProcedureModel ToModel(SqlConnection connection, string procedureNamespace, Smo.StoredProcedure procedure)
+		private StoredProcedureModel ToModel(SqlConnection connection, Configuration.DatabaseConfiguration configuration, Smo.StoredProcedure procedure)
 		{
 			var model = new StoredProcedureModel();
 			model.DatabaseName = new DatabaseName(procedure.Schema, procedure.Name);
-			model.TypeName = new TypeName(procedureNamespace, procedure.Name);
-			model.Parameters = ToModel(procedure.Parameters);
+			model.TypeName = new TypeName(configuration.StoredProcedures.Namespace, procedure.Name);
+			model.Parameters = ToModel(configuration, procedure.Parameters);
 			model.Results = GetResults(connection, model);
 			return model;
 		}
@@ -119,53 +123,20 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			return model;
 		}
 
-		private List<ParameterModel> ToModel(Smo.StoredProcedureParameterCollection parameters)
+		private List<ParameterModel> ToModel(Configuration.DatabaseConfiguration configuration, Smo.StoredProcedureParameterCollection parameters)
 		{
 			return parameters.Cast<Smo.StoredProcedureParameter>().Select(p => new ParameterModel()
 			{
 				IsOutput = p.IsOutputParameter,
-				SqlDbType = p.DataType.SqlDataType,
+				SqlDataType = p.DataType.SqlDataType,
+				SqlDbType = p.DataType.ToSqlDbDataType(),
 				Column = new ColumnModel()
 				{
 					DatabaseName = p.Name,
-					ClrType = p.DataType.ToClrString()
+					ClrType = p.DataType.ToClrString(configuration.TableTypeNamespaceFromStoredProcedure)
 				}
 			}).ToList();
 		}
-
-		//private SqlDbType ToSqlDbType(Smo.SqlDataType sqlDataType)
-		//{
-		//    SqlDbType sqlDbType;
-		//    switch (sqlDataType)
-		//    {
-		//        case Smo.SqlDataType.UserDefinedTableType:
-		//            sqlDbType = System.Data.SqlDbType.Udt;
-		//            break;
-		//        case Smo.SqlDataType.UserDefinedType:
-		//            sqlDbType = System.Data.SqlDbType.Udt;
-		//            break;
-		//        //TODO
-		//        //case Smo.SqlDataType.None:
-		//        //case Smo.SqlDataType.NVarCharMax:
-		//        //case Smo.SqlDataType.UserDefinedDataType:
-		//        //case Smo.SqlDataType.VarBinaryMax:
-		//        //case Smo.SqlDataType.VarCharMax:
-		//        //case Smo.SqlDataType.SysName:
-		//        //case Smo.SqlDataType.Numeric:
-		//        //case Smo.SqlDataType.UserDefinedTableType:
-		//        //case Smo.SqlDataType.HierarchyId:
-		//        //case Smo.SqlDataType.Geometry:
-		//        case Smo.SqlDataType.Geography:
-		//            throw new NotSupportedException("Unable to convert to SqlDbType:" + sqlDataType);
-		//        default:
-		//            if (!Enum.TryParse<SqlDbType>(sqlDataType.ToString(), out sqlDbType))
-		//            {
-		//                throw new NotSupportedException("Unable to convert to SqlDbType:" + sqlDataType);
-		//            }
-		//            break;
-		//    }
-		//    return sqlDbType;
-		//}
 
 	}
 

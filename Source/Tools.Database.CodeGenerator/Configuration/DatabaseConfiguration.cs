@@ -14,6 +14,9 @@ namespace Flip.Tools.Database.CodeGenerator.Configuration
 		[System.Xml.Serialization.XmlElement("UserDefinedTableTypes", typeof(UserDefinedTableTypes))]
 		public UserDefinedTableTypes UserDefinedTableTypes { get; set; }
 
+		[System.Xml.Serialization.XmlIgnore()]
+		public string TableTypeNamespaceFromStoredProcedure { get; set; }
+
 	}
 
 }

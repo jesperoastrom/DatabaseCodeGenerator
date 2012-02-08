@@ -72,11 +72,33 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 		{
 			using (ICodeWriter writer = this.outputFacade.CreateOrOpenOutputWriter(outputFile, indentation))
 			{
+				if (databaseModel.StoredProcedures != null || databaseModel.UserDefinedTableTypes != null)
+				{
+					WriteUsings(writer);
+				}
+
 				if (databaseModel.StoredProcedures != null)
 				{
 					new StoredProcedureWriter(writer).Write(databaseModel.StoredProcedures);
 				}
+
+				if (databaseModel.UserDefinedTableTypes != null)
+				{
+					new UserDefinedTableTypeWriter(writer).Write(databaseModel.UserDefinedTableTypes);
+				}
 			}
+		}
+
+		private void WriteUsings(ICodeWriter writer)
+		{
+			writer
+				.WriteIndentedLine("using System;")
+				.WriteIndentedLine("using System.Collections.Generic;")
+				.WriteIndentedLine("using System.Data;")
+				.WriteIndentedLine("using System.Data.SqlClient;")
+				.WriteNewLine()
+				.WriteNewLine()
+				.WriteNewLine();
 		}
 
 

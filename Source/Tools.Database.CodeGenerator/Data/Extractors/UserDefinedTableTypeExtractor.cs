@@ -21,16 +21,16 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 
 
 
-		public SchemaCollection<UserDefinedTableTypeModel> Extract(Configuration.UserDefinedTableTypes userDefinedTableTypes)
+		public SchemaCollection<UserDefinedTableTypeModel> Extract(Configuration.DatabaseConfiguration configuration)
 		{
-			var collection = new SchemaCollection<UserDefinedTableTypeModel>(userDefinedTableTypes.Namespace);
+			var collection = new SchemaCollection<UserDefinedTableTypeModel>(configuration.UserDefinedTableTypes.Namespace);
 
-			foreach (var element in userDefinedTableTypes.Elements)
+			foreach (var element in configuration.UserDefinedTableTypes.Elements)
 			{
 				if (this.tableTypeLookup.ContainsKey(element.EscapedFullName))
 				{
 					Smo.UserDefinedTableType tableType = this.tableTypeLookup[element.EscapedFullName];
-					collection.AddElement(tableType.Schema, ToModel(tableType));
+					collection.AddElement(tableType.Schema, ToModel(configuration.UserDefinedTableTypes.Namespace, tableType));
 				}
 				else
 				{
@@ -43,21 +43,22 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 
 
 
-		private UserDefinedTableTypeModel ToModel(Smo.UserDefinedTableType tableType)
+		private UserDefinedTableTypeModel ToModel(string typeNamespace, Smo.UserDefinedTableType tableType)
 		{
 			var model = new UserDefinedTableTypeModel();
-			model.Name = new DatabaseName(tableType.Schema, tableType.Name);
-			model.Columns = ToModel(tableType.Columns);
+			model.DatabaseName = new DatabaseName(tableType.Schema, tableType.Name);
+			model.TypeName = new TypeName(typeNamespace, tableType.Name);
+			model.Columns = ToModel(typeNamespace, tableType.Columns);
 			return model;
 		}
 
-		private IEnumerable<ColumnModel> ToModel(Smo.ColumnCollection columns)
+		private List<ColumnModel> ToModel(string typeNamespace, Smo.ColumnCollection columns)
 		{
 			return columns.Cast<Smo.Column>().Select(c => new ColumnModel()
 			{
 				DatabaseName = c.Name,
-				//TODO
-			});
+				ClrType = c.DataType.ToClrString(typeNamespace)
+			}).ToList();
 		}
 
 
