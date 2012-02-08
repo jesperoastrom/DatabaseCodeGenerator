@@ -7,7 +7,7 @@ using System.Linq;
 namespace Flip.Tools.Database.CodeGenerator.Data.Models
 {
 
-	internal sealed class SchemaCollection<TElement>
+	public sealed class SchemaCollection<TElement>
 	{
 
 		public SchemaCollection(string elementNamespace)

@@ -9,13 +9,14 @@ using System.Text;
 namespace Flip.Tools.Database.CodeGenerator.IO
 {
 
-	internal class Writer : IDisposable
+	public class StreamCodeWriter : ICodeWriter
 	{
 
-		public Writer(Stream stream, string indentation)
+		public StreamCodeWriter(Stream stream, string indentation)
 		{
 			this.indentation = indentation;
 			this.indentLookup = new Dictionary<byte, string>(8);
+			this.stream = stream;
 			this.writer = new StreamWriter(stream, Encoding.UTF8);
 		}
 
@@ -23,7 +24,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 		public byte Indent { get; set; }
 
-		public Writer WriteIndentation()
+		public ICodeWriter WriteIndentation()
 		{
 			AssertNotDisposed();
 
@@ -32,7 +33,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			return this;
 		}
 
-		public Writer Write(string s)
+		public ICodeWriter Write(string s)
 		{
 			AssertNotDisposed();
 
@@ -41,7 +42,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			return this;
 		}
 
-		public Writer WriteNewLine()
+		public ICodeWriter WriteNewLine()
 		{
 			AssertNotDisposed();
 
@@ -50,7 +51,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			return this;
 		}
 
-		public Writer WriteIndentedLine(string s)
+		public ICodeWriter WriteIndentedLine(string s)
 		{
 			AssertNotDisposed();
 
@@ -93,11 +94,24 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 				{
 					if (this.writer != null)
 					{
-						this.writer.Flush();
-						this.writer.Dispose();
+						try
+						{
+							this.writer.Flush();
+							this.writer.Dispose();
+						}
+						catch { }
+					}
+					if (this.stream != null)
+					{
+						try
+						{
+							this.stream.Close();
+						}
+						catch { }
 					}
 				}
 				this.writer = null;
+				this.stream = null;
 				this.disposed = true;
 			}
 		}
@@ -114,6 +128,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 		private bool disposed;
 		private StreamWriter writer;
+		private Stream stream;
 		private readonly Dictionary<byte, string> indentLookup;
 		private readonly string indentation;
 

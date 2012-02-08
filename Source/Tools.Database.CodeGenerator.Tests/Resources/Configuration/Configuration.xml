@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+  <StoredProcedures Namespace="Database.Tests.StoredProcedures">
+	<Procedure SchemaName="Core" Name="GetAllTestTableItems" />
+	<Procedure SchemaName="Core" Name="GetAllTestTableItemsById" />
+	<Procedure SchemaName="Core" Name="GetAllTestTableItemsByIds" />
+  </StoredProcedures>
+  <UserDefinedTableTypes Namespace="Database.Tests.UserDefinedTypes">
+	<Type SchemaName="Core" Name="TestTableIds" />
+  </UserDefinedTableTypes>
+</Database>

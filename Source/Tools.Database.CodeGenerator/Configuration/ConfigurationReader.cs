@@ -1,27 +1,28 @@
 ﻿using System;
 using System.IO;
+using Flip.Tools.Database.CodeGenerator.IO;
 
 
 
 namespace Flip.Tools.Database.CodeGenerator.Configuration
 {
 
-	internal sealed class ConfigurationReader
+	public sealed class ConfigurationReader : IConfigurationReader
 	{
 
-		public ConfigurationReader(string file, System.IO.TextWriter errorOutput)
+		public ConfigurationReader(ITextWriter errorOutput, IStorageProvider storageProvider)
 		{
-			this.file = file;
 			this.errorOutput = errorOutput;
+			this.storageProvider = storageProvider;
 		}
 
 
 
-		public bool TryRead(out DatabaseConfiguration configuration)
+		public bool TryRead(string file, out DatabaseConfiguration configuration)
 		{
-			if (!File.Exists(this.file))
+			if (!this.storageProvider.ConfigurationFileExists(file))
 			{
-				this.errorOutput.WriteLine("Unable to find file '" + this.file + "'");
+				this.errorOutput.WriteLine("Unable to find file '" + file + "'");
 				configuration = null;
 				return false;
 			}
@@ -30,7 +31,7 @@ namespace Flip.Tools.Database.CodeGenerator.Configuration
 
 			try
 			{
-				using (var stream = new FileStream(this.file, FileMode.Open))
+				using (var stream = this.storageProvider.OpenConfigurationFile(file))
 				{
 					configuration = (DatabaseConfiguration)serializer.Deserialize(stream);
 					return true;
@@ -58,8 +59,8 @@ namespace Flip.Tools.Database.CodeGenerator.Configuration
 
 
 
-		private readonly string file;
-		private readonly System.IO.TextWriter errorOutput;
+		private readonly IStorageProvider storageProvider;
+		private readonly ITextWriter errorOutput;
 
 	}
 

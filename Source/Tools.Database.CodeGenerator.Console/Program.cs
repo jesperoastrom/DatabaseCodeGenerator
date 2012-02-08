@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using Autofac;
+using Flip.Tools.Database.CodeGenerator.Configuration;
 using Flip.Tools.Database.CodeGenerator.IO;
 using NDesk.Options;
-
+using Flip.Tools.Database.CodeGenerator.Data;
 
 
 namespace Flip.Tools.Database.CodeGenerator.Console
@@ -17,14 +19,27 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 			{
 				if (ValidateArguments(arguments))
 				{
-					var writer = new DatabaseWriter(System.Console.Out);
-					if (writer.WriteFile(arguments.File, arguments.Output, arguments.ConnectionString, "\t")) //TODO: parameterize indentation
+					IContainer container = CreateContainer(arguments.ConnectionString);
+
+					var writer = container.Resolve<IDatabaseWriter>();
+
+					if (writer.WriteOutput(arguments.File, arguments.Output, "\t")) //TODO: parameterize indentation
 					{
 						System.Console.WriteLine("Finished! Press the any-key to continue");
 					}
 				}
 			}
 			System.Console.ReadKey();
+		}
+
+		private static IContainer CreateContainer(string connectionString)
+		{
+			var builder = new ContainerBuilder();
+
+			builder.Register(c => new ConnectionStringProvider(connectionString)).As<IConnectionStringProvider>().SingleInstance();
+
+			builder.RegisterCodeGeneratorTypes();
+			return builder.Build();
 		}
 
 

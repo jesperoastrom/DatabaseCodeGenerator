@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using Flip.Tools.Database.CodeGenerator.Data.Models;
-using System.Data.SqlClient;
-using System.Data;
 
 
 
 namespace Flip.Tools.Database.CodeGenerator.IO
 {
 
-	internal sealed class StoredProcedureWriter
+	public sealed class StoredProcedureWriter
 	{
 
-		public StoredProcedureWriter(Writer writer)
+		public StoredProcedureWriter(ICodeWriter writer)
 		{
 			this.writer = writer;
 		}
@@ -331,7 +330,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 
 
-		private readonly Writer writer;
+		private readonly ICodeWriter writer;
 
 	}
 

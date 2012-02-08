@@ -5,7 +5,7 @@
 namespace Flip.Tools.Database.CodeGenerator.Data.Models
 {
 
-	internal class SchemaElementCollection<TItem>
+	public class SchemaElementCollection<TItem>
 	{
 
 		public SchemaElementCollection(string schemaName)

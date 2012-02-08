@@ -4,3 +4,4 @@ obj/
 *.suo
 *.csproj.user
 Thumbs.db
+Source/TestResults/

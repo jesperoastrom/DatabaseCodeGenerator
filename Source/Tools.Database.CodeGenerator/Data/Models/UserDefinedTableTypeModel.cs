@@ -5,7 +5,7 @@
 namespace Flip.Tools.Database.CodeGenerator.Data.Models
 {
 
-	internal sealed class UserDefinedTableTypeModel
+	public sealed class UserDefinedTableTypeModel
 	{
 
 		public DatabaseName Name { get; set; }

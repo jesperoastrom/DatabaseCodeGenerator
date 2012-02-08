@@ -22,48 +22,64 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			prettyTypeLook.Add(typeof(System.Char), "char");
 			prettyTypeLook.Add(typeof(System.String), "string");
 
-			sqlTypeLookup = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
-			sqlTypeLookup.Add("bit", typeof(System.Boolean));
-			sqlTypeLookup.Add("tinyint", typeof(System.Int16));
-			sqlTypeLookup.Add("int", typeof(System.Int32));
-			sqlTypeLookup.Add("bigint", typeof(System.Int64));
-			sqlTypeLookup.Add("smallmoney", typeof(System.Decimal));
-			sqlTypeLookup.Add("money", typeof(System.Decimal));
-			sqlTypeLookup.Add("decimal", typeof(System.Decimal));
-			sqlTypeLookup.Add("numeric", typeof(System.Decimal));
-			sqlTypeLookup.Add("real", typeof(System.Single));
-			sqlTypeLookup.Add("float", typeof(System.Double));
+			sqlDataTypeLookup = new Dictionary<Smo.SqlDataType, Type>();
 
-			sqlTypeLookup.Add("char", typeof(System.String));
-			sqlTypeLookup.Add("nchar", typeof(System.String));
-			sqlTypeLookup.Add("varchar", typeof(System.String));
-			sqlTypeLookup.Add("nvarchar", typeof(System.String));
-			sqlTypeLookup.Add("text", typeof(System.String));
-			sqlTypeLookup.Add("ntext", typeof(System.String));
-			sqlTypeLookup.Add("xml", typeof(System.Xml.Linq.XElement));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.BigInt, typeof(System.Int64));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Bit, typeof(System.Boolean));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Binary, typeof(System.Byte[]));
 
-			sqlTypeLookup.Add("smalldatetime", typeof(System.DateTime));
-			sqlTypeLookup.Add("datetime", typeof(System.DateTime));
-			sqlTypeLookup.Add("datetime2", typeof(System.DateTime));
-			sqlTypeLookup.Add("datetimeoffset", typeof(System.DateTimeOffset));
-			sqlTypeLookup.Add("date", typeof(System.DateTime));
-			sqlTypeLookup.Add("time", typeof(System.TimeSpan));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Char, typeof(System.String));
 
-			sqlTypeLookup.Add("binary", typeof(System.Byte[]));
-			sqlTypeLookup.Add("varbinary", typeof(System.Byte[]));
-			sqlTypeLookup.Add("image", typeof(System.Byte[]));
-			sqlTypeLookup.Add("timestamp", typeof(System.Byte[]));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Date, typeof(System.DateTime));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.DateTime, typeof(System.DateTime));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.DateTime2, typeof(System.DateTime));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.DateTimeOffset, typeof(System.DateTimeOffset));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Decimal, typeof(System.Decimal));
 
-			sqlTypeLookup.Add("uniqueidentifier", typeof(System.Guid));
-			sqlTypeLookup.Add("sql_variant", typeof(System.Object));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Float, typeof(System.Double));
+
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Image, typeof(System.Byte[]));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Int, typeof(System.Int32));
+
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Money, typeof(System.Decimal));
+
+			sqlDataTypeLookup.Add(Smo.SqlDataType.NChar, typeof(System.String));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.NText, typeof(System.String));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Numeric, typeof(System.Decimal));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.NVarChar, typeof(System.String));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.NVarCharMax, typeof(System.String));
+
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Real, typeof(System.Single));
+
+			sqlDataTypeLookup.Add(Smo.SqlDataType.SmallDateTime, typeof(System.DateTime));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.SmallInt, typeof(System.Int16));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.SmallMoney, typeof(System.Decimal));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.SysName, typeof(System.String));
+
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Text, typeof(System.String));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Time, typeof(System.TimeSpan));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Timestamp, typeof(System.Byte[]));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.TinyInt, typeof(System.Byte));
+
+			sqlDataTypeLookup.Add(Smo.SqlDataType.UniqueIdentifier, typeof(System.Guid));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.UserDefinedDataType, typeof(System.Object));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.UserDefinedTableType, typeof(System.Data.DataTable));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.UserDefinedType, typeof(System.Object));
+
+			sqlDataTypeLookup.Add(Smo.SqlDataType.VarBinary, typeof(System.Byte[]));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.VarBinaryMax, typeof(System.Byte[]));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.VarChar, typeof(System.String));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.VarCharMax, typeof(System.String));
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Variant, typeof(System.Object));
+
+			sqlDataTypeLookup.Add(Smo.SqlDataType.Xml, typeof(System.Xml.Linq.XElement));
 		}
 
 
 
 		public static string ToClrString(this Smo.DataType dataType)
 		{
-			Type type = GetType(dataType.ToString());
-			return type.ToClrString();
+			return GetType(dataType.SqlDataType).ToClrString();
 		}
 
 		public static string ToClrString(this Type type)
@@ -76,23 +92,23 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			{
 				return type.Name;
 			}
-			return type.AssemblyQualifiedName;
+			return type.FullName;
 		}
 
 
 
-		private static Type GetType(string sqlType)
+		private static Type GetType(Smo.SqlDataType sqlDataType)
 		{
-			if (sqlTypeLookup.ContainsKey(sqlType))
+			if (sqlDataTypeLookup.ContainsKey(sqlDataType))
 			{
-				return sqlTypeLookup[sqlType];
+				return sqlDataTypeLookup[sqlDataType];
 			}
-			throw new ArgumentException("Unknown sql type '" + sqlType + "'.");
+			throw new ArgumentException("Unknown sql type '" + sqlDataType.ToString() + "'.");
 		}
 
 
 
-		private static Dictionary<string, Type> sqlTypeLookup;
+		private static Dictionary<Smo.SqlDataType, Type> sqlDataTypeLookup;
 		private static Dictionary<Type, string> prettyTypeLook;
 
 	}

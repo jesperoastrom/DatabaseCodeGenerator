@@ -1,7 +1,7 @@
 ﻿namespace Flip.Tools.Database.CodeGenerator.Data.Models
 {
 
-	internal sealed class ColumnModel
+	public sealed class ColumnModel
 	{
 
 		public string DatabaseName

@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\Dependencies\Autofac\2.5.2.830\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -48,13 +51,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\ConfigurationReader.cs" />
+    <Compile Include="Configuration\ContainerBuilderExtensions.cs" />
     <Compile Include="Configuration\DatabaseConfiguration.cs" />
+    <Compile Include="Configuration\IConfigurationReader.cs" />
     <Compile Include="Configuration\SchemaElement.cs" />
     <Compile Include="Configuration\StoredProcedureElement.cs" />
     <Compile Include="Configuration\StoredProcedures.cs" />
     <Compile Include="Configuration\UserDefinedTypeTableElement.cs" />
     <Compile Include="Configuration\UserDefinedTableTypes.cs" />
+    <Compile Include="Data\ConnectionStringProvider.cs" />
+    <Compile Include="Data\Extractors\IDatabaseExtractor.cs" />
     <Compile Include="Data\Extractors\SmoExtensions.cs" />
+    <Compile Include="Data\IConnectionStringProvider.cs" />
     <Compile Include="Data\Models\DatabaseName.cs" />
     <Compile Include="Data\Extractors\DatabaseExtractor.cs" />
     <Compile Include="Data\Extractors\StoredProcedureExtractor.cs" />
@@ -68,9 +76,16 @@
     <Compile Include="Data\Models\StoredProcedureModel.cs" />
     <Compile Include="Data\Models\TypeName.cs" />
     <Compile Include="Data\Models\UserDefinedTableTypeModel.cs" />
+    <Compile Include="IO\ConsoleTextWriter.cs" />
     <Compile Include="IO\DatabaseWriter.cs" />
+    <Compile Include="IO\ICodeWriter.cs" />
+    <Compile Include="IO\IDatabaseWriter.cs" />
+    <Compile Include="IO\IStorageProvider.cs" />
+    <Compile Include="IO\ITextWriter.cs" />
+    <Compile Include="IO\FileStorageProvider.cs" />
     <Compile Include="IO\StoredProcedureWriter.cs" />
-    <Compile Include="IO\Writer.cs" />
+    <Compile Include="IO\StreamCodeWriter.cs" />
+    <Compile Include="IO\StringCodeWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>

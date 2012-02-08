@@ -9,34 +9,40 @@ using Flip.Tools.Database.CodeGenerator.Data.Models;
 namespace Flip.Tools.Database.CodeGenerator.IO
 {
 
-	public sealed class DatabaseWriter
+	public sealed class DatabaseWriter : IDatabaseWriter
 	{
 
-		public DatabaseWriter(TextWriter traceOutput)
+		public DatabaseWriter(
+			IConfigurationReader configurationReader,
+			IDatabaseExtractor databaseExtractor,
+			IStorageProvider outputFacade,
+			ITextWriter traceWriter)
 		{
-			this.traceOutput = traceOutput;
+			this.configurationReader = configurationReader;
+			this.databaseExtractor = databaseExtractor;
+			this.outputFacade = outputFacade;
+			this.traceOutput = traceWriter;
 		}
 
 
 
-		public bool WriteFile(string configurationFile, string outputFile, string connectionString, string indentation)
+		public bool WriteOutput(string configurationFile, string outputFile, string indentation)
 		{
-			var configurationReader = new ConfigurationReader(configurationFile, this.traceOutput);
-
 			DatabaseConfiguration configuration;
-			if (configurationReader.TryRead(out configuration))
+
+			if (this.configurationReader.TryRead(configurationFile, out configuration))
 			{
 				string directory = Path.GetDirectoryName(outputFile);
 
-				if (!Directory.Exists(directory))
+				if (!outputFacade.OutputDirectoryExists(directory))
 				{
 					throw new ArgumentException("Directory '" + directory + "' does not exist");
 				}
 
 				DatabaseModel databaseModel;
-				if (TryGetDatabaseModel(connectionString, configuration, out databaseModel))
+				if (TryGetDatabaseModel(configuration, out databaseModel))
 				{
-					WriteFile(configuration, outputFile, indentation, databaseModel);
+					WriteOutput(configuration, outputFile, indentation, databaseModel);
 					return true;
 				}
 
@@ -46,40 +52,39 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 
 
-		private bool TryGetDatabaseModel(string connectionString, DatabaseConfiguration configuration, out DatabaseModel databaseModel)
+		private bool TryGetDatabaseModel(DatabaseConfiguration configuration, out DatabaseModel databaseModel)
 		{
 			try
 			{
-				var extractor = new DatabaseExtractor(connectionString);
-				databaseModel = extractor.Extract(configuration);
+				databaseModel = databaseExtractor.Extract(configuration);
 				return true;
 			}
 			catch (Exception ex)
 			{
 				this.traceOutput.WriteLine(ex.Message);
+				this.traceOutput.WriteLine(ex.StackTrace);
 				databaseModel = null;
 				return false;
 			}
 		}
 
-		private void WriteFile(DatabaseConfiguration configuration, string outputFile, string indentation, DatabaseModel databaseModel)
+		private void WriteOutput(DatabaseConfiguration configuration, string outputFile, string indentation, DatabaseModel databaseModel)
 		{
-			using (FileStream stream = File.Open(outputFile, FileMode.Create))
+			using (ICodeWriter writer = this.outputFacade.CreateOrOpenOutputWriter(outputFile, indentation))
 			{
-				using (var writer = new Writer(stream, indentation))
+				if (databaseModel.StoredProcedures != null)
 				{
-					if (databaseModel.StoredProcedures != null)
-					{
-						StoredProcedureWriter procedureWriter = new StoredProcedureWriter(writer);
-						procedureWriter.Write(databaseModel.StoredProcedures);
-					}
+					new StoredProcedureWriter(writer).Write(databaseModel.StoredProcedures);
 				}
 			}
 		}
 
 
 
-		private readonly TextWriter traceOutput;
+		private readonly IConfigurationReader configurationReader;
+		private readonly IDatabaseExtractor databaseExtractor;
+		private readonly IStorageProvider outputFacade;
+		private readonly ITextWriter traceOutput;
 
 	}
 

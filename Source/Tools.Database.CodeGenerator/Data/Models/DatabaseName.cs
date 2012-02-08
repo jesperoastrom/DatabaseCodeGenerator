@@ -5,7 +5,7 @@
 namespace Flip.Tools.Database.CodeGenerator.Data.Models
 {
 
-	internal sealed class DatabaseName : IComparable<DatabaseName>, IComparable
+	public sealed class DatabaseName : IComparable<DatabaseName>, IComparable
 	{
 
 		public DatabaseName(string schemaName, string name)

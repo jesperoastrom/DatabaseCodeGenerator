@@ -8,12 +8,12 @@ using Smo = Microsoft.SqlServer.Management.Smo;
 namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 {
 
-	internal sealed class DatabaseExtractor
+	public sealed class DatabaseExtractor : IDatabaseExtractor
 	{
 
-		public DatabaseExtractor(string connectionString)
+		public DatabaseExtractor(IConnectionStringProvider connectionStringProvider)
 		{
-			this.connectionString = connectionString;
+			this.connectionStringProvider = connectionStringProvider;
 		}
 
 
@@ -39,8 +39,7 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 				}
 				if (configuration.StoredProcedures != null)
 				{
-					var storedProceduresExtractor = new StoredProcedureExtractor(this.connectionString, database.StoredProcedures);
-					model.StoredProcedures = storedProceduresExtractor.Extract(configuration.StoredProcedures);
+					model.StoredProcedures = new StoredProcedureExtractor().Extract(this.connectionStringProvider, configuration.StoredProcedures, database.StoredProcedures);
 				}
 
 				return model;
@@ -59,7 +58,7 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 		{
 			try
 			{
-				using (SqlConnection connection = new SqlConnection(this.connectionString))
+				using (SqlConnection connection = new SqlConnection(this.connectionStringProvider.ConnectionString))
 				{
 					connection.Open();
 					return new ConnectionDetails()
@@ -71,13 +70,13 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			}
 			catch (SqlException sqlException)
 			{
-				throw new InvalidArgumentException("Could not connect to database using connection string '" + this.connectionString + "'.", sqlException);
+				throw new InvalidArgumentException("Could not connect to database using connection string '" + this.connectionStringProvider.ConnectionString + "'.", sqlException);
 			}
 		}
 
 
 
-		private readonly string connectionString;
+		private readonly IConnectionStringProvider connectionStringProvider;
 
 
 

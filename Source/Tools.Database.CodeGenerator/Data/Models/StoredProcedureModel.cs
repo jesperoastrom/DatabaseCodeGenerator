@@ -5,7 +5,7 @@
 namespace Flip.Tools.Database.CodeGenerator.Data.Models
 {
 
-	internal sealed class StoredProcedureModel
+	public sealed class StoredProcedureModel
 	{
 
 		public DatabaseName DatabaseName { get; set; }
