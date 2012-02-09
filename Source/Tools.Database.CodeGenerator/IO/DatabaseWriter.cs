@@ -96,8 +96,6 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 				.WriteIndentedLine("using System.Collections.Generic;")
 				.WriteIndentedLine("using System.Data;")
 				.WriteIndentedLine("using System.Data.SqlClient;")
-				.WriteNewLine()
-				.WriteNewLine()
 				.WriteNewLine();
 		}
 

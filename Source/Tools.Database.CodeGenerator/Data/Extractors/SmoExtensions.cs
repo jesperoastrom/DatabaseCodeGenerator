@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using Smo = Microsoft.SqlServer.Management.Smo;
 using Flip.Tools.Database.CodeGenerator.Data.Models;
+using Smo = Microsoft.SqlServer.Management.Smo;
 
 
 
@@ -107,39 +107,56 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			sqlDbTypeLookup.Add(Smo.SqlDataType.Xml, SqlDbType.Xml);
 		}
 
-
-
-		public static string ToClrString(this Smo.DataType dataType, string ns)
-		{
-			if (dataType.SqlDataType == Smo.SqlDataType.UserDefinedTableType)
-			{
-				return TypeName.GetFullyQualifiedTypeName(ns, dataType.Schema, dataType.Name);
-			}
-			else
-			{
-				return GetType(dataType.SqlDataType).ToClrString();
-			}
-		}
-
 		public static SqlDbType ToSqlDbDataType(this Smo.DataType dataType)
 		{
 			return sqlDbTypeLookup[dataType.SqlDataType];
 		}
-
-		public static string ToClrString(this Type type)
+		
+		public static string ToClrString(this Smo.StoredProcedureParameter parameter, string ns)
 		{
-			if (prettyStringLookup.ContainsKey(type))
+			if (parameter.DataType.SqlDataType == Smo.SqlDataType.UserDefinedTableType)
 			{
-				return prettyStringLookup[type];
+				return TypeName.GetFullyQualifiedTypeName(ns, parameter.DataType.Schema, parameter.DataType.Name);
 			}
-			if (type.Assembly.FullName == "System")
+			else
 			{
-				return type.Name;
+				return ToClrString(GetType(parameter.DataType.SqlDataType), true);
 			}
-			return type.FullName;
 		}
 
+		public static string ToClrString(this Smo.Column column, string ns)
+		{
+			if (column.DataType.SqlDataType == Smo.SqlDataType.UserDefinedTableType)
+			{
+				return TypeName.GetFullyQualifiedTypeName(ns, column.DataType.Schema, column.DataType.Name);
+			}
+			else
+			{
+				return GetType(column.DataType.SqlDataType).ToClrString(column.Nullable);
+			}
+		}
 
+		public static string ToClrString(this Type type, bool nullable)
+		{
+			string s = null;
+			if (prettyStringLookup.ContainsKey(type))
+			{
+				s = prettyStringLookup[type];
+			}
+			else if (type.Namespace == "System")
+			{
+				s = type.Name;
+			}
+			else
+			{
+				s = type.FullName;
+			}
+			if (type.IsValueType && nullable)
+			{
+				s = s + "?";
+			}
+			return s;
+		}
 
 		private static Type GetType(Smo.SqlDataType sqlDataType)
 		{

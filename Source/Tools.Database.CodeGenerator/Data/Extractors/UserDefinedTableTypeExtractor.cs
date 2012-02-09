@@ -57,7 +57,7 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			return columns.Cast<Smo.Column>().Select(c => new ColumnModel()
 			{
 				DatabaseName = c.Name,
-				ClrType = c.DataType.ToClrString(typeNamespace)
+				ClrType = c.ToClrString(typeNamespace)
 			}).ToList();
 		}
 

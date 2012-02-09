@@ -12,7 +12,8 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 	public sealed class StoredProcedureWriter : ElementWriterBase
 	{
 
-		public StoredProcedureWriter(ICodeWriter writer) : base(writer)
+		public StoredProcedureWriter(ICodeWriter writer)
+			: base(writer)
 		{
 		}
 
@@ -51,8 +52,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 				.Write("public partial class ")
 				.Write(procedure.TypeName.Name)
 				.WriteNewLine()
-				.WriteIndentedLine("{")
-				.WriteNewLine();
+				.WriteIndentedLine("{");
 
 			this.writer.Indent++;
 			{
@@ -79,7 +79,47 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 			this.writer.Indent++;
 			{
-				//TODO
+				for (int i = 0; i < procedure.Results.Count; i++)
+				{
+					this.writer
+						.WriteIndentation()
+						.Write("public IEnumerable<ResultRow")
+						.Write((i + 1).ToString())
+						.Write("> Rows")
+						.Write((i + 1).ToString())
+						.Write(" { get; set; }")
+						.WriteNewLine();
+				}
+
+				this.writer
+					.WriteNewLine();
+
+				for (int i = 0; i < procedure.Results.Count; i++)
+				{
+					this.writer
+						.WriteIndentation()
+						.Write("public partial class ResultRow")
+						.Write((i + 1).ToString())
+						.WriteNewLine()
+						.WriteIndentedLine("{");
+
+					this.writer.Indent++;
+					{
+						ResultModel result = procedure.Results[i];
+						foreach (ColumnModel column in result.Columns)
+						{
+							this.writer
+								.WriteIndentation()
+								.Write("public ")
+								.Write(column.ClrType)
+								.Write(" ")
+								.Write(column.PropertyName)
+								.Write(" { get; set; }")
+								.WriteNewLine();
+						}
+					}
+					WriteBlockEnd();
+				}
 			}
 			WriteBlockEnd();
 		}

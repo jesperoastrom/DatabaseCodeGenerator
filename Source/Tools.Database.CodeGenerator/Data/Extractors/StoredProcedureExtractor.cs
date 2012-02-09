@@ -90,16 +90,11 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 
 				using (var reader = command.ExecuteReader())
 				{
-					if (reader.Read())
+					list.Add(GetResult(reader));
+
+					while (reader.NextResult())
 					{
 						list.Add(GetResult(reader));
-						while (reader.NextResult())
-						{
-							if (reader.Read())
-							{
-								list.Add(GetResult(reader));
-							}
-						}
 					}
 				}
 			}
@@ -109,14 +104,19 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 
 		private ResultModel GetResult(SqlDataReader reader)
 		{
-			ResultModel model = new ResultModel();
+			DataTable table = reader.GetSchemaTable();
 
-			for (int i = 0; i < reader.FieldCount; i++)
+			ResultModel model = new ResultModel();
+			model.Columns = new List<ColumnModel>(table.Columns.Count);
+
+			foreach(DataRow row in table.Rows)
 			{
+				Type type = (Type)row["DataType"];
+				bool? allowDbNull = (bool?)row["AllowDBNull"];
 				model.Columns.Add(new ColumnModel()
 				{
-					DatabaseName = reader.GetName(i),
-					ClrType = reader.GetFieldType(i).ToClrString()
+					DatabaseName = row["ColumnName"] as string,
+					ClrType = type.ToClrString(allowDbNull == true)
 				});
 			}
 
@@ -133,7 +133,7 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 				Column = new ColumnModel()
 				{
 					DatabaseName = p.Name,
-					ClrType = p.DataType.ToClrString(configuration.TableTypeNamespaceFromStoredProcedure)
+					ClrType = p.ToClrString(configuration.TableTypeNamespaceFromStoredProcedure)
 				}
 			}).ToList();
 		}
