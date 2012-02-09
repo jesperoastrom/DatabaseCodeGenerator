@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Reflection;
 using Autofac;
 using Flip.Tools.Database.CodeGenerator.Configuration;
 using Flip.Tools.Database.CodeGenerator.Data;
@@ -51,14 +52,13 @@ namespace Flip.Tools.Database.CodeGenerator.Tests.IO
 		}
 
 		[TestMethod]
-		public void CanWriteOutput()
+		public void TestGenerateCode()
 		{
 			IContainer container = CreateContainer(testConnectionString);
 
 			var writer = container.Resolve<IDatabaseWriter>();
 			var storageProvider = container.Resolve<IStorageProvider>() as MemoryStorageProvider;
 			Assert.IsNotNull(storageProvider, "Memory storage provider is not used");
-
 
 			string outputFile = "MyOutput";
 			Assert.IsTrue(writer.WriteOutput(configurationPath, outputFile, "\t"));
@@ -67,6 +67,38 @@ namespace Flip.Tools.Database.CodeGenerator.Tests.IO
 
 			CompilerResults results = CompileCode(code);
 			Assert.AreEqual(0, results.Errors.Count, "Could not compile code:\n" + code);
+
+			Type spStaticType = results.CompiledAssembly.GetType("Database.Tests.StoredProcedures.Core");
+			Type udtStaticType = results.CompiledAssembly.GetType("Database.Tests.UserDefinedTableTypes.Core");
+
+			Assert.IsNotNull(spStaticType, "Unable to locate static type for stored procedures in Core schema");
+			Assert.IsNotNull(spStaticType, "Unable to locate static type for user defined table types in Core schema");
+
+			VerifyGetAllTestTableItems(spStaticType);
+		}
+
+		private void VerifyGetAllTestTableItems(Type spStaticType)
+		{
+			string spName = "GetAllTestTableItems";
+			Type spType = spStaticType.GetNestedType(spName);
+			Assert.IsNotNull(spType, "Unable to locate stored procedure " + spStaticType.FullName + "." + spName);
+
+			object sp = Activator.CreateInstance(spType);
+			ExecuteResultFromConnectionString(spType, sp);
+		}
+
+		private static object ExecuteResultFromConnectionString(Type spType, object sp)
+		{
+			MethodInfo method = spType.GetMethod("ExecuteResult", new Type[] { typeof(string) });
+			Assert.IsNotNull(method, "Could not locate ExecuteResult method");
+
+			return method.Invoke(sp, new object[] { testConnectionString });
+		}
+
+		private static void HasExecuteResultFromCommand(Type spType, object sp)
+		{
+			MethodInfo method = spType.GetMethod("ExecuteResult", new Type[] { typeof(SqlCommand) });
+			Assert.IsNotNull(method, "Could not locate ExecuteResult method");
 		}
 
 

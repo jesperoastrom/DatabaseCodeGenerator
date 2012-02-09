@@ -5,7 +5,7 @@
 	<Procedure SchemaName="Core" Name="GetAllTestTableItemsById" />
 	<Procedure SchemaName="Core" Name="GetAllTestTableItemsByIds" />
   </StoredProcedures>
-  <UserDefinedTableTypes Namespace="Database.Tests.UserDefinedTypes">
+  <UserDefinedTableTypes Namespace="Database.Tests.UserDefinedTableTypes">
 	<Type SchemaName="Core" Name="TestTableIds" />
   </UserDefinedTableTypes>
 </Database>

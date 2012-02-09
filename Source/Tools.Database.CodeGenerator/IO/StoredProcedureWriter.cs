@@ -59,14 +59,14 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			{
 				if (procedure.Results.Count > 0)
 				{
+					WriteExecuteMethodOverload("ExecuteResult", procedure);
 					WriteExecuteResultMethod(procedure);
 				}
 				else
 				{
+					WriteExecuteMethodOverload("ExecuteNonQuery", procedure);
 					WriteExecuteNonQueryMethod(procedure);
 				}
-
-				this.writer.WriteNewLine();
 
 				WriteParameterClass(procedure);
 
@@ -170,6 +170,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			if (procedure.Parameters.Count > 0)
 			{
 				this.writer
+					.WriteNewLine()
 					.WriteIndentedLine("public partial class Parameters")
 					.WriteIndentedLine("{");
 
@@ -247,6 +248,63 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 					.Write(" { get; private set; }")
 					.WriteNewLine();
 			}
+		}
+
+		private void WriteExecuteMethodOverload(string methodName, StoredProcedureModel procedure)
+		{
+			this.writer
+				.WriteIndentation()
+				.Write("public Result ")
+				.Write(methodName)
+				.Write("(string connectionString");
+
+			if (procedure.Parameters.Count > 0)
+			{
+				this.writer.Write(", Parameters parameters");
+			}
+
+			this.writer
+				.Write(")")
+				.WriteNewLine()
+				.WriteIndentedLine("{");
+
+			this.writer.Indent++;
+			{
+				this.writer
+					.WriteIndentedLine("using (SqlConnection connection = new SqlConnection(connectionString))")
+					.WriteIndentedLine("{");
+
+				this.writer.Indent++;
+				{
+					this.writer
+						.WriteIndentedLine("using (SqlCommand command = new SqlCommand())")
+						.WriteIndentedLine("{");
+
+					this.writer.Indent++;
+					{
+						this.writer
+							.WriteIndentedLine("connection.Open();")
+							.WriteIndentedLine("command.Connection = connection;")
+							.WriteIndentation()
+							.Write("return ")
+							.Write(methodName)
+							.Write("(command");
+
+						if (procedure.Parameters.Count > 0)
+						{
+							this.writer
+								.Write(", parameters");
+						}
+
+						this.writer
+							.Write(");")
+							.WriteNewLine();
+					}
+					WriteBlockEnd();
+				}
+				WriteBlockEnd();
+			}
+			WriteBlockEnd();
 		}
 
 		private void WriteExecuteResultMethod(StoredProcedureModel procedure)
