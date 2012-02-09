@@ -85,16 +85,33 @@ namespace Flip.Tools.Database.CodeGenerator.Tests.IO
 
 		private static CompilerResults CompileCode(string code)
 		{
-			var csc = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v4.0" } });
-			var parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.dll", "System.Core.dll", "System.Data.dll", "System.Xml.dll" }, "foo.exe", true);
+			code = AddMainMethod(code);
+
+			var codeProvider = new CSharpCodeProvider(new Dictionary<string, string>() 
+			{ 
+				{ "CompilerVersion", "v4.0" }
+			});
+			var parameters = new CompilerParameters(new[] 
+			{ 
+				"mscorlib.dll", 
+				"System.dll", 
+				"System.Core.dll", 
+				"System.Data.dll", 
+				"System.Xml.dll" 
+			}, "DatabaseTest.exe", true);
 			parameters.GenerateExecutable = true;
-			CompilerResults results = csc.CompileAssemblyFromSource(parameters, code);
+			CompilerResults results = codeProvider.CompileAssemblyFromSource(parameters, code);
 			foreach (CompilerError error in results.Errors)
 			{
 				Console.WriteLine(error.ErrorText);
 			}
 			Assert.AreEqual(0, results.Errors.Count, "Unable to compile code:\n" + code);
 			return results;
+		}
+
+		private static string AddMainMethod(string code)
+		{
+			return code + "\nnamespace MainNamespace { class Program { static void Main(string[] args) { } } }";
 		}
 
 		private static IContainer CreateContainer(string connectionString)
