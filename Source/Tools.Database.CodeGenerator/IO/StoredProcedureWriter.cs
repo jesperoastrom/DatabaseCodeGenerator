@@ -54,13 +54,23 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 				.WriteNewLine()
 				.WriteIndentedLine("{");
 
+
 			this.writer.Indent++;
 			{
-				WriteExecuteMethod(procedure);
+				if (procedure.Results.Count > 0)
+				{
+					WriteExecuteResultMethod(procedure);
+				}
+				else
+				{
+					WriteExecuteNonQueryMethod(procedure);
+				}
 
-				writer.WriteNewLine();
+				this.writer.WriteNewLine();
 
 				WriteParameterClass(procedure);
+
+				this.writer.WriteNewLine();
 				WriteResultClass(procedure);
 			}
 			WriteBlockEnd();
@@ -79,49 +89,80 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 			this.writer.Indent++;
 			{
-				for (int i = 0; i < procedure.Results.Count; i++)
+				if (procedure.Results.Count == 0)
 				{
 					this.writer
-						.WriteIndentation()
-						.Write("public IEnumerable<ResultRow")
-						.Write((i + 1).ToString())
-						.Write("> Rows")
-						.Write((i + 1).ToString())
-						.Write(" { get; set; }")
-						.WriteNewLine();
+						.WriteIndentedLine("public int AffectedRows { get; set; }");
 				}
 
-				this.writer
-					.WriteNewLine();
+				WriteResultOutputProperties(procedure);
 
-				for (int i = 0; i < procedure.Results.Count; i++)
+				if (procedure.Results.Count > 0)
 				{
-					this.writer
-						.WriteIndentation()
-						.Write("public partial class ResultRow")
-						.Write((i + 1).ToString())
-						.WriteNewLine()
-						.WriteIndentedLine("{");
-
-					this.writer.Indent++;
-					{
-						ResultModel result = procedure.Results[i];
-						foreach (ColumnModel column in result.Columns)
-						{
-							this.writer
-								.WriteIndentation()
-								.Write("public ")
-								.Write(column.ClrType)
-								.Write(" ")
-								.Write(column.PropertyName)
-								.Write(" { get; set; }")
-								.WriteNewLine();
-						}
-					}
-					WriteBlockEnd();
+					WriteResults(procedure);
 				}
 			}
 			WriteBlockEnd();
+		}
+
+		private void WriteResultOutputProperties(StoredProcedureModel procedure)
+		{
+			foreach (var parameter in procedure.OutputParameters)
+			{
+				this.writer
+					.WriteIndentation()
+					.Write("public ")
+					.Write(parameter.Column.ClrType)
+					.Write(" ")
+					.Write(parameter.Column.PropertyName)
+					.Write(" { get; set; }")
+					.WriteNewLine();
+			}
+		}
+
+		private void WriteResults(StoredProcedureModel procedure)
+		{
+			for (int i = 0; i < procedure.Results.Count; i++)
+			{
+				this.writer
+					.WriteIndentation()
+					.Write("public IEnumerable<ResultRow")
+					.Write((i + 1).ToString())
+					.Write("> Rows")
+					.Write((i + 1).ToString())
+					.Write(" { get; set; }")
+					.WriteNewLine();
+			}
+
+			this.writer
+				.WriteNewLine();
+
+			for (int i = 0; i < procedure.Results.Count; i++)
+			{
+				this.writer
+					.WriteIndentation()
+					.Write("public partial class ResultRow")
+					.Write((i + 1).ToString())
+					.WriteNewLine()
+					.WriteIndentedLine("{");
+
+				this.writer.Indent++;
+				{
+					StoredProcedureResultModel result = procedure.Results[i];
+					foreach (ColumnModel column in result.Columns)
+					{
+						this.writer
+							.WriteIndentation()
+							.Write("public ")
+							.Write(column.ClrType)
+							.Write(" ")
+							.Write(column.PropertyName)
+							.Write(" { get; set; }")
+							.WriteNewLine();
+					}
+				}
+				WriteBlockEnd();
+			}
 		}
 
 		private void WriteParameterClass(StoredProcedureModel procedure)
@@ -141,8 +182,6 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 					WriteParameterClassProperties(procedure);
 				}
 				WriteBlockEnd();
-
-				this.writer.WriteNewLine();
 			}
 		}
 
@@ -210,11 +249,11 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			}
 		}
 
-		private void WriteExecuteMethod(StoredProcedureModel procedure)
+		private void WriteExecuteResultMethod(StoredProcedureModel procedure)
 		{
 			this.writer
 				.WriteIndentation()
-				.Write("public Result ExecuteResult(SqlCommand command");
+				.Write("public Result ExecuteResult(SqlCommand c");
 
 			if (procedure.Parameters.Count > 0)
 			{
@@ -230,14 +269,154 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 			{
 				this.writer
 					.WriteIndentation()
-					.Write("command.CommandText = \"")
+					.Write("c.CommandText = \"")
 					.Write(procedure.DatabaseName.EscapedFullName)
 					.Write("\";")
 					.WriteNewLine();
 
 				this.writer
 					.WriteIndentation()
-					.Write("command.CommandType = CommandType.StoredProcedure;")
+					.Write("c.CommandType = CommandType.StoredProcedure;")
+					.WriteNewLine();
+
+				if (procedure.Parameters.Count > 0)
+				{
+					this.writer
+						.WriteIndentedLine("SqlParameter p = null;");
+
+					WriteExecuteAddParameters(procedure);
+				}
+
+				this.writer
+					.WriteIndentedLine("using(var reader = c.ExecuteReader())")
+					.WriteIndentedLine("{");
+
+				this.writer.Indent++;
+				{
+					this.writer
+						.WriteIndentedLine("var r = new Result();");
+
+					WriteExecuteMethodRead(procedure);
+
+					WriteExecuteOutputParameters(procedure);
+
+					this.writer
+						.WriteIndentedLine("return r;");
+				}
+				WriteBlockEnd();
+
+			}
+			this.WriteBlockEnd();
+		}
+
+		private void WriteExecuteMethodRead(StoredProcedureModel procedure)
+		{
+			for (int i = 0; i < procedure.Results.Count; i++)
+			{
+				WriteExecuteMethodReadRow(procedure, i);
+
+				if (i < procedure.Results.Count - 1)
+				{
+					this.writer
+						.WriteIndentedLine("reader.NextResult();");
+				}
+			}
+		}
+
+		private void WriteExecuteMethodReadRow(StoredProcedureModel procedure, int i)
+		{
+			var result = procedure.Results[i];
+			string iString = (i + 1).ToString();
+
+			this.writer
+				.WriteIndentation()
+				.Write("var list")
+				.Write(iString)
+				.Write("= new List<Result.ResultRow")
+				.Write(iString)
+				.Write(">();")
+				.WriteNewLine();
+
+			this.writer
+				.WriteIndentedLine("while (reader.Read())")
+				.WriteIndentedLine("{");
+
+			this.writer.Indent++;
+			{
+				this.writer
+					.WriteIndentation()
+					.Write("list")
+					.Write(iString)
+					.Write(".Add(new Result.ResultRow")
+					.Write(iString)
+					.Write("()")
+					.WriteNewLine()
+					.WriteIndentedLine("{");
+
+				this.writer.Indent++;
+				{
+					WriteExecuteMethodReadValues(result, iString);
+				}
+				this.writer.Indent--;
+				this.writer
+					.WriteIndentedLine("});");
+			}
+			WriteBlockEnd();
+
+			this.writer
+				.WriteIndentation()
+				.Write("r.Rows")
+				.Write(iString)
+				.Write(" = list")
+				.Write(iString)
+				.Write(";")
+				.WriteNewLine();
+		}
+
+		private void WriteExecuteMethodReadValues(StoredProcedureResultModel result, string iString)
+		{
+			foreach (var column in result.Columns)
+			{
+				this.writer
+					.WriteIndentation()
+					.Write(column.PropertyName)
+					.Write(" = (")
+					.Write(column.ClrType)
+					.Write(")reader[\"")
+					.Write(column.DatabaseName)
+					.Write("\"],")
+					.WriteNewLine();
+			}
+		}
+
+		private void WriteExecuteNonQueryMethod(StoredProcedureModel procedure)
+		{
+			this.writer
+				.WriteIndentation()
+				.Write("public Result ExecuteNonQuery(SqlCommand c");
+
+			if (procedure.Parameters.Count > 0)
+			{
+				this.writer.Write(", Parameters parameters");
+			}
+
+			this.writer
+				.Write(")")
+				.WriteNewLine()
+				.WriteIndentedLine("{");
+
+			this.writer.Indent++;
+			{
+				this.writer
+					.WriteIndentation()
+					.Write("c.CommandText = \"")
+					.Write(procedure.DatabaseName.EscapedFullName)
+					.Write("\";")
+					.WriteNewLine();
+
+				this.writer
+					.WriteIndentation()
+					.Write("c.CommandType = CommandType.StoredProcedure;")
 					.WriteNewLine();
 
 				if (procedure.Parameters.Count > 0)
@@ -247,41 +426,86 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 						.Write("SqlParameter p = null;")
 						.WriteNewLine();
 
-					WriteExecuteParameters(procedure);
+					WriteExecuteAddParameters(procedure);
 				}
 
 				this.writer
-					.WriteIndentation()
-					.Write("using(var reader = command.ExecuteReader())")
-					.WriteNewLine()
-					.WriteIndentedLine("{");
+					.WriteIndentedLine("var r = new Result();")
+					.WriteIndentedLine("r.AffectedRows = c.ExecuteNonQuery();");
 
-				this.writer.Indent++;
-				{
-					//TODO
-					this.writer
-						.WriteIndentation()
-						.Write("return null;")
-						.WriteNewLine();
-				}
-				WriteBlockEnd();
+				WriteExecuteOutputParameters(procedure);
 
+				this.writer
+					.WriteIndentedLine("return r;");
 			}
 			this.WriteBlockEnd();
 		}
 
-		private void WriteExecuteParameters(StoredProcedureModel procedure)
+		private void WriteExecuteOutputParameters(StoredProcedureModel procedure)
+		{
+			foreach (var parameter in procedure.OutputParameters)
+			{
+				this.writer
+					.WriteIndentation()
+					.Write("r.")
+					.Write(parameter.Column.PropertyName)
+					.Write(" = (")
+					.Write(parameter.Column.ClrType)
+					.Write(")c.Parameters[\"")
+					.Write(parameter.Column.DatabaseName)
+					.Write("\"].Value;");
+			}
+		}
+
+		private void WriteExecuteAddParameters(StoredProcedureModel procedure)
 		{
 			foreach (var parameter in procedure.Parameters)
 			{
 				this.writer
 					.WriteIndentation()
-					.Write("p = new SqlParameter(\"")
+					.Write("p = c.Parameters.AddWithValue(\"")
 					.Write(parameter.Column.DatabaseName)
-					.Write("\", SqlDbType.")
-					.Write(parameter.SqlDbType.ToString())
+					.Write("\", parameters.")
+					.Write(parameter.Column.PropertyName)
 					.Write(");")
 					.WriteNewLine();
+
+				this.writer
+					.WriteIndentation()
+					.Write("p.SqlDbType = SqlDbType.")
+					.Write(parameter.SqlDbType.ToString())
+					.Write(";")
+					.WriteNewLine();
+
+				if (parameter.Size != null)
+				{
+					this.writer
+						.WriteIndentation()
+						.Write("p.Size = ")
+						.Write(parameter.Size.ToString())
+						.Write(";")
+						.WriteNewLine();
+				}
+
+				if (parameter.Precision != null)
+				{
+					this.writer
+						.WriteIndentation()
+						.Write("p.Precision = ")
+						.Write(parameter.Precision.ToString())
+						.Write(";")
+						.WriteNewLine();
+				}
+
+				if (parameter.Scale != null)
+				{
+					this.writer
+						.WriteIndentation()
+						.Write("p.Scale = ")
+						.Write(parameter.Scale.ToString())
+						.Write(";")
+						.WriteNewLine();
+				}
 
 				if (parameter.IsOutput)
 				{
@@ -291,18 +515,8 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 						.WriteNewLine();
 				}
 
-				this.writer
-					.WriteIndentation()
-					.Write("p.Value = parameters.")
-					.Write(parameter.Column.PropertyName)
-					.Write(";")
-					.WriteNewLine();
-
-				this.writer
-					.WriteIndentation()
-					.Write("command.Parameters.Add(p);")
-					.WriteNewLine();
 			}
+
 		}
 
 	}

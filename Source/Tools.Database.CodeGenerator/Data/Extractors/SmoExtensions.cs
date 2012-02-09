@@ -111,7 +111,7 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 		{
 			return sqlDbTypeLookup[dataType.SqlDataType];
 		}
-		
+
 		public static string ToClrString(this Smo.StoredProcedureParameter parameter, string ns)
 		{
 			if (parameter.DataType.SqlDataType == Smo.SqlDataType.UserDefinedTableType)

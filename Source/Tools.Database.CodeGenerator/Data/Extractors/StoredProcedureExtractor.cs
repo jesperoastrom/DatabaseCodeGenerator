@@ -55,14 +55,15 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			var model = new StoredProcedureModel();
 			model.DatabaseName = new DatabaseName(procedure.Schema, procedure.Name);
 			model.TypeName = new TypeName(configuration.StoredProcedures.Namespace, procedure.Name);
-			model.Parameters = ToModel(configuration, procedure.Parameters);
+			model.Parameters = GetParameters(configuration, procedure);
+			model.OutputParameters = model.Parameters.Where(p => p.IsOutput).ToList();
 			model.Results = GetResults(connection, model);
 			return model;
 		}
 
-		private List<ResultModel> GetResults(SqlConnection connection, StoredProcedureModel model)
+		private List<StoredProcedureResultModel> GetResults(SqlConnection connection, StoredProcedureModel model)
 		{
-			List<ResultModel> list = new List<ResultModel>();
+			List<StoredProcedureResultModel> list = new List<StoredProcedureResultModel>();
 
 			using (SqlCommand command = new SqlCommand())
 			{
@@ -90,7 +91,12 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 
 				using (var reader = command.ExecuteReader())
 				{
-					list.Add(GetResult(reader));
+					//In case there is no result from the SP, the first result is null
+					StoredProcedureResultModel result = GetResult(reader);
+					if (result != null)
+					{
+						list.Add(result);
+					}
 
 					while (reader.NextResult())
 					{
@@ -102,14 +108,19 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			return list;
 		}
 
-		private ResultModel GetResult(SqlDataReader reader)
+		private StoredProcedureResultModel GetResult(SqlDataReader reader)
 		{
 			DataTable table = reader.GetSchemaTable();
 
-			ResultModel model = new ResultModel();
+			if (table == null)
+			{
+				return null;
+			}
+
+			StoredProcedureResultModel model = new StoredProcedureResultModel();
 			model.Columns = new List<ColumnModel>(table.Columns.Count);
 
-			foreach(DataRow row in table.Rows)
+			foreach (DataRow row in table.Rows)
 			{
 				Type type = (Type)row["DataType"];
 				bool? allowDbNull = (bool?)row["AllowDBNull"];
@@ -123,10 +134,22 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			return model;
 		}
 
-		private List<ParameterModel> ToModel(Configuration.DatabaseConfiguration configuration, Smo.StoredProcedureParameterCollection parameters)
+		private List<ParameterModel> GetParameters(Configuration.DatabaseConfiguration configuration, Smo.StoredProcedure procedure)
 		{
-			return parameters.Cast<Smo.StoredProcedureParameter>().Select(p => new ParameterModel()
+			return
+				procedure.Parameters
+				.Cast<Smo.StoredProcedureParameter>()
+				.Select(p => ToModel(configuration, p))
+				.ToList();
+		}
+
+		private ParameterModel ToModel(Configuration.DatabaseConfiguration configuration, Smo.StoredProcedureParameter p)
+		{
+			return new ParameterModel()
 			{
+				Scale = GetNumericScale(p.DataType),
+				Precision = GetNumericPrecision(p.DataType),
+				Size = GetSize(p.DataType),
 				IsOutput = p.IsOutputParameter,
 				SqlDataType = p.DataType.SqlDataType,
 				SqlDbType = p.DataType.ToSqlDbDataType(),
@@ -135,7 +158,46 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 					DatabaseName = p.Name,
 					ClrType = p.ToClrString(configuration.TableTypeNamespaceFromStoredProcedure)
 				}
-			}).ToList();
+			};
+		}
+
+		private int? GetNumericScale(Smo.DataType dataType)
+		{
+			return
+				dataType.SqlDataType == Smo.SqlDataType.Decimal ||
+				dataType.SqlDataType == Smo.SqlDataType.Float ||
+				dataType.SqlDataType == Smo.SqlDataType.Numeric ||
+				dataType.SqlDataType == Smo.SqlDataType.Real ?
+				new int?(dataType.NumericScale) :
+				null;
+		}
+
+		private int? GetNumericPrecision(Smo.DataType dataType)
+		{
+			return
+				dataType.SqlDataType == Smo.SqlDataType.Decimal ||
+				dataType.SqlDataType == Smo.SqlDataType.Float ||
+				dataType.SqlDataType == Smo.SqlDataType.Numeric ||
+				dataType.SqlDataType == Smo.SqlDataType.Real ?
+				new int?(dataType.NumericPrecision) :
+				null;
+		}
+
+		private int? GetSize(Smo.DataType dataType)
+		{
+			return
+				dataType.SqlDataType == Smo.SqlDataType.Char ||
+				dataType.SqlDataType == Smo.SqlDataType.NChar ||
+				dataType.SqlDataType == Smo.SqlDataType.NText ||
+				dataType.SqlDataType == Smo.SqlDataType.NVarChar ||
+				dataType.SqlDataType == Smo.SqlDataType.NVarCharMax ||
+				dataType.SqlDataType == Smo.SqlDataType.Text ||
+				dataType.SqlDataType == Smo.SqlDataType.VarBinary ||
+				dataType.SqlDataType == Smo.SqlDataType.VarChar ||
+				dataType.SqlDataType == Smo.SqlDataType.VarBinaryMax ||
+				dataType.SqlDataType == Smo.SqlDataType.VarCharMax ?
+				new int?(dataType.MaximumLength) :
+				null;
 		}
 
 	}

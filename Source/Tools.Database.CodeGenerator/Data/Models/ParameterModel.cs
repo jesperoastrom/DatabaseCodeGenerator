@@ -8,7 +8,9 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Models
 
 	public sealed class ParameterModel
 	{
-
+		public int? Size { get; set; }
+		public int? Scale { get; set; }
+		public int? Precision { get; set; }
 		public bool IsOutput { get; set; }
 		public Smo.SqlDataType SqlDataType { get; set; }
 		public SqlDbType SqlDbType { get; set; }

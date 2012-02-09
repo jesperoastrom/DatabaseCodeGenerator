@@ -11,7 +11,8 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Models
 		public DatabaseName DatabaseName { get; set; }
 		public TypeName TypeName { get; set; }
 		public List<ParameterModel> Parameters { get; set; }
-		public List<ResultModel> Results { get; set; }
+		public List<ParameterModel> OutputParameters { get; set; }
+		public List<StoredProcedureResultModel> Results { get; set; }
 
 
 

@@ -70,7 +70,7 @@
     <Compile Include="Data\Models\ColumnModel.cs" />
     <Compile Include="Data\Models\DatabaseModel.cs" />
     <Compile Include="Data\Models\ParameterModel.cs" />
-    <Compile Include="Data\Models\ResultModel.cs" />
+    <Compile Include="Data\Models\StoredProcedureResultModel.cs" />
     <Compile Include="Data\Models\SchemaCollection.cs" />
     <Compile Include="Data\Models\SchemaElementCollection.cs" />
     <Compile Include="Data\Models\StoredProcedureModel.cs" />

@@ -5,7 +5,7 @@
 namespace Flip.Tools.Database.CodeGenerator.Data.Models
 {
 
-	public sealed class ResultModel
+	public sealed class StoredProcedureResultModel
 	{
 
 		public List<ColumnModel> Columns { get; set; }

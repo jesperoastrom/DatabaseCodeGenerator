@@ -150,8 +150,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 						.Write(column.PropertyName)
 						.Write(";")
 						.WriteNewLine()
-						.WriteIndentedLine("table.Rows.Add(dataRow);")
-						.WriteNewLine();
+						.WriteIndentedLine("table.Rows.Add(dataRow);");
 				}
 			}
 			WriteBlockEnd();
