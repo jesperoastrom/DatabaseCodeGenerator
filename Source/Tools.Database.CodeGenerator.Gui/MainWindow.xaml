@@ -1,0 +1,80 @@
+﻿<Window x:Class="Tools.Database.CodeGenerator.Gui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:local="clr-namespace:Tools.Database.CodeGenerator.Gui.Controls"
+        Title="Database Code Generator" Height="300" Width="550" WindowStartupLocation="CenterScreen" MinWidth="400" MinHeight="300">
+	<Window.Resources>
+		
+		<SolidColorBrush x:Key="brushWatermarkBackground" Color="White" />
+		<SolidColorBrush x:Key="brushWatermarkForeground" Color="LightSteelBlue" />
+		<SolidColorBrush x:Key="brushWatermarkBorder" Color="Indigo" />
+
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+		<local:TextInputToVisibilityConverter x:Key="TextInputToVisibilityConverter" />
+
+		<Style x:Key="EntryFieldStyle" TargetType="Grid" >
+			<Setter Property="HorizontalAlignment" Value="Stretch" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="Margin" Value="4,0" />
+		</Style>
+				
+	</Window.Resources>
+  <Grid>
+  	
+	<Grid.RowDefinitions>
+		<RowDefinition Height="30" />
+		<RowDefinition Height="30" />
+		<RowDefinition Height="30" />
+	</Grid.RowDefinitions>
+
+	<Grid.ColumnDefinitions>
+		<ColumnDefinition />
+		<ColumnDefinition Width="80" />
+	</Grid.ColumnDefinitions>	
+		<Grid Grid.Row="0" Grid.Column="0" Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}" >
+			<TextBlock Margin="5,2" Text="Pick Configfuration File" Foreground="{StaticResource brushWatermarkForeground}" >
+				<TextBlock.Visibility>
+					<MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
+						<Binding ElementName="tbConfiguration" Path="Text.IsEmpty" />
+						<Binding ElementName="tbConfiguration" Path="IsFocused" />
+					</MultiBinding>
+				</TextBlock.Visibility>
+			</TextBlock>
+			<Grid>
+				<TextBox x:Name="tbConfiguration" Background="Transparent" BorderBrush="{StaticResource brushWatermarkBorder}" />
+			</Grid>
+		</Grid>
+		<Grid Grid.Row="0" Grid.Column="1">
+			<Button Margin="5,2" Name="btnConfiguration" Content="File..." Height="22" Click="OnFileClick" />
+		</Grid>
+		<Grid Grid.Row="1" Grid.Column="0" Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}" >
+			<TextBlock Margin="5,2" Text="Pick Output Folder" Foreground="{StaticResource brushWatermarkForeground}" >
+				<TextBlock.Visibility>
+					<MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
+						<Binding ElementName="tbFolder" Path="Text.IsEmpty" />
+						<Binding ElementName="tbFolder" Path="IsFocused" />
+					</MultiBinding>
+				</TextBlock.Visibility>
+			</TextBlock>
+			<Grid>
+				<TextBox x:Name="tbFolder" Background="Transparent" BorderBrush="{StaticResource brushWatermarkBorder}" />
+			</Grid>
+		</Grid>
+		<Grid Grid.Row="1" Grid.Column="1">
+			<Button Margin="5,2" Name="btnFolder" Content="Folder..." Height="22" Click="OnFolderClick" />
+		</Grid>
+		<Grid Grid.Row="2" Grid.Column="0" Background="{StaticResource brushWatermarkBackground}" Style="{StaticResource EntryFieldStyle}" >
+			<TextBlock Margin="5,2" Text="Enter Output Filename" Foreground="{StaticResource brushWatermarkForeground}" >
+				<TextBlock.Visibility>
+					<MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
+						<Binding ElementName="tbFilename" Path="Text.IsEmpty" />
+						<Binding ElementName="tbFilename" Path="IsFocused" />
+					</MultiBinding>
+				</TextBlock.Visibility>
+			</TextBlock>
+			<Grid>
+				<TextBox x:Name="tbFilename" Background="Transparent" BorderBrush="{StaticResource brushWatermarkBorder}" />
+			</Grid>
+		</Grid>
+	</Grid>
+</Window>

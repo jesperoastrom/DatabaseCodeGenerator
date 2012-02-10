@@ -86,6 +86,12 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 				isValid = false;
 			}
 
+			if (string.IsNullOrWhiteSpace(arguments.File))
+			{
+				System.Console.WriteLine("Missing command line argument 'file'. Type --help for help text.");
+				isValid = false;
+			} 
+			
 			if (string.IsNullOrWhiteSpace(arguments.Output))
 			{
 				System.Console.WriteLine("Missing command line argument 'output'. Type --help for help text.");
@@ -95,12 +101,6 @@ namespace Flip.Tools.Database.CodeGenerator.Console
 			if (string.IsNullOrWhiteSpace(arguments.ConnectionString))
 			{
 				System.Console.WriteLine("Missing command line argument 'connectionString'. Type --help for help text.");
-				isValid = false;
-			}
-
-			if (string.IsNullOrWhiteSpace(arguments.Output))
-			{
-				System.Console.WriteLine("Missing command line argument 'output'. Type --help for help text.");
 				isValid = false;
 			}
 

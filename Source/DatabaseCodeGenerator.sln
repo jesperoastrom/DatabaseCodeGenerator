@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3BE55C66
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools.Database.CodeGenerator.Tests", "Tools.Database.CodeGenerator.Tests\Tools.Database.CodeGenerator.Tests.csproj", "{E7727023-23C5-4252-B7FB-F789A2980FF9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools.Database.CodeGenerator.Gui", "Tools.Database.CodeGenerator.Gui\Tools.Database.CodeGenerator.Gui.csproj", "{9DE0EA02-8D77-4F23-B758-E03C953B2A12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,16 @@ Global
 		{E7727023-23C5-4252-B7FB-F789A2980FF9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E7727023-23C5-4252-B7FB-F789A2980FF9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E7727023-23C5-4252-B7FB-F789A2980FF9}.Release|x86.ActiveCfg = Release|Any CPU
+		{9DE0EA02-8D77-4F23-B758-E03C953B2A12}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{9DE0EA02-8D77-4F23-B758-E03C953B2A12}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{9DE0EA02-8D77-4F23-B758-E03C953B2A12}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{9DE0EA02-8D77-4F23-B758-E03C953B2A12}.Debug|x86.ActiveCfg = Debug|x86
+		{9DE0EA02-8D77-4F23-B758-E03C953B2A12}.Debug|x86.Build.0 = Debug|x86
+		{9DE0EA02-8D77-4F23-B758-E03C953B2A12}.Release|Any CPU.ActiveCfg = Release|x86
+		{9DE0EA02-8D77-4F23-B758-E03C953B2A12}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{9DE0EA02-8D77-4F23-B758-E03C953B2A12}.Release|Mixed Platforms.Build.0 = Release|x86
+		{9DE0EA02-8D77-4F23-B758-E03C953B2A12}.Release|x86.ActiveCfg = Release|x86
+		{9DE0EA02-8D77-4F23-B758-E03C953B2A12}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
