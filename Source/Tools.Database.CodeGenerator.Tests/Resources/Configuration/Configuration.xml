@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database>
   <StoredProcedures Namespace="Database.Tests.StoredProcedures">
-	<Procedure SchemaName="Core" Name="GetAllTestTableItems" />
-	<Procedure SchemaName="Core" Name="GetAllTestTableItemsById" />
-	<Procedure SchemaName="Core" Name="GetAllTestTableItemsByIds" />
+	<Procedure SchemaName="Core" Name="GetAllLargeTableItems" />
+	<Procedure SchemaName="Core" Name="GetAllLargeTableItemsById" />
+	<Procedure SchemaName="Core" Name="GetAllLargeTableItemsByIds" />
+	<Procedure SchemaName="Core" Name="SaveSmallTableRows" />
   </StoredProcedures>
   <UserDefinedTableTypes Namespace="Database.Tests.UserDefinedTableTypes">
-	<Type SchemaName="Core" Name="TestTableIds" />
+	<Type SchemaName="Core" Name="LargeTableIds" />
+	<Type SchemaName="Core" Name="SmallTableRows" />
   </UserDefinedTableTypes>
 </Database>

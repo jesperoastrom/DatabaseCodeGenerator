@@ -12,6 +12,7 @@ using Microsoft.CSharp;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Smo = Microsoft.SqlServer.Management.Smo;
+using Flip.Tools.Database.CodeGenerator.Tests.Logging;
 
 
 
@@ -40,7 +41,7 @@ namespace Flip.Tools.Database.CodeGenerator.Tests.IO
 			using (SqlConnection connection = new SqlConnection(testConnectionString))
 			{
 				connection.Open();
-				using (SqlCommand command = new SqlCommand("select count(*) from Core.TestTable", connection))
+				using (SqlCommand command = new SqlCommand("select count(*) from Core.LargeTable", connection))
 				{
 					command.CommandType = System.Data.CommandType.Text;
 					using (SqlDataReader reader = command.ExecuteReader())
@@ -68,18 +69,16 @@ namespace Flip.Tools.Database.CodeGenerator.Tests.IO
 			CompilerResults results = CompileCode(code);
 			Assert.AreEqual(0, results.Errors.Count, "Could not compile code:\n" + code);
 
-			Type spStaticType = results.CompiledAssembly.GetType("Database.Tests.StoredProcedures.Core");
-			Type udtStaticType = results.CompiledAssembly.GetType("Database.Tests.UserDefinedTableTypes.Core");
+			Type proceduresWrapperType = results.CompiledAssembly.GetType("Database.Tests.StoredProcedures.Core");
+			Type tableTypesWrapperType = results.CompiledAssembly.GetType("Database.Tests.UserDefinedTableTypes.Core");
 
-			Assert.IsNotNull(spStaticType, "Unable to locate static type for stored procedures in Core schema");
-			Assert.IsNotNull(spStaticType, "Unable to locate static type for user defined table types in Core schema");
-
-			VerifyGetAllTestTableItems(spStaticType);
+			Assert.IsNotNull(proceduresWrapperType, "Unable to locate static type for stored procedures in Core schema");
+			Assert.IsNotNull(tableTypesWrapperType, "Unable to locate static type for user defined table types in Core schema");
 		}
 
-		private void VerifyGetAllTestTableItems(Type spStaticType)
+		private void VerifyGetAllLargeTableItems(Type spStaticType)
 		{
-			string spName = "GetAllTestTableItems";
+			string spName = "GetAllLargeTableItems";
 			Type spType = spStaticType.GetNestedType(spName);
 			Assert.IsNotNull(spType, "Unable to locate stored procedure " + spStaticType.FullName + "." + spName);
 
@@ -151,6 +150,7 @@ namespace Flip.Tools.Database.CodeGenerator.Tests.IO
 			var builder = new ContainerBuilder();
 
 			builder.Register(c => new ConnectionStringProvider(connectionString)).As<IConnectionStringProvider>().SingleInstance();
+			builder.Register(c => new DebugLogger()).As<ILogger>().SingleInstance();
 
 			builder.RegisterCodeGeneratorTypes();
 

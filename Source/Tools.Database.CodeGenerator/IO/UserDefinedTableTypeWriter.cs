@@ -53,7 +53,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 			this.writer.Indent++;
 			{
-				WriteConstructor();
+				WriteConstructor(type);
 				WriteAddRowMethod();
 				WriteGetDataTableMethod(type);
 				WritePrivateMembers();
@@ -68,11 +68,13 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 		}
 
-		private void WriteConstructor()
+		private void WriteConstructor(UserDefinedTableTypeModel type)
 		{
 			this.writer
 				.WriteIndentation()
-				.Write("public TestTableIds()")
+				.Write("public ")
+				.Write(type.TypeName.Name)
+				.Write("()")
 				.WriteNewLine()
 				.WriteIndentedLine("{");
 

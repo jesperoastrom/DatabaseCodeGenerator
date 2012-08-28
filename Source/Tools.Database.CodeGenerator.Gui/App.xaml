@@ -3,5 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-    </Application.Resources>
+
+		<Style TargetType="{x:Type TextBox}">
+			<Setter Property="Validation.ErrorTemplate">
+				<Setter.Value>
+					<ControlTemplate>
+						<DockPanel LastChildFill="True" Background="LightSalmon">
+							<Border BorderBrush="Red" BorderThickness="1">
+								<AdornedElementPlaceholder />
+							</Border>
+						</DockPanel>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		
+	</Application.Resources>
 </Application>
