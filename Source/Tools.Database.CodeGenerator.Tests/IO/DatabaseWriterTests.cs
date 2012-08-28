@@ -166,6 +166,7 @@ namespace Flip.Tools.Database.CodeGenerator.Tests.IO
 		private const string createScriptPath = "Flip.Tools.Database.CodeGenerator.Tests.Resources.Sql.Create.Database.sql";
 		private const string deleteScriptPath = "Flip.Tools.Database.CodeGenerator.Tests.Resources.Sql.Delete.Database.sql";
 		private const string configurationPath = "Flip.Tools.Database.CodeGenerator.Tests.Resources.Configuration.Configuration.xml";
+
 	}
 
 }
