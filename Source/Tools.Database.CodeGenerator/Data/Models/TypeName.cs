@@ -25,12 +25,10 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Models
 
 
 
-
 		public override string ToString()
 		{
 			return this.FullyQualifiedTypeName;
 		}
-
 
 
 
@@ -62,11 +60,6 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Models
 		{
 			return ((IComparable<TypeName>)this).CompareTo(obj as TypeName);
 		}
-
-
-
-		private string assemblyName;
-		private string name;
 
 	}
 
