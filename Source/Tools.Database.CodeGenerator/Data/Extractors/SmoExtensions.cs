@@ -97,7 +97,7 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			sqlDbTypeLookup.Add(Smo.SqlDataType.TinyInt, SqlDbType.TinyInt);
 			sqlDbTypeLookup.Add(Smo.SqlDataType.UniqueIdentifier, SqlDbType.UniqueIdentifier);
 			sqlDbTypeLookup.Add(Smo.SqlDataType.UserDefinedDataType, SqlDbType.Udt);
-			sqlDbTypeLookup.Add(Smo.SqlDataType.UserDefinedTableType, SqlDbType.Udt);
+			sqlDbTypeLookup.Add(Smo.SqlDataType.UserDefinedTableType, SqlDbType.Structured);
 			sqlDbTypeLookup.Add(Smo.SqlDataType.UserDefinedType, SqlDbType.Udt);
 			sqlDbTypeLookup.Add(Smo.SqlDataType.VarBinary, SqlDbType.VarBinary);
 			sqlDbTypeLookup.Add(Smo.SqlDataType.VarBinaryMax, SqlDbType.VarBinary);
@@ -112,50 +112,68 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 			return sqlDbTypeLookup[dataType.SqlDataType];
 		}
 
-		public static string ToClrString(this Smo.StoredProcedureParameter parameter, string ns)
+		public static ClrType ToClrType(this Smo.StoredProcedureParameter parameter, string ns)
 		{
 			if (parameter.DataType.SqlDataType == Smo.SqlDataType.UserDefinedTableType)
 			{
-				return TypeName.GetFullyQualifiedTypeName(ns, parameter.DataType.Schema, parameter.DataType.Name);
+				string typeName = TypeName.GetFullyQualifiedTypeName(ns, parameter.DataType.Schema, parameter.DataType.Name);
+				return new ClrType()
+				{
+					IsUserDefined = true,
+					InnerTypeName = typeName,
+					TypeName = typeName
+				};
 			}
 			else
 			{
-				return ToClrString(GetType(parameter.DataType.SqlDataType), true);
+				return ToClrType(GetType(parameter.DataType.SqlDataType), true);
 			}
 		}
 
-		public static string ToClrString(this Smo.Column column, string ns)
+		public static ClrType ToClrType(this Smo.Column column, string ns)
 		{
 			if (column.DataType.SqlDataType == Smo.SqlDataType.UserDefinedTableType)
 			{
-				return TypeName.GetFullyQualifiedTypeName(ns, column.DataType.Schema, column.DataType.Name);
+				string typeName = TypeName.GetFullyQualifiedTypeName(ns, column.DataType.Schema, column.DataType.Name);
+				return new ClrType()
+				{
+					IsUserDefined = true,
+					InnerTypeName = typeName,
+					TypeName = typeName
+				};
 			}
 			else
 			{
-				return GetType(column.DataType.SqlDataType).ToClrString(column.Nullable);
+				return GetType(column.DataType.SqlDataType).ToClrType(column.Nullable);
 			}
 		}
 
-		public static string ToClrString(this Type type, bool nullable)
+		public static ClrType ToClrType(this Type type, bool nullable)
 		{
-			string s = null;
+			var clrType = new ClrType();
+
 			if (prettyStringLookup.ContainsKey(type))
 			{
-				s = prettyStringLookup[type];
+				clrType.TypeName = prettyStringLookup[type];
 			}
 			else if (type.Namespace == "System")
 			{
-				s = type.Name;
+				clrType.TypeName = type.Name;
 			}
 			else
 			{
-				s = type.FullName;
+				clrType.TypeName = type.FullName;
 			}
+
+			clrType.InnerTypeName = clrType.TypeName;
+
 			if (type.IsValueType && nullable)
 			{
-				s = s + "?";
+				clrType.TypeName = clrType.TypeName + "?";
+				clrType.IsNullable = true;
 			}
-			return s;
+
+			return clrType;
 		}
 
 		private static Type GetType(Smo.SqlDataType sqlDataType)

@@ -19,17 +19,27 @@ namespace Flip.Tools.Database.CodeGenerator.Tests.IO
 
 
 
-		public bool OutputDirectoryExists(string directory)
+		public string Combine(string[] paths)
+		{
+			return Path.Combine(paths);
+		}
+
+		public string GetDirectoryName(string path)
+		{
+			return Path.GetDirectoryName(path);
+		}
+
+		public bool DirectoryExists(string directory)
 		{
 			return true;
 		}
 
-		public bool ConfigurationFileExists(string fileName)
+		public bool FileExists(string fileName)
 		{
 			return true;
 		}
 
-		public ICodeWriter CreateOrOpenOutputWriter(string fileName, string indentation)
+		public ICodeWriter CreateOrOpenCodeWriter(string fileName, string indentation)
 		{
 			if (this.codeWriters.ContainsKey(fileName))
 			{
@@ -40,9 +50,21 @@ namespace Flip.Tools.Database.CodeGenerator.Tests.IO
 			return codeWriter;
 		}
 
-		public Stream OpenConfigurationFile(string fileName)
+		public Stream OpenStream(string fileName)
 		{
 			return EmbeddedResourceHelper.GetStreamFromEmbeddedResource(fileName);
+		}
+
+		public Stream CreateOrOpenStream(string fileName)
+		{
+			try
+			{
+				return EmbeddedResourceHelper.GetStreamFromEmbeddedResource(fileName);
+			}
+			catch (FileNotFoundException)
+			{
+				throw new NotImplementedException();
+			}
 		}
 
 		public string GetOutputString(string fileName)

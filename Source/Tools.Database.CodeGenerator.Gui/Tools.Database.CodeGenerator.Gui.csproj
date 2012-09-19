@@ -64,6 +64,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Configuration\GuiConfiguration.cs" />
+    <Compile Include="Configuration\GuiConfigurationProvider.cs" />
     <Compile Include="IO\TextBoxTextWriter.cs" />
     <Compile Include="Rules\RequiredRule.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

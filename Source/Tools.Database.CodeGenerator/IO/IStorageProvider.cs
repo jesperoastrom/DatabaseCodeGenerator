@@ -8,10 +8,13 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 	public interface IStorageProvider
 	{
 
-		bool OutputDirectoryExists(string directory);
-		bool ConfigurationFileExists(string fileName);
-		ICodeWriter CreateOrOpenOutputWriter(string fileName, string indentation);
-		Stream OpenConfigurationFile(string fileName);
+		string Combine(params string[] paths);
+		string GetDirectoryName(string path);
+		bool DirectoryExists(string directory);
+		bool FileExists(string fileName);
+		ICodeWriter CreateOrOpenCodeWriter(string fileName, string indentation);
+		Stream OpenStream(string fileName);
+		Stream CreateOrOpenStream(string fileName);
 
 	}
 

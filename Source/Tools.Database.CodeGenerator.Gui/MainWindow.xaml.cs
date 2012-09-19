@@ -7,6 +7,7 @@ using Autofac;
 using Flip.Tools.Database.CodeGenerator.Configuration;
 using Flip.Tools.Database.CodeGenerator.Data;
 using Flip.Tools.Database.CodeGenerator.IO;
+using Tools.Database.CodeGenerator.Gui.Configuration;
 using Tools.Database.CodeGenerator.Gui.IO;
 using Tools.Database.CodeGenerator.Gui.ViewModels;
 using Forms = System.Windows.Forms;
@@ -24,9 +25,19 @@ namespace Tools.Database.CodeGenerator.Gui
 			InitializeComponent();
 			this.model = new MainViewModel();
 			this.DataContext = this.model;
+
+			this.guiConfigurationProvider = new GuiConfigurationProvider(new FileStorageProvider());
+			this.guiConfiguration = this.guiConfigurationProvider.LoadConfiguration();
+			this.guiConfiguration.PropertyChanged += ConfigurationPropertyChanged;
+			this.Loaded += OnLoaded;
 		}
 
 
+
+		private void OnLoaded(object sender, RoutedEventArgs e)
+		{
+			UpdateControlsWithValuesFromConfiguration();
+		}
 
 		private void OnFileClick(object sender, RoutedEventArgs e)
 		{
@@ -67,11 +78,11 @@ namespace Tools.Database.CodeGenerator.Gui
 				IContainer container = CreateContainer(tbConnectionString.Text);
 				var writer = container.Resolve<IDatabaseWriter>();
 
-				string filePath = Path.Combine(tbFolder.Text, tbFilename.Text);
+				string outputFilePath = Path.Combine(tbFolder.Text, tbFilename.Text);
 
 				try
 				{
-					if (!writer.WriteOutput(tbConfiguration.Text, filePath, "\t"))
+					if (!writer.WriteOutput(tbConfiguration.Text, outputFilePath, "\t"))
 					{
 						MessageBox.Show("Output could not be created.");
 					}
@@ -82,6 +93,7 @@ namespace Tools.Database.CodeGenerator.Gui
 					return;
 				}
 				MessageBox.Show("The output was created!");
+				UpdateConfigurationWithValuesFromControls();
 			}
 		}
 
@@ -102,8 +114,37 @@ namespace Tools.Database.CodeGenerator.Gui
 			return builder.Build();
 		}
 
+		private void UpdateControlsWithValuesFromConfiguration()
+		{
+			tbConfiguration.Text = this.guiConfiguration.ConfigurationFilePath;
+			tbConnectionString.Text = this.guiConfiguration.ConnectionString;
+			tbFilename.Text = this.guiConfiguration.OutputFilename;
+			tbFolder.Text = this.guiConfiguration.OutputFolder;
+		}
+
+		private void UpdateConfigurationWithValuesFromControls()
+		{
+			this.guiConfiguration.ConfigurationFilePath = tbConfiguration.Text;
+			this.guiConfiguration.ConnectionString = tbConnectionString.Text;
+			this.guiConfiguration.OutputFilename = tbFilename.Text;
+			this.guiConfiguration.OutputFolder = tbFolder.Text;
+
+			if (this.guiConfigurationHasChanged)
+			{
+				this.guiConfigurationProvider.SaveConfiguration(this.guiConfiguration);
+			}
+		}
+
+		private void ConfigurationPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			this.guiConfigurationHasChanged = true;
+		}
 
 
+
+		private bool guiConfigurationHasChanged;
+		private readonly GuiConfiguration guiConfiguration;
+		private readonly GuiConfigurationProvider guiConfigurationProvider;
 		private readonly MainViewModel model;
 
 	}

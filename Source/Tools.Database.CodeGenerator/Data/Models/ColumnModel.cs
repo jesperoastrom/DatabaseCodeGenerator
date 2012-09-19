@@ -3,7 +3,6 @@
 
 	public sealed class ColumnModel
 	{
-
 		public string DatabaseName
 		{
 			get
@@ -19,7 +18,7 @@
 		}
 		public string ParameterName { get; private set; }
 		public string PropertyName { get; private set; }
-		public string ClrType { get; set; }
+		public ClrType ClrType { get; set; }
 
 
 

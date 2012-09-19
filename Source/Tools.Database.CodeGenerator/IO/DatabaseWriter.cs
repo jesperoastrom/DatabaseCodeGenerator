@@ -15,12 +15,12 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 		public DatabaseWriter(
 			IConfigurationReader configurationReader,
 			IDatabaseExtractor databaseExtractor,
-			IStorageProvider outputFacade,
+			IStorageProvider storageProvider,
 			ITextWriter traceWriter)
 		{
 			this.configurationReader = configurationReader;
 			this.databaseExtractor = databaseExtractor;
-			this.outputFacade = outputFacade;
+			this.storageProvider = storageProvider;
 			this.traceOutput = traceWriter;
 		}
 
@@ -32,9 +32,9 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 			if (this.configurationReader.TryRead(configurationFile, out configuration))
 			{
-				string directory = Path.GetDirectoryName(outputFile);
+				string directory = this.storageProvider.GetDirectoryName(outputFile);
 
-				if (!outputFacade.OutputDirectoryExists(directory))
+				if (!storageProvider.DirectoryExists(directory))
 				{
 					throw new ArgumentException("Directory '" + directory + "' does not exist");
 				}
@@ -70,7 +70,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 		private void WriteOutput(DatabaseConfiguration configuration, string outputFile, string indentation, DatabaseModel databaseModel)
 		{
-			using (ICodeWriter writer = this.outputFacade.CreateOrOpenOutputWriter(outputFile, indentation))
+			using (ICodeWriter writer = this.storageProvider.CreateOrOpenCodeWriter(outputFile, indentation))
 			{
 				if (databaseModel.StoredProcedures != null || databaseModel.UserDefinedTableTypes != null)
 				{
@@ -103,7 +103,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 		private readonly IConfigurationReader configurationReader;
 		private readonly IDatabaseExtractor databaseExtractor;
-		private readonly IStorageProvider outputFacade;
+		private readonly IStorageProvider storageProvider;
 		private readonly ITextWriter traceOutput;
 
 	}

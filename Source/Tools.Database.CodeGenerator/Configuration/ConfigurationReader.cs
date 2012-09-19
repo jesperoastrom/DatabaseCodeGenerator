@@ -20,7 +20,7 @@ namespace Flip.Tools.Database.CodeGenerator.Configuration
 
 		public bool TryRead(string file, out DatabaseConfiguration configuration)
 		{
-			if (!this.storageProvider.ConfigurationFileExists(file))
+			if (!this.storageProvider.FileExists(file))
 			{
 				this.errorOutput.WriteLine("Unable to find file '" + file + "'");
 				configuration = null;
@@ -31,7 +31,7 @@ namespace Flip.Tools.Database.CodeGenerator.Configuration
 
 			try
 			{
-				using (var stream = this.storageProvider.OpenConfigurationFile(file))
+				using (var stream = this.storageProvider.OpenStream(file))
 				{
 					configuration = (DatabaseConfiguration)serializer.Deserialize(stream);
 					configuration.TableTypeNamespaceFromStoredProcedure =

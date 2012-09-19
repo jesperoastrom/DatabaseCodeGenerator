@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Flip.Tools.Database.CodeGenerator.Data.Models;
@@ -35,13 +36,14 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 						var element = elements[i];
 						WriteProcedure(element, i == lastIndex);
 					}
+
+					WriteGetValueOrDefaultMethod();
 				}
 				WriteBlockEnd();
 			}
 
 			WriteBlockEnd();
 		}
-
 
 
 
@@ -112,7 +114,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 				this.writer
 					.WriteIndentation()
 					.Write("public ")
-					.Write(parameter.Column.ClrType)
+					.Write(parameter.Column.ClrType.TypeName)
 					.Write(" ")
 					.Write(parameter.Column.PropertyName)
 					.Write(" { get; set; }")
@@ -154,7 +156,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 						this.writer
 							.WriteIndentation()
 							.Write("public ")
-							.Write(column.ClrType)
+							.Write(column.ClrType.TypeName)
 							.Write(" ")
 							.Write(column.PropertyName)
 							.Write(" { get; set; }")
@@ -224,7 +226,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 				ParameterModel parameter = procedure.Parameters[i];
 
 				this.writer
-					.Write(parameter.Column.ClrType)
+					.Write(parameter.Column.ClrType.TypeName)
 					.Write(" ")
 					.Write(parameter.Column.ParameterName);
 
@@ -242,7 +244,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 				this.writer
 					.WriteIndentation()
 					.Write("public ")
-					.Write(parameter.Column.ClrType)
+					.Write(parameter.Column.ClrType.TypeName)
 					.Write(" ")
 					.Write(parameter.Column.PropertyName)
 					.Write(" { get; private set; }")
@@ -435,14 +437,16 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 		{
 			foreach (var column in result.Columns)
 			{
+				//Example: FirstName = GetValueOrDefault<string>(reader, "FirstName"),
 				this.writer
 					.WriteIndentation()
 					.Write(column.PropertyName)
-					.Write(" = (")
-					.Write(column.ClrType)
-					.Write(")reader[\"")
+					.Write(" = ")
+					.Write("GetValueOrDefault<")
+					.Write(column.ClrType.TypeName)
+					.Write(">(reader, \"")
 					.Write(column.DatabaseName)
-					.Write("\"],")
+					.Write("\"),")
 					.WriteNewLine();
 			}
 		}
@@ -508,7 +512,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 					.Write("r.")
 					.Write(parameter.Column.PropertyName)
 					.Write(" = (")
-					.Write(parameter.Column.ClrType)
+					.Write(parameter.Column.ClrType.TypeName)
 					.Write(")c.Parameters[\"")
 					.Write(parameter.Column.DatabaseName)
 					.Write("\"].Value;");
@@ -519,14 +523,28 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 		{
 			foreach (var parameter in procedure.Parameters)
 			{
-				this.writer
-					.WriteIndentation()
-					.Write("p = c.Parameters.AddWithValue(\"")
-					.Write(parameter.Column.DatabaseName)
-					.Write("\", parameters.")
-					.Write(parameter.Column.PropertyName)
-					.Write(");")
-					.WriteNewLine();
+				if (parameter.Column.ClrType.IsUserDefined)
+				{
+					this.writer
+						.WriteIndentation()
+						.Write("p = c.Parameters.AddWithValue(\"")
+						.Write(parameter.Column.DatabaseName)
+						.Write("\", parameters.")
+						.Write(parameter.Column.PropertyName)
+						.Write(".GetDataTable());")
+						.WriteNewLine();
+				}
+				else
+				{
+					this.writer
+						.WriteIndentation()
+						.Write("p = c.Parameters.AddWithValue(\"")
+						.Write(parameter.Column.DatabaseName)
+						.Write("\", parameters.")
+						.Write(parameter.Column.PropertyName)
+						.Write(");")
+						.WriteNewLine();
+				}
 
 				this.writer
 					.WriteIndentation()
@@ -575,6 +593,24 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 			}
 
+		}
+
+		private void WriteGetValueOrDefaultMethod()
+		{
+			this.writer.WriteNewLine();
+			this.writer.WriteIndentedLine("private static T GetValueOrDefault<T>(SqlDataReader reader, string columnName)");
+			this.writer.WriteIndentedLine("{");
+			this.writer.Indent++;
+			{
+				this.writer.WriteIndentedLine("return reader.IsDBNull(reader.GetOrdinal(columnName)) ?");
+				this.writer.Indent++;
+				{
+					this.writer.WriteIndentedLine("default(T) :");
+					this.writer.WriteIndentedLine("(T)reader[columnName];");
+				}
+				this.writer.Indent--; //No block end here
+			}
+			WriteBlockEnd();
 		}
 
 	}

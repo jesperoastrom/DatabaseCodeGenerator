@@ -127,7 +127,7 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 				model.Columns.Add(new ColumnModel()
 				{
 					DatabaseName = row["ColumnName"] as string,
-					ClrType = type.ToClrString(allowDbNull == true)
+					ClrType = type.ToClrType(allowDbNull == true)
 				});
 			}
 
@@ -156,7 +156,7 @@ namespace Flip.Tools.Database.CodeGenerator.Data.Extractors
 				Column = new ColumnModel()
 				{
 					DatabaseName = p.Name,
-					ClrType = p.ToClrString(configuration.TableTypeNamespaceFromStoredProcedure)
+					ClrType = p.ToClrType(configuration.TableTypeNamespaceFromStoredProcedure)
 				}
 			};
 		}

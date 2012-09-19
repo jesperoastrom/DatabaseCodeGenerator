@@ -127,7 +127,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 					.Write("table.Columns.Add(\"")
 					.Write(column.DatabaseName)
 					.Write("\", typeof(")
-					.Write(column.ClrType)
+					.Write(column.ClrType.InnerTypeName)
 					.Write("));")
 					.WriteNewLine();
 			}
@@ -144,16 +144,33 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 
 				foreach (var column in type.Columns)
 				{
-					this.writer
-						.WriteIndentation()
-						.Write("dataRow[\"")
-						.Write(column.DatabaseName)
-						.Write("\"] = row.")
-						.Write(column.PropertyName)
-						.Write(";")
-						.WriteNewLine()
-						.WriteIndentedLine("table.Rows.Add(dataRow);");
+					if (column.ClrType.IsNullable)
+					{
+						this.writer
+							.WriteIndentation()
+							.Write("dataRow[\"")
+							.Write(column.DatabaseName)
+							.Write("\"] = row.")
+							.Write(column.PropertyName)
+							.Write(".HasValue ? (object)row.")
+							.Write(column.PropertyName)
+							.Write(".Value : DBNull.Value;")
+							.WriteNewLine();
+					}
+					else
+					{
+						this.writer
+							.WriteIndentation()
+							.Write("dataRow[\"")
+							.Write(column.DatabaseName)
+							.Write("\"] = row.")
+							.Write(column.PropertyName)
+							.Write(";")
+							.WriteNewLine();
+					}
 				}
+				this.writer
+					.WriteIndentedLine("table.Rows.Add(dataRow);");
 			}
 			WriteBlockEnd();
 
@@ -213,7 +230,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 				var column = type.Columns[i];
 
 				this.writer
-					.Write(column.ClrType)
+					.Write(column.ClrType.TypeName)
 					.Write(" ")
 					.Write(column.ParameterName);
 
@@ -247,7 +264,7 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 				this.writer
 					.WriteIndentation()
 					.Write("public ")
-					.Write(column.ClrType)
+					.Write(column.ClrType.TypeName)
 					.Write(" ")
 					.Write(column.PropertyName)
 					.Write(" { get; private set; }")
