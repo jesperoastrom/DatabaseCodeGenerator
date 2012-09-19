@@ -515,7 +515,8 @@ namespace Flip.Tools.Database.CodeGenerator.IO
 					.Write(parameter.Column.ClrType.TypeName)
 					.Write(")c.Parameters[\"")
 					.Write(parameter.Column.DatabaseName)
-					.Write("\"].Value;");
+					.Write("\"].Value;")
+					.WriteNewLine();
 			}
 		}
 
