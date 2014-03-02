@@ -1,0 +1,7 @@
+SQL Server versioner
+Multiple databases
+One file per object
+Tables with index
+Views with index
+Extensions methods for executing
+Patches
