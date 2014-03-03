@@ -44,6 +44,26 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.3.0\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Unofficial.Microsoft.SQLServer.SMO.11.0.3000.0\lib\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Unofficial.Microsoft.SQLServer.SMO.11.0.3000.0\lib\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Unofficial.Microsoft.SQLServer.SMO.11.0.3000.0\lib\Microsoft.SqlServer.Smo.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.SmoExtended, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Unofficial.Microsoft.SQLServer.SMO.11.0.3000.0\lib\Microsoft.SqlServer.SmoExtended.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.SqlEnum, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Unofficial.Microsoft.SQLServer.SMO.11.0.3000.0\lib\Microsoft.SqlServer.SqlEnum.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -51,13 +71,9 @@
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Microsoft.SqlServer.ConnectionInfo" />
-    <Reference Include="Microsoft.SqlServer.Smo" />
-    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\ConfigurationReader.cs" />
-    <Compile Include="Configuration\ContainerBuilderExtensions.cs" />
     <Compile Include="Configuration\DatabaseConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationReader.cs" />
     <Compile Include="Configuration\SchemaElement.cs" />
@@ -67,13 +83,13 @@
     <Compile Include="Configuration\UserDefinedTableTypes.cs" />
     <Compile Include="Data\ConnectionStringProvider.cs" />
     <Compile Include="Data\Extractors\IDatabaseExtractor.cs" />
-    <Compile Include="Data\Extractors\SmoExtensions.cs" />
+    <Compile Include="Data\Extractors\SqlServer2012\SmoExtensions.cs" />
     <Compile Include="Data\IConnectionStringProvider.cs" />
     <Compile Include="Data\Models\ClrType.cs" />
     <Compile Include="Data\Models\DatabaseName.cs" />
-    <Compile Include="Data\Extractors\DatabaseExtractor.cs" />
-    <Compile Include="Data\Extractors\StoredProcedureExtractor.cs" />
-    <Compile Include="Data\Extractors\UserDefinedTableTypeExtractor.cs" />
+    <Compile Include="Data\Extractors\SqlServer2012\DatabaseExtractor.cs" />
+    <Compile Include="Data\Extractors\SqlServer2012\StoredProcedureExtractor.cs" />
+    <Compile Include="Data\Extractors\SqlServer2012\UserDefinedTableTypeExtractor.cs" />
     <Compile Include="Data\Models\ColumnModel.cs" />
     <Compile Include="Data\Models\DatabaseModel.cs" />
     <Compile Include="Data\Models\ParameterModel.cs" />
@@ -83,6 +99,7 @@
     <Compile Include="Data\Models\StoredProcedureModel.cs" />
     <Compile Include="Data\Models\TypeName.cs" />
     <Compile Include="Data\Models\UserDefinedTableTypeModel.cs" />
+    <Compile Include="DependencyInjection\CoreModule.cs" />
     <Compile Include="IO\ConsoleTextWriter.cs" />
     <Compile Include="IO\DatabaseWriter.cs" />
     <Compile Include="IO\ElementWriterBase.cs" />
@@ -104,6 +121,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

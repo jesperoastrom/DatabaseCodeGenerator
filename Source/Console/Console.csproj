@@ -8,7 +8,7 @@
     <ProjectGuid>{884D27EB-3138-46D5-AD2C-7C210C617CE3}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SqlFramework</RootNamespace>
+    <RootNamespace>SqlFramework.Console</RootNamespace>
     <AssemblyName>SqlFramework.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>

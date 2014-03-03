@@ -12,6 +12,7 @@ using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
 using SqlFramework.Configuration;
 using SqlFramework.Data;
+using SqlFramework.DependencyInjection;
 using SqlFramework.Logging.Tests;
 using Xunit;
 
@@ -113,14 +114,10 @@ namespace SqlFramework.IO.Tests
         private static IContainer CreateContainer(string connectionString)
         {
             var builder = new ContainerBuilder();
-
             builder.Register(c => new ConnectionStringProvider(connectionString)).As<IConnectionStringProvider>().SingleInstance();
             builder.Register(c => new DebugLogger()).As<ILogger>().SingleInstance();
-
-            builder.RegisterCodeGeneratorTypes();
-
+            builder.RegisterModule<CoreModule>();
             builder.RegisterType<MemoryStorageProvider>().As<IStorageProvider>().SingleInstance();
-
             return builder.Build();
         }
 
