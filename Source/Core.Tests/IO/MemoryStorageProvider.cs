@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using SqlFramework.IO;
 
-namespace SqlFramework.IO.Tests
+namespace SqlFramework.IO
 {
     public sealed class MemoryStorageProvider : IStorageProvider, IDisposable
     {

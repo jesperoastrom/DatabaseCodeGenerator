@@ -1,69 +1,56 @@
 ﻿using System;
-using System.IO;
 using SqlFramework.IO;
-
-
 
 namespace SqlFramework.Configuration
 {
+    public sealed class ConfigurationReader : IConfigurationReader
+    {
+        public ConfigurationReader(ITextWriter errorOutput, IStorageProvider storageProvider)
+        {
+            _errorOutput = errorOutput;
+            _storageProvider = storageProvider;
+        }
 
-	public sealed class ConfigurationReader : IConfigurationReader
-	{
+        private void WriteException(Exception ex)
+        {
+            _errorOutput.WriteLine(ex.Message);
+            _errorOutput.WriteLine(ex.StackTrace);
+            if (ex.InnerException != null)
+            {
+                WriteException(ex.InnerException);
+            }
+        }
 
-		public ConfigurationReader(ITextWriter errorOutput, IStorageProvider storageProvider)
-		{
-			this.errorOutput = errorOutput;
-			this.storageProvider = storageProvider;
-		}
+        public bool TryRead(string file, out DatabaseConfiguration configuration)
+        {
+            if (!_storageProvider.FileExists(file))
+            {
+                _errorOutput.WriteLine("Unable to find file '" + file + "'");
+                configuration = null;
+                return false;
+            }
 
+            var serializer = new System.Xml.Serialization.XmlSerializer(typeof (DatabaseConfiguration));
 
+            try
+            {
+                using (var stream = this._storageProvider.OpenStream(file))
+                {
+                    configuration = (DatabaseConfiguration) serializer.Deserialize(stream);
+                    configuration.TableTypeNamespaceFromStoredProcedure =
+                        configuration.StoredProcedures.Namespace.GetShortestNamespace(configuration.UserDefinedTableTypes.Namespace);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteException(ex);
+                configuration = null;
+                return false;
+            }
+        }
 
-		public bool TryRead(string file, out DatabaseConfiguration configuration)
-		{
-			if (!this.storageProvider.FileExists(file))
-			{
-				this.errorOutput.WriteLine("Unable to find file '" + file + "'");
-				configuration = null;
-				return false;
-			}
-
-			var serializer = new System.Xml.Serialization.XmlSerializer(typeof(DatabaseConfiguration));
-
-			try
-			{
-				using (var stream = this.storageProvider.OpenStream(file))
-				{
-					configuration = (DatabaseConfiguration)serializer.Deserialize(stream);
-					configuration.TableTypeNamespaceFromStoredProcedure =
-						configuration.StoredProcedures.Namespace.GetShortestNamespace(configuration.UserDefinedTableTypes.Namespace);
-					return true;
-				}
-			}
-			catch (Exception ex)
-			{
-				WriteException(ex);
-				configuration = null;
-				return false;
-			}
-		}
-
-
-
-		private void WriteException(Exception ex)
-		{
-			this.errorOutput.WriteLine(ex.Message);
-			this.errorOutput.WriteLine(ex.StackTrace);
-			if (ex.InnerException != null)
-			{
-				WriteException(ex.InnerException);
-			}
-		}
-
-
-
-		private readonly IStorageProvider storageProvider;
-		private readonly ITextWriter errorOutput;
-
-	}
-
+        private readonly ITextWriter _errorOutput;
+        private readonly IStorageProvider _storageProvider;
+    }
 }
