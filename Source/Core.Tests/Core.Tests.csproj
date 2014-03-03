@@ -70,7 +70,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\Tests\ConfigurationReaderTests.cs" />
+    <Compile Include="Configuration\Tests\ConfigurationReaderTest.cs" />
     <Compile Include="Configuration\Tests\WhenReadingFileThatDoesntExist.cs" />
     <Compile Include="IO\StorageProviderMockExtensions.cs" />
     <Compile Include="IO\Tests\DatabaseWriterTests.cs" />

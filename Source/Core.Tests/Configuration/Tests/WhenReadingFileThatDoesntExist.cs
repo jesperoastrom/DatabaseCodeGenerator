@@ -5,15 +5,13 @@ using Xunit;
 
 namespace SqlFramework.Configuration.Tests
 {
-    public class WhenReadingFileThatDoesntExist : ConfigurationReaderTests
+    public class WhenReadingFileThatDoesntExist : ConfigurationReaderTest
     {
         public WhenReadingFileThatDoesntExist()
         {
-            _output = new List<string>(1);
-            _textWriterMock.SimulateWriteLine(s => _output.Add(s));
-            _storageProviderMock.SimulateFileExists("nofile", false);
-
-            _returnValue = _configurationReader.TryRead("nofile", out _configuration);
+            SetupExternalBehavior();
+            GivenFileDoesNotExist();
+            Act();
         }
 
         [Fact]
@@ -34,8 +32,24 @@ namespace SqlFramework.Configuration.Tests
             _output.Count.Should().Be(1);
         }
 
-        private readonly DatabaseConfiguration _configuration;
-        private readonly List<string> _output;
-        private readonly bool _returnValue;
+        private void Act()
+        {
+            _returnValue = ConfigurationReader.TryRead("nofile", out _configuration);
+        }
+
+        private void GivenFileDoesNotExist()
+        {
+            StorageProviderMock.SimulateFileExists("nofile", false);
+        }
+
+        private void SetupExternalBehavior()
+        {
+            _output = new List<string>(1);
+            TextWriterMock.SimulateWriteLine(s => _output.Add(s));
+        }
+
+        private DatabaseConfiguration _configuration;
+        private List<string> _output;
+        private bool _returnValue;
     }
 }
