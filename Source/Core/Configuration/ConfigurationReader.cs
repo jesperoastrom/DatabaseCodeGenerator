@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 using SqlFramework.IO;
 
 namespace SqlFramework.Configuration
@@ -30,11 +31,11 @@ namespace SqlFramework.Configuration
                 return false;
             }
 
-            var serializer = new System.Xml.Serialization.XmlSerializer(typeof (DatabaseConfiguration));
+            var serializer = new XmlSerializer(typeof (DatabaseConfiguration));
 
             try
             {
-                using (var stream = this._storageProvider.OpenStream(file))
+                using (var stream = _storageProvider.OpenStream(file))
                 {
                     configuration = (DatabaseConfiguration) serializer.Deserialize(stream);
                     configuration.TableTypeNamespaceFromStoredProcedure =

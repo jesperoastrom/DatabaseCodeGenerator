@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database>
+	<StoredProcedures Namespace="SpNs">
+		<Procedure SchemaName="Auth" Name="GetUser" />
+		<Procedure SchemaName="Auth" Name="CreateUser" />
+		<Procedure SchemaName="Core" Name="GetMember" />
+	</StoredProcedures>
+	<UserDefinedTableTypes Namespace="UdtNs">
+		<Type SchemaName="Auth" Name="UserIds" />
+		<Type SchemaName="Core" Name="MemberIds" />
+	</UserDefinedTableTypes>
+</Database>
