@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using SqlFramework.IO;
 using Xunit;
 
@@ -9,7 +8,6 @@ namespace SqlFramework.Configuration.Tests
     {
         public WhenReadingFileThatDoesExist()
         {
-            SetupExternalBehavior();
             GivenFileExists();
             GivenFileHasContent();
             Act();
@@ -52,15 +50,9 @@ namespace SqlFramework.Configuration.Tests
             _configuration.Should().NotBeNull();
         }
 
-        [Fact]
-        public void ThenTheReadingShouldBeSuccessful()
-        {
-            _returnValue.Should().BeTrue();
-        }
-
         private void Act()
         {
-            _returnValue = ConfigurationReader.TryRead("file", out _configuration);
+            _configuration = ConfigurationReader.Read("file");
         }
 
         private void GivenFileExists()
@@ -70,17 +62,9 @@ namespace SqlFramework.Configuration.Tests
 
         private void GivenFileHasContent()
         {
-            StorageProviderMock.SimulateOpenStream("file", ResourceFiles.Configuration.Tests.Resources.Configuration_xml);
-        }
-
-        private void SetupExternalBehavior()
-        {
-            _output = new List<string>(1);
-            TextWriterMock.SimulateWriteLine(s => _output.Add(s));
+            StorageProviderMock.SimulateOpenStream("file", TestResources.Configuration.Tests.Resources.DatabaseConfiguration_xml);
         }
 
         private DatabaseConfiguration _configuration;
-        private List<string> _output;
-        private bool _returnValue;
     }
 }

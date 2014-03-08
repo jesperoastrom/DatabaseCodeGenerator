@@ -7,13 +7,11 @@ namespace SqlFramework.Configuration.Tests
     {
         protected ConfigurationReaderTest()
         {
-            TextWriterMock = new Mock<ITextWriter>(MockBehavior.Strict);
             StorageProviderMock = new Mock<IStorageProvider>(MockBehavior.Strict);
-            ConfigurationReader = new ConfigurationReader(TextWriterMock.Object, StorageProviderMock.Object);
+            ConfigurationReader = new ConfigurationReader(StorageProviderMock.Object);
         }
 
         protected readonly ConfigurationReader ConfigurationReader;
         protected readonly Mock<IStorageProvider> StorageProviderMock;
-        protected readonly Mock<ITextWriter> TextWriterMock;
     }
 }

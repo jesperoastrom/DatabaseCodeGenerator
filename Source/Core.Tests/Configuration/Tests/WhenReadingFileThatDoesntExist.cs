@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
+﻿using System.IO;
 using SqlFramework.IO;
 using Xunit;
 
@@ -9,47 +8,23 @@ namespace SqlFramework.Configuration.Tests
     {
         public WhenReadingFileThatDoesntExist()
         {
-            SetupExternalBehavior();
             GivenFileDoesNotExist();
-            Act();
         }
 
         [Fact]
-        public void ThenConfigurationShouldBeNull()
+        public void ThenExceptionShouldBeThrown()
         {
-            _configuration.Should().BeNull();
-        }
-
-        [Fact]
-        public void ThenFalseShouldBeReturned()
-        {
-            _returnValue.Should().BeFalse();
-        }
-
-        [Fact]
-        public void ThenLogShouldContainError()
-        {
-            _output.Count.Should().Be(1);
+            Assert.Throws<FileNotFoundException>(() => Act());
         }
 
         private void Act()
         {
-            _returnValue = ConfigurationReader.TryRead("nofile", out _configuration);
+            ConfigurationReader.Read("nofile");
         }
 
         private void GivenFileDoesNotExist()
         {
             StorageProviderMock.SimulateFileExists("nofile", false);
         }
-
-        private void SetupExternalBehavior()
-        {
-            _output = new List<string>(1);
-            TextWriterMock.SimulateWriteLine(s => _output.Add(s));
-        }
-
-        private DatabaseConfiguration _configuration;
-        private List<string> _output;
-        private bool _returnValue;
     }
 }

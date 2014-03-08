@@ -12,7 +12,7 @@ namespace SqlFramework.IO
 
         public static void SimulateOpenStream(this Mock<IStorageProvider> mock, string fileName, string resourceName)
         {
-            Stream stream = EmbeddedResourceHelper.GetStreamFromEmbeddedResource(resourceName);
+            Stream stream = EmbeddedResourceHelper.GetStreamFromEmbeddedResource<TestResources>(resourceName);
             mock.Setup(x => x.OpenStream(fileName)).Returns(stream);
         }
     }

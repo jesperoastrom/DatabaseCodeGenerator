@@ -137,7 +137,7 @@ namespace SqlFramework.IO.Tests
 
         private static void RunEmbeddedSetupScript(string resourcePath)
         {
-            string script = EmbeddedResourceHelper.GetStringFromEmbeddedResource(resourcePath);
+            string script = EmbeddedResourceHelper.GetStringFromEmbeddedResource<TestResources>(resourcePath);
 
             using (var connection = new SqlConnection(SetupConnectionString))
             {
@@ -149,7 +149,6 @@ namespace SqlFramework.IO.Tests
 
         private const string CreateScriptPath = "SqlFramework.Resources.Tests.Sql.Create.Database.sql";
         private const string DeleteScriptPath = "SqlFramework.Resources.Tests.Sql.Delete.Database.sql";
-        private const string ConfigurationPath = "SqlFramework.Resources.Tests.Configuration.Configuration.xml";
         private static readonly string TestConnectionString = ConfigurationManager.ConnectionStrings["test"].ConnectionString;
         private static readonly string SetupConnectionString = ConfigurationManager.ConnectionStrings["setup"].ConnectionString;
     }

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 using SqlFramework.IO;
 
@@ -6,52 +9,68 @@ namespace SqlFramework.Configuration
 {
     public sealed class ConfigurationReader : IConfigurationReader
     {
-        public ConfigurationReader(ITextWriter errorOutput, IStorageProvider storageProvider)
+        public ConfigurationReader(IStorageProvider storageProvider)
         {
-            _errorOutput = errorOutput;
             _storageProvider = storageProvider;
         }
 
-        private void WriteException(Exception ex)
+        private XmlReaderSettings CreateSettings(XmlSchemaSet schemas)
         {
-            _errorOutput.WriteLine(ex.Message);
-            _errorOutput.WriteLine(ex.StackTrace);
-            if (ex.InnerException != null)
+            return new XmlReaderSettings
+                       {
+                           Schemas = schemas,
+                           ValidationType = ValidationType.Schema,
+                           ValidationFlags =
+                               XmlSchemaValidationFlags.ProcessIdentityConstraints |
+                               XmlSchemaValidationFlags.ReportValidationWarnings
+                       };
+        }
+
+        private XmlSchemaSet GetSchemas()
+        {
+            using (var xsdStream = EmbeddedResourceHelper.GetStreamFromEmbeddedResource<Resources>(Resources.Configuration.DatabaseConfiguration_xsd))
             {
-                WriteException(ex.InnerException);
+                var schemas = new XmlSchemaSet();
+                schemas.Add(XmlSchema.Read(xsdStream, (sender, args) => { }));
+                return schemas;
             }
         }
 
-        public bool TryRead(string file, out DatabaseConfiguration configuration)
+        public DatabaseConfiguration Read(string file)
         {
             if (!_storageProvider.FileExists(file))
             {
-                _errorOutput.WriteLine("Unable to find file '" + file + "'");
-                configuration = null;
-                return false;
+                throw new FileNotFoundException(file);
             }
 
-            var serializer = new XmlSerializer(typeof (DatabaseConfiguration));
-
-            try
+            Exception firstException = null;
+            XmlSchemaSet schemas = GetSchemas();
+            XmlReaderSettings settings = CreateSettings(schemas);
+            settings.ValidationEventHandler += (sender, args) =>
+                                                   {
+                                                       if (args.Severity == XmlSeverityType.Error && firstException == null)
+                                                       {
+                                                           firstException = args.Exception;
+                                                       }
+                                                   };
+            DatabaseConfiguration configuration;
+            using (var stream = _storageProvider.OpenStream(file))
             {
-                using (var stream = _storageProvider.OpenStream(file))
+                using (XmlReader reader = XmlReader.Create(stream, settings))
                 {
-                    configuration = (DatabaseConfiguration) serializer.Deserialize(stream);
+                    var serializer = new XmlSerializer(typeof (DatabaseConfiguration));
+                    configuration = (DatabaseConfiguration) serializer.Deserialize(reader);
                     configuration.TableTypeNamespaceFromStoredProcedure =
                         configuration.StoredProcedures.Namespace.GetShortestNamespace(configuration.UserDefinedTableTypes.Namespace);
-                    return true;
                 }
             }
-            catch (Exception ex)
+            if (firstException != null)
             {
-                WriteException(ex);
-                configuration = null;
-                return false;
+                throw new XmlSchemaException("Configuration file does not confirm to schema definition", firstException);
             }
+            return configuration;
         }
 
-        private readonly ITextWriter _errorOutput;
         private readonly IStorageProvider _storageProvider;
     }
 }

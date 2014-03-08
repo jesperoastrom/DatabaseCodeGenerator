@@ -100,6 +100,7 @@
     <Compile Include="Data\Models\TypeName.cs" />
     <Compile Include="Data\Models\UserDefinedTableTypeModel.cs" />
     <Compile Include="DependencyInjection\CoreModule.cs" />
+    <Compile Include="EmbeddedResourceHelper.cs" />
     <Compile Include="IO\ConsoleTextWriter.cs" />
     <Compile Include="IO\DatabaseWriter.cs" />
     <Compile Include="IO\ElementWriterBase.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Resources.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿namespace SqlFramework
 {
-    public static class ResourceFiles
+    public class TestResources
     {
         public static class Configuration
         {
@@ -9,15 +9,15 @@
                 public static class Resources
                 {
                     private const string Path = Tests.Path + "Resources.";
-                    public const string Configuration_xml = Path + "Configuration.xml";
+                    public const string DatabaseConfiguration_xml = Path + "DatabaseConfiguration.xml";
+                    public const string InvalidDatabaseConfiguration_xml = Path + "InvalidDatabaseConfiguration.xml";
                 }
 
                 private const string Path = Configuration.Path + "Tests.";
             }
 
-            private const string Path = ResourceFiles.Path + "Configuration.";
+            private const string Path = TestResources.Path + "Configuration.";
         }
-
         private const string Path = "SqlFramework.";
     }
 }
