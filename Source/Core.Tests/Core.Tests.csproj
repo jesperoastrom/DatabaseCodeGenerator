@@ -83,6 +83,7 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="TestResources.cs" />
+    <Compile Include="Tests\EscapeDatabaseNameTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

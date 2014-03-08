@@ -1,119 +1,109 @@
 ﻿using System;
 
-
-
 namespace SqlFramework
 {
+    public static class StringExtensions
+    {
+        public static string EscapeDatabaseName(this string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return name;
+            }
 
-	internal static class StringExtensions
-	{
+            if (!name.StartsWith("["))
+            {
+                name = "[" + name;
+            }
+            if (!name.EndsWith("]"))
+            {
+                name = name + "]";
+            }
 
-		public static string EscapeDatabaseName(this string name)
-		{
-			if (name == null)
-			{
-				return name;
-			}
+            return name;
+        }
 
-			if (!name.StartsWith("["))
-			{
-				name = "[" + name;
-			}
-			if (!name.EndsWith("]"))
-			{
-				name = name + "]";
-			}
+        public static string GetShortestNamespace(this string fromNs, string toNs)
+        {
+            string[] fromParts = fromNs.Split('.');
+            string[] toParts = toNs.Split('.');
 
-			return name;
-		}
+            for (int i = 0; i < toParts.Length; i++)
+            {
+                if (fromParts[i] != toParts[i])
+                {
+                    var resultParts = new string[toParts.Length - i];
+                    Array.Copy(toParts, i, resultParts, 0, resultParts.Length);
+                    return string.Join(".", resultParts);
+                }
+            }
+            return string.Empty;
+        }
 
-		public static string ToTypeName(this string name)
-		{
-			if (string.IsNullOrEmpty(name))
-			{
-				throw new ArgumentNullException("name");
-			}
+        public static string ToParameterName(this string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
 
-			name = CreateValidIdentifier(name);
+            if (name.StartsWith("@"))
+            {
+                name = name.Substring(1);
+            }
 
-			if (name.Length == 1)
-			{
-				return name.ToUpper();
-			}
-			else
-			{
-				return char.ToUpper(name[0]) + name.Substring(1);
-			}
-		}
+            name = CreateValidIdentifier(name);
 
-		public static string ToPropertyName(this string name)
-		{
-			if (string.IsNullOrEmpty(name))
-			{
-				throw new ArgumentNullException("name");
-			}
+            if (name.Length == 1)
+            {
+                return name.ToLower();
+            }
+            else
+            {
+                return char.ToLower(name[0]) + name.Substring(1);
+            }
+        }
 
-			if (name.StartsWith("@"))
-			{
-				name = name.Substring(1);
-			}
+        public static string ToPropertyName(this string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
 
-			return name.ToTypeName();
-		}
+            if (name.StartsWith("@"))
+            {
+                name = name.Substring(1);
+            }
 
-		public static string ToParameterName(this string name)
-		{
-			if (string.IsNullOrEmpty(name))
-			{
-				throw new ArgumentNullException("name");
-			}
+            return name.ToTypeName();
+        }
 
-			if (name.StartsWith("@"))
-			{
-				name = name.Substring(1);
-			}
+        public static string ToTypeName(this string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
 
-			name = CreateValidIdentifier(name);
+            name = CreateValidIdentifier(name);
 
-			if (name.Length == 1)
-			{
-				return name.ToLower();
-			}
-			else
-			{
-				return char.ToLower(name[0]) + name.Substring(1);
-			}
-		}
+            if (name.Length == 1)
+            {
+                return name.ToUpper();
+            }
+            else
+            {
+                return char.ToUpper(name[0]) + name.Substring(1);
+            }
+        }
 
-		public static string GetShortestNamespace(this string fromNs, string toNs)
-		{
-			string[] fromParts = fromNs.Split('.');
-			string[] toParts = toNs.Split('.');
+        private static string CreateValidIdentifier(string value)
+        {
+            return codeProvider.CreateValidIdentifier(value);
+        }
 
-			for (int i = 0; i < toParts.Length; i++)
-			{
-				if (fromParts[i] != toParts[i])
-				{
-					var resultParts = new string[toParts.Length - i];
-					Array.Copy(toParts, i, resultParts, 0, resultParts.Length);
-					return string.Join(".", resultParts);
-				}
-			}
-			return string.Empty;
-		}
-
-
-
-		private static string CreateValidIdentifier(string value)
-		{
-			return codeProvider.CreateValidIdentifier(value);
-		}
-
-
-
-		//TODO Mutiple code providers?
-		private static readonly Microsoft.CSharp.CSharpCodeProvider codeProvider = new Microsoft.CSharp.CSharpCodeProvider();
-
-	}
-
+        //TODO Mutiple code providers?
+        private static readonly Microsoft.CSharp.CSharpCodeProvider codeProvider = new Microsoft.CSharp.CSharpCodeProvider();
+    }
 }
