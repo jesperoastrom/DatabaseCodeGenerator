@@ -74,11 +74,10 @@
     <Compile Include="Configuration\Tests\WhenReadingInvalidFile.cs" />
     <Compile Include="Configuration\Tests\WhenReadingFileThatDoesExist.cs" />
     <Compile Include="Configuration\Tests\WhenReadingFileThatDoesntExist.cs" />
+    <Compile Include="Data\Tests\WhenConnectionStringIsSpecified.cs" />
     <Compile Include="IO\StorageProviderMockExtensions.cs" />
     <Compile Include="IO\Tests\DatabaseWriterTests.cs" />
     <Compile Include="IO\TextWriterMockExtensions.cs" />
-    <Compile Include="Logging\DebugLogger.cs" />
-    <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>

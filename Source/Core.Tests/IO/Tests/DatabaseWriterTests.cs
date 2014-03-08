@@ -10,9 +10,6 @@ using FluentAssertions;
 using Microsoft.CSharp;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
-using SqlFramework.Data;
-using SqlFramework.DependencyInjection;
-using SqlFramework.Logging;
 using Xunit;
 
 namespace SqlFramework.IO.Tests
