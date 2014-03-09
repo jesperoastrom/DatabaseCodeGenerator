@@ -83,7 +83,9 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="TestResources.cs" />
-    <Compile Include="Tests\EscapeDatabaseNameTests.cs" />
+    <Compile Include="Data\Extractors\SqlServer2012\SqlServerCSharpCodeNameConverterTests\EscapeDatabaseNameTests.cs" />
+    <Compile Include="Data\Extractors\SqlServer2012\SqlServerCSharpCodeNameConverterTests\GetShortestNamespaceToTests.cs" />
+    <Compile Include="Data\Extractors\SqlServer2012\SqlServerCSharpCodeNameConverterTests\ToParameterNameTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

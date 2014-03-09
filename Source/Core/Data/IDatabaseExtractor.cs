@@ -1,6 +1,6 @@
 ﻿using SqlFramework.Data.Models;
 
-namespace SqlFramework.Data.Extractors
+namespace SqlFramework.Data
 {
     public interface IDatabaseExtractor
     {

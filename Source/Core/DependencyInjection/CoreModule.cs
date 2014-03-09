@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using SqlFramework.Configuration;
-using SqlFramework.Data.Extractors;
-using SqlFramework.Data.Extractors.SqlServer2012;
+using SqlFramework.Data;
+using SqlFramework.Data.SqlServer2012.Extractors;
 using SqlFramework.IO;
 
 namespace SqlFramework.DependencyInjection

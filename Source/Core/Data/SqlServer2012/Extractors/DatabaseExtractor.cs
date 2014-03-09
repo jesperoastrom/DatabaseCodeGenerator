@@ -4,13 +4,15 @@ using Microsoft.SqlServer.Management.Smo;
 using SqlFramework.Configuration;
 using SqlFramework.Data.Models;
 
-namespace SqlFramework.Data.Extractors.SqlServer2012
+namespace SqlFramework.Data.SqlServer2012.Extractors
 {
     public sealed class DatabaseExtractor : IDatabaseExtractor
     {
-        public DatabaseExtractor(IConnectionStringProvider connectionStringProvider)
+        public DatabaseExtractor(IConnectionStringProvider connectionStringProvider,
+                                 IStoredProcedureExtractor storedProcedureExtractor)
         {
             this._connectionStringProvider = connectionStringProvider;
+            _storedProcedureExtractor = storedProcedureExtractor;
         }
 
         private ConnectionDetails GetConnectionDetails()
@@ -54,7 +56,7 @@ namespace SqlFramework.Data.Extractors.SqlServer2012
                 }
                 if (configuration.StoredProcedures != null)
                 {
-                    model.StoredProcedures = new StoredProcedureExtractor().Extract(_connectionStringProvider, configuration, database.StoredProcedures);
+                    model.StoredProcedures = _storedProcedureExtractor.Extract(configuration, database.StoredProcedures);
                 }
 
                 return model;
@@ -75,5 +77,6 @@ namespace SqlFramework.Data.Extractors.SqlServer2012
         }
 
         private readonly IConnectionStringProvider _connectionStringProvider;
+        private readonly IStoredProcedureExtractor _storedProcedureExtractor;
     }
 }

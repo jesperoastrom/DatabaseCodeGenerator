@@ -1,6 +1,6 @@
 ﻿using System;
 using SqlFramework.Configuration;
-using SqlFramework.Data.Extractors;
+using SqlFramework.Data;
 using SqlFramework.Data.Models;
 
 namespace SqlFramework.IO

@@ -1,4 +1,5 @@
 ﻿using Moq;
+using SqlFramework.Data.SqlServer2012;
 using SqlFramework.IO;
 
 namespace SqlFramework.Configuration.Tests
@@ -8,7 +9,7 @@ namespace SqlFramework.Configuration.Tests
         protected ConfigurationReaderTest()
         {
             StorageProviderMock = new Mock<IStorageProvider>(MockBehavior.Strict);
-            ConfigurationReader = new ConfigurationReader(StorageProviderMock.Object);
+            ConfigurationReader = new ConfigurationReader(StorageProviderMock.Object, new SqlServerCSharpCodeNameConverter());
         }
 
         protected readonly ConfigurationReader ConfigurationReader;

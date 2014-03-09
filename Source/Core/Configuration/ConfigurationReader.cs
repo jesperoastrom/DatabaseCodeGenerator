@@ -9,9 +9,10 @@ namespace SqlFramework.Configuration
 {
     public sealed class ConfigurationReader : IConfigurationReader
     {
-        public ConfigurationReader(IStorageProvider storageProvider)
+        public ConfigurationReader(IStorageProvider storageProvider, IDatabaseToCodeNameConverter nameConverter)
         {
             _storageProvider = storageProvider;
+            _nameConverter = nameConverter;
         }
 
         private XmlReaderSettings CreateSettings(XmlSchemaSet schemas)
@@ -61,7 +62,9 @@ namespace SqlFramework.Configuration
                     var serializer = new XmlSerializer(typeof (DatabaseConfiguration));
                     configuration = (DatabaseConfiguration) serializer.Deserialize(reader);
                     configuration.TableTypeNamespaceFromStoredProcedure =
-                        configuration.StoredProcedures.Namespace.GetShortestNamespace(configuration.UserDefinedTableTypes.Namespace);
+                        _nameConverter.GetShortestNamespaceTo(
+                            configuration.StoredProcedures.Namespace,
+                            configuration.UserDefinedTableTypes.Namespace);
                 }
             }
             if (firstException != null)
@@ -71,6 +74,7 @@ namespace SqlFramework.Configuration
             return configuration;
         }
 
+        private readonly IDatabaseToCodeNameConverter _nameConverter;
         private readonly IStorageProvider _storageProvider;
     }
 }
