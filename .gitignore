@@ -7,3 +7,4 @@ Thumbs.db
 Source/TestResults/
 Build/Publish/
 Source/packages
+Source/_Resharper.*
