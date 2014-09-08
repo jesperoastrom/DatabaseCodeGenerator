@@ -2,7 +2,7 @@
 using SqlFramework.Configuration;
 using SqlFramework.Data.Models;
 
-namespace SqlFramework.Data
+namespace SqlFramework.Data.SqlServer2012.Extractors
 {
     public interface IStoredProcedureExtractor
     {

@@ -109,7 +109,8 @@ namespace SqlFramework.Data.SqlServer2012.Extractors
         {
             if (parameter.DataType.SqlDataType == SqlDataType.UserDefinedTableType)
             {
-                string typeName = _nameConverter.GetFullyQualifiedTypeName(ns, parameter.DataType.Schema, parameter.DataType.Name);
+                string typeName = _nameConverter.GetFullyQualifiedTypeName(ns, parameter.DataType.Schema,
+                                                                           parameter.DataType.Name);
                 return new ClrType
                            {
                                IsUserDefined = true,
@@ -124,7 +125,8 @@ namespace SqlFramework.Data.SqlServer2012.Extractors
         {
             if (column.DataType.SqlDataType == SqlDataType.UserDefinedTableType)
             {
-                string typeName = _nameConverter.GetFullyQualifiedTypeName(ns, column.DataType.Schema, column.DataType.Name);
+                string typeName = _nameConverter.GetFullyQualifiedTypeName(ns, column.DataType.Schema,
+                                                                           column.DataType.Name);
                 return new ClrType
                            {
                                IsUserDefined = true,

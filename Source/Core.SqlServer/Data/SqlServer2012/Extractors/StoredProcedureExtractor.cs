@@ -218,7 +218,8 @@ namespace SqlFramework.Data.SqlServer2012.Extractors
                            Precision = GetNumericPrecision(p.DataType),
                            Size = GetSize(p.DataType),
                            IsOutput = p.IsOutputParameter,
-                           SqlDataType = p.DataType.SqlDataType,
+                           //todo
+                           //SqlDataType = p.DataType.SqlDataType,
                            SqlDbType = _typeConverter.ToSqlDbDataType(p.DataType),
                            Column = new ColumnModel()
                                         {

@@ -31,7 +31,7 @@ namespace SqlFramework.Data.SqlServer2012.Extractors
             }
             catch (SqlException sqlException)
             {
-                throw new InvalidArgumentException("Could not connect to database using connection string '" + _connectionStringProvider.ConnectionString + "'.", sqlException);
+                throw new InvalidArgumentException(string.Format("Could not connect to database using connection string '{0}'.", _connectionStringProvider.ConnectionString), sqlException);
             }
         }
 

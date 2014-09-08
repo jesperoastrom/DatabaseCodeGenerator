@@ -103,7 +103,7 @@ namespace SqlFramework.IO.Tests
             {
                 Console.WriteLine(error.ErrorText);
             }
-            results.Errors.Count.Should().Be(0, reason: "Unable to compile code:\n" + code);
+            results.Errors.Count.Should().Be(0, because: "Unable to compile code:\n" + code);
             return results;
         }
 

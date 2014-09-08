@@ -1,7 +1,5 @@
 ﻿using Autofac;
 using SqlFramework.Configuration;
-using SqlFramework.Data;
-using SqlFramework.Data.SqlServer2012.Extractors;
 using SqlFramework.IO;
 
 namespace SqlFramework.DependencyInjection
@@ -12,7 +10,6 @@ namespace SqlFramework.DependencyInjection
         {
             builder.RegisterType<ConsoleTextWriter>().As<ITextWriter>().SingleInstance();
             builder.RegisterType<ConfigurationReader>().As<IConfigurationReader>().SingleInstance();
-            builder.RegisterType<DatabaseExtractor>().As<IDatabaseExtractor>().SingleInstance();
             builder.RegisterType<FileStorageProvider>().As<IStorageProvider>().SingleInstance();
             builder.RegisterType<DatabaseWriter>().As<IDatabaseWriter>().SingleInstance();
         }
