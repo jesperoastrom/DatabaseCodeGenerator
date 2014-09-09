@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.SqlServer.Management.Smo;
@@ -51,7 +52,7 @@ namespace SqlFramework.Data.SqlServer2012.Extractors
                     }
                     else
                     {
-                        throw new ArgumentException("Unable to locate stored procedure '" + escapedFullName + "'");
+                        throw new ArgumentException(string.Format("Unable to locate stored procedure '{0}'", escapedFullName));
                     }
                 }
 

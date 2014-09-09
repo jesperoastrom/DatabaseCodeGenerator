@@ -6,7 +6,7 @@ namespace SqlFramework.Data.Models
     {
         public override string ToString()
         {
-            return this.EscapedFullName;
+            return EscapedFullName;
         }
 
         int IComparable.CompareTo(object obj)

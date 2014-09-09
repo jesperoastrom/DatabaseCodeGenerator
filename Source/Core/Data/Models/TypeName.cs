@@ -21,7 +21,7 @@ namespace SqlFramework.Data.Models
                 return 1;
             }
 
-            return string.Compare(FullyQualifiedTypeName, other.FullyQualifiedTypeName);
+            return String.CompareOrdinal(FullyQualifiedTypeName, other.FullyQualifiedTypeName);
         }
 
         public string Namespace { get; set; }

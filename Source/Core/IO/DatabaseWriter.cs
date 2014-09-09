@@ -11,12 +11,14 @@ namespace SqlFramework.IO
             IConfigurationReader configurationReader,
             IDatabaseExtractor databaseExtractor,
             IStorageProvider storageProvider,
-            ITextWriter traceWriter)
+            ITextWriter traceWriter,
+            IWriterFactory writerFactory)
         {
             _configurationReader = configurationReader;
             _databaseExtractor = databaseExtractor;
             _storageProvider = storageProvider;
             _traceOutput = traceWriter;
+            _writerFactory = writerFactory;
         }
 
         private bool TryGetConfiguration(string configurationFile, out DatabaseConfiguration configuration)
@@ -57,29 +59,25 @@ namespace SqlFramework.IO
             {
                 if (databaseModel.StoredProcedures != null || databaseModel.UserDefinedTableTypes != null)
                 {
-                    WriteUsings(writer);
+                    _writerFactory
+                        .CreateUsingsWriter(writer)
+                        .WriteUsings();
                 }
 
                 if (databaseModel.StoredProcedures != null)
                 {
-                    new StoredProcedureWriter(writer).Write(databaseModel.StoredProcedures);
+                    _writerFactory
+                        .CreateStoredProcedureWriter(writer)
+                        .Write(databaseModel.StoredProcedures);
                 }
 
                 if (databaseModel.UserDefinedTableTypes != null)
                 {
-                    new UserDefinedTableTypeWriter(writer).Write(databaseModel.UserDefinedTableTypes);
+                    _writerFactory
+                        .CreateUserDefinedTableTypeWriter(writer)
+                        .Write(databaseModel.UserDefinedTableTypes);
                 }
             }
-        }
-
-        private void WriteUsings(ICodeWriter writer)
-        {
-            writer
-                .WriteIndentedLine("using System;")
-                .WriteIndentedLine("using System.Collections.Generic;")
-                .WriteIndentedLine("using System.Data;")
-                .WriteIndentedLine("using System.Data.SqlClient;")
-                .WriteNewLine();
         }
 
         public bool WriteOutput(string configurationFile, string outputFile, string indentation)
@@ -110,5 +108,6 @@ namespace SqlFramework.IO
         private readonly IDatabaseExtractor _databaseExtractor;
         private readonly IStorageProvider _storageProvider;
         private readonly ITextWriter _traceOutput;
+        private readonly IWriterFactory _writerFactory;
     }
 }

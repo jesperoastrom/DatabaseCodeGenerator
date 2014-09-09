@@ -17,7 +17,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -113,12 +113,14 @@
     <Compile Include="IO\ICodeWriter.cs" />
     <Compile Include="IO\IDatabaseWriter.cs" />
     <Compile Include="IO\IStorageProvider.cs" />
+    <Compile Include="IO\IStoredProcedureWriter.cs" />
     <Compile Include="IO\ITextWriter.cs" />
     <Compile Include="IO\FileStorageProvider.cs" />
-    <Compile Include="IO\StoredProcedureWriter.cs" />
+    <Compile Include="IO\IUserDefinedTableTypeWriter.cs" />
+    <Compile Include="IO\IUsingsWriter.cs" />
+    <Compile Include="IO\IWriterFactory.cs" />
     <Compile Include="IO\StreamCodeWriter.cs" />
     <Compile Include="IO\StringCodeWriter.cs" />
-    <Compile Include="IO\UserDefinedTableTypeWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
@@ -130,9 +132,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Extractors\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

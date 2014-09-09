@@ -35,7 +35,6 @@ namespace SqlFramework.Data.Models
         }
 
         private readonly ISchemaElementCollectionBuilder _collectionBuilder;
-
         private readonly Dictionary<string, ISchemaElementCollection<TElement>> _schemas;
     }
 }

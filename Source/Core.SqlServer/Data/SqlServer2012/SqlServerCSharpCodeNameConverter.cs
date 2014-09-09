@@ -126,8 +126,6 @@ namespace SqlFramework.Data.SqlServer2012
         {
             return CodeProvider.CreateValidIdentifier(value);
         }
-
-        //TODO Mutiple code providers?
         private static readonly CSharpCodeProvider CodeProvider = new CSharpCodeProvider();
     }
 }

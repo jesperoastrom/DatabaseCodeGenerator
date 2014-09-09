@@ -2,7 +2,7 @@ bin/
 obj/
 *.sln.cache
 *.suo
-*.csproj.user
+*.user
 Thumbs.db
 Source/TestResults/
 Build/Publish/

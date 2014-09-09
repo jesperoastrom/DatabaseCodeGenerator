@@ -29,7 +29,7 @@ namespace SqlFramework.Configuration
 
         private XmlSchemaSet GetSchemas()
         {
-            using (var xsdStream = EmbeddedResourceHelper.GetStreamFromEmbeddedResource<Resources>(Resources.Configuration.DatabaseConfiguration_xsd))
+            using (var xsdStream = EmbeddedResourceHelper.GetStreamFromEmbeddedResource<Resources>(Resources.Configuration.DatabaseConfigurationXsd))
             {
                 var schemas = new XmlSchemaSet();
                 schemas.Add(XmlSchema.Read(xsdStream, (sender, args) => { }));
