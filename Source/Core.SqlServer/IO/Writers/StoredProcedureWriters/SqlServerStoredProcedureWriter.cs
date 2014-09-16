@@ -4,7 +4,7 @@ using System.Linq;
 using SqlFramework.Data.Models;
 using SqlFramework.IO.CodeBuilders;
 
-namespace SqlFramework.IO.Writers
+namespace SqlFramework.IO.Writers.StoredProcedureWriters
 {
     public sealed class SqlServerStoredProcedureWriter : ElementWriterBase, IStoredProcedureWriter
     {

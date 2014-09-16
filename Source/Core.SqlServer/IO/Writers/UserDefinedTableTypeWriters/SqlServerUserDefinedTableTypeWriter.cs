@@ -3,7 +3,7 @@ using System.Linq;
 using SqlFramework.Data.Models;
 using SqlFramework.IO.CodeBuilders;
 
-namespace SqlFramework.IO.Writers
+namespace SqlFramework.IO.Writers.UserDefinedTableTypeWriters
 {
     public sealed class SqlServerUserDefinedTableTypeWriter : ElementWriterBase
     {
