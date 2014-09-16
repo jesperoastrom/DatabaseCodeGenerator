@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SqlFramework.Data.Models;
-using SqlFramework.IO;
 using SqlFramework.IO.CodeBuilders;
-using SqlFramework.IO.Writers;
 
-namespace SqlFramework.Data.SqlServer.IO
+namespace SqlFramework.IO.Writers
 {
     public sealed class SqlServerUserDefinedTableTypeWriter : ElementWriterBase
     {

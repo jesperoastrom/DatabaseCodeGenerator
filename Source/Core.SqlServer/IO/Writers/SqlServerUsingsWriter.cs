@@ -1,8 +1,6 @@
-﻿using SqlFramework.IO;
-using SqlFramework.IO.CodeBuilders;
-using SqlFramework.IO.Writers;
+﻿using SqlFramework.IO.CodeBuilders;
 
-namespace SqlFramework.Data.SqlServer.IO
+namespace SqlFramework.IO.Writers
 {
     public class SqlServerUsingsWriter : ElementWriterBase, IUsingsWriter
     {
