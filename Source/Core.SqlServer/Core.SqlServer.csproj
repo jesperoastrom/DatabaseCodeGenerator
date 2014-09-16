@@ -63,22 +63,22 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="Data\SqlServer2012\IO\SqlServerUsingsWriter.cs" />
-    <Compile Include="Data\SqlServer2012\IO\SqlServerStoredProcedureWriter.cs" />
-    <Compile Include="Data\SqlServer2012\IO\SqlServerUserDefinedTableTypeWriter.cs" />
+    <Compile Include="IO\Writers\SqlServerUsingsWriter.cs" />
+    <Compile Include="IO\Writers\SqlServerStoredProcedureWriter.cs" />
+    <Compile Include="IO\Writers\SqlServerUserDefinedTableTypeWriter.cs" />
     <Compile Include="DependencyInjection\SqlServerModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\SqlServer2012\Extractors\DatabaseExtractor.cs" />
-    <Compile Include="Data\SqlServer2012\Extractors\IStoredProcedureExtractor.cs">
+    <Compile Include="Data\Extractors\SqlServer\DatabaseExtractor.cs" />
+    <Compile Include="Data\Extractors\SqlServer\IStoredProcedureExtractor.cs">
       <DependentUpon>StoredProcedureExtractor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\SqlServer2012\Extractors\ITypeConverter.cs">
+    <Compile Include="Data\Extractors\SqlServer\ITypeConverter.cs">
       <DependentUpon>TypeConverter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\SqlServer2012\Extractors\StoredProcedureExtractor.cs" />
-    <Compile Include="Data\SqlServer2012\Extractors\TypeConverter.cs" />
-    <Compile Include="Data\SqlServer2012\Extractors\UserDefinedTableTypeExtractor.cs" />
-    <Compile Include="Data\SqlServer2012\SqlServerCSharpCodeNameConverter.cs" />
+    <Compile Include="Data\Extractors\SqlServer\StoredProcedureExtractor.cs" />
+    <Compile Include="Data\Extractors\SqlServer\TypeConverter.cs" />
+    <Compile Include="Data\Extractors\SqlServer\UserDefinedTableTypeExtractor.cs" />
+    <Compile Include="Data\Extractors\SqlServer\SqlServerCSharpCodeNameConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

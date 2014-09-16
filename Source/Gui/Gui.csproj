@@ -69,7 +69,7 @@
     </ApplicationDefinition>
     <Compile Include="Gui.Configuration\GuiConfiguration.cs" />
     <Compile Include="Gui.Configuration\GuiConfigurationProvider.cs" />
-    <Compile Include="Gui.IO\TextBoxTextWriter.cs" />
+    <Compile Include="Gui.IO\TextBoxOutputDestination.cs" />
     <Compile Include="Gui.Rules\RequiredRule.cs" />
     <Compile Include="Gui.ViewModels\MainViewModel.cs" />
     <Page Include="MainWindow.xaml">

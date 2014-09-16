@@ -7,6 +7,9 @@ using Autofac;
 using SqlFramework.Data;
 using SqlFramework.DependencyInjection;
 using SqlFramework.IO;
+using SqlFramework.IO.OutputDestinations;
+using SqlFramework.IO.StorageProviders;
+using SqlFramework.IO.Writers;
 using Tools.Database.CodeGenerator.Gui.Configuration;
 using Tools.Database.CodeGenerator.Gui.IO;
 using Tools.Database.CodeGenerator.Gui.ViewModels;
@@ -32,7 +35,7 @@ namespace Tools.Database.CodeGenerator.Gui
             var builder = new ContainerBuilder();
             builder.Register(c => new ConnectionStringProvider(connectionString)).As<IConnectionStringProvider>().SingleInstance();
             builder.RegisterModule<CoreModule>();
-            builder.RegisterInstance<ITextWriter>(new TextBoxTextWriter(this.tbMessages));
+            builder.RegisterInstance<IOutputDestination>(new TextBoxOutputDestination(this.tbMessages));
             return builder.Build();
         }
 

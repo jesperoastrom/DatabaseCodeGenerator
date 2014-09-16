@@ -77,7 +77,7 @@
     <Compile Include="Data\Builders\SchemaElementCollectionBuilder.cs" />
     <Compile Include="Data\Builders\TypeNameBuilder.cs" />
     <Compile Include="Data\ConnectionStringProvider.cs" />
-    <Compile Include="Data\IDatabaseExtractor.cs" />
+    <Compile Include="Data\Extractors\IDatabaseExtractor.cs" />
     <Compile Include="IDatabaseToCodeNameConverter.cs" />
     <Compile Include="Data\Models\IColumnModel.cs">
       <DependentUpon>ColumnModel.cs</DependentUpon>
@@ -107,20 +107,20 @@
     <Compile Include="Data\Models\UserDefinedTableTypeModel.cs" />
     <Compile Include="DependencyInjection\CoreModule.cs" />
     <Compile Include="EmbeddedResourceHelper.cs" />
-    <Compile Include="IO\ConsoleTextWriter.cs" />
-    <Compile Include="IO\DatabaseWriter.cs" />
-    <Compile Include="IO\ElementWriterBase.cs" />
-    <Compile Include="IO\ICodeWriter.cs" />
-    <Compile Include="IO\IDatabaseWriter.cs" />
-    <Compile Include="IO\IStorageProvider.cs" />
-    <Compile Include="IO\IStoredProcedureWriter.cs" />
-    <Compile Include="IO\ITextWriter.cs" />
-    <Compile Include="IO\FileStorageProvider.cs" />
-    <Compile Include="IO\IUserDefinedTableTypeWriter.cs" />
-    <Compile Include="IO\IUsingsWriter.cs" />
-    <Compile Include="IO\IWriterFactory.cs" />
-    <Compile Include="IO\StreamCodeWriter.cs" />
-    <Compile Include="IO\StringCodeWriter.cs" />
+    <Compile Include="IO\OutputDestinations\ConsoleOutputDestination.cs" />
+    <Compile Include="IO\Writers\DatabaseWriter.cs" />
+    <Compile Include="IO\Writers\ElementWriterBase.cs" />
+    <Compile Include="IO\CodeBuilders\ICodeBuilder.cs" />
+    <Compile Include="IO\Writers\IDatabaseWriter.cs" />
+    <Compile Include="IO\StorageProviders\IStorageProvider.cs" />
+    <Compile Include="IO\Writers\IStoredProcedureWriter.cs" />
+    <Compile Include="IO\OutputDestinations\IOutputDestination.cs" />
+    <Compile Include="IO\StorageProviders\FileStorageProvider.cs" />
+    <Compile Include="IO\Writers\IUserDefinedTableTypeWriter.cs" />
+    <Compile Include="IO\Writers\IUsingsWriter.cs" />
+    <Compile Include="IO\Writers\IWriterFactory.cs" />
+    <Compile Include="IO\CodeBuilders\StreamCodeBuilder.cs" />
+    <Compile Include="IO\CodeBuilders\StringCodeBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>

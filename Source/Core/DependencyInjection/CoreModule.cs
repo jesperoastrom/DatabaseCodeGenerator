@@ -1,6 +1,9 @@
 ﻿using Autofac;
 using SqlFramework.Configuration;
 using SqlFramework.IO;
+using SqlFramework.IO.OutputDestinations;
+using SqlFramework.IO.StorageProviders;
+using SqlFramework.IO.Writers;
 
 namespace SqlFramework.DependencyInjection
 {
@@ -8,7 +11,7 @@ namespace SqlFramework.DependencyInjection
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ConsoleTextWriter>().As<ITextWriter>().SingleInstance();
+            builder.RegisterType<ConsoleOutputDestination>().As<IOutputDestination>().SingleInstance();
             builder.RegisterType<ConfigurationReader>().As<IConfigurationReader>().SingleInstance();
             builder.RegisterType<FileStorageProvider>().As<IStorageProvider>().SingleInstance();
             builder.RegisterType<DatabaseWriter>().As<IDatabaseWriter>().SingleInstance();

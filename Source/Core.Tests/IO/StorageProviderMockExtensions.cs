@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Moq;
+using SqlFramework.IO.StorageProviders;
 
 namespace SqlFramework.IO
 {

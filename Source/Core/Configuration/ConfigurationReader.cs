@@ -4,6 +4,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using SqlFramework.IO;
+using SqlFramework.IO.StorageProviders;
 
 namespace SqlFramework.Configuration
 {

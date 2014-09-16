@@ -4,6 +4,7 @@ using NDesk.Options;
 using SqlFramework.Data;
 using SqlFramework.DependencyInjection;
 using SqlFramework.IO;
+using SqlFramework.IO.Writers;
 
 namespace SqlFramework.Console
 {

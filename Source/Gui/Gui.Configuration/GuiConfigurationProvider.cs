@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
 using SqlFramework.IO;
-
-
+using SqlFramework.IO.StorageProviders;
 
 namespace Tools.Database.CodeGenerator.Gui.Configuration
 {

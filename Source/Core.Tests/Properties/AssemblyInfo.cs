@@ -1,2 +1,2 @@
-﻿[assembly: System.Reflection.AssemblyTitle("SqlFramework.Tests")]
-[assembly: System.Runtime.InteropServices.Guid("6d71749d-6ab5-410e-88d6-18549c3736bb")]
+﻿[assembly: System.Reflection.AssemblyTitle("Core.Tests")]
+[assembly: System.Runtime.InteropServices.Guid("e1a7bcd7-e847-4e88-a029-d3692d897d87")]
