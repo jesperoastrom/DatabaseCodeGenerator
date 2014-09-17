@@ -1,9 +1,9 @@
-﻿using System.IO;
-using Moq;
-using SqlFramework.IO.StorageProviders;
-
-namespace SqlFramework.IO
+﻿namespace SqlFramework.IO
 {
+    using System.IO;
+    using Moq;
+    using StorageProviders;
+
     internal static class StorageProviderMockExtensions
     {
         public static void SimulateFileExists(this Mock<IStorageProvider> mock, string fileName, bool returnValue)

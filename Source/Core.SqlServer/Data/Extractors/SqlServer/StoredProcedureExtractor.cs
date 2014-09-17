@@ -1,23 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using Microsoft.SqlServer.Management.Smo;
-using SqlFramework.Configuration;
-using SqlFramework.Data.Builders;
-using SqlFramework.Data.Models;
-
-namespace SqlFramework.Data.Extractors.SqlServer
+﻿namespace SqlFramework.Data.Extractors.SqlServer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using System.Text;
+    using Builders;
+    using Configuration;
+    using Microsoft.SqlServer.Management.Smo;
+    using Models;
+
     public sealed class StoredProcedureExtractor
     {
-        public StoredProcedureExtractor(IConnectionStringProvider connectionStringProvider,
-                                        IDatabaseToCodeNameConverter nameConverter,
-                                        ITypeConverter typeConverter,
-                                        ITypeNameBuilder typeNameBuilder,
-                                        ISchemaElementCollectionBuilder schemaElementCollectionBuilder)
+        public StoredProcedureExtractor(
+            IConnectionStringProvider connectionStringProvider,
+            IDatabaseToCodeNameConverter nameConverter,
+            ITypeConverter typeConverter,
+            ITypeNameBuilder typeNameBuilder,
+            ISchemaElementCollectionBuilder schemaElementCollectionBuilder)
         {
             _connectionStringProvider = connectionStringProvider;
             _nameConverter = nameConverter;
@@ -84,9 +85,9 @@ namespace SqlFramework.Data.Extractors.SqlServer
                 dataType.SqlDataType == SqlDataType.Decimal ||
                 dataType.SqlDataType == SqlDataType.Float ||
                 dataType.SqlDataType == SqlDataType.Numeric ||
-                dataType.SqlDataType == SqlDataType.Real ?
-                    new int?(dataType.NumericPrecision) :
-                    null;
+                dataType.SqlDataType == SqlDataType.Real
+                    ? new int?(dataType.NumericPrecision)
+                    : null;
         }
 
         private int? GetNumericScale(DataType dataType)
@@ -95,18 +96,18 @@ namespace SqlFramework.Data.Extractors.SqlServer
                 dataType.SqlDataType == SqlDataType.Decimal ||
                 dataType.SqlDataType == SqlDataType.Float ||
                 dataType.SqlDataType == SqlDataType.Numeric ||
-                dataType.SqlDataType == SqlDataType.Real ?
-                    new int?(dataType.NumericScale) :
-                    null;
+                dataType.SqlDataType == SqlDataType.Real
+                    ? new int?(dataType.NumericScale)
+                    : null;
         }
 
         private List<ParameterModel> GetParameters(DatabaseConfiguration configuration, StoredProcedure procedure)
         {
             return
                 procedure.Parameters
-                         .Cast<StoredProcedureParameter>()
-                         .Select(p => ToModel(configuration, p))
-                         .ToList();
+                    .Cast<StoredProcedureParameter>()
+                    .Select(p => ToModel(configuration, p))
+                    .ToList();
         }
 
         private StoredProcedureResultModel GetResult(SqlDataReader reader)
@@ -123,8 +124,8 @@ namespace SqlFramework.Data.Extractors.SqlServer
 
             foreach (DataRow row in table.Rows)
             {
-                var type = (Type) row["DataType"];
-                var allowDbNull = (bool?) row["AllowDBNull"];
+                var type = (Type)row["DataType"];
+                var allowDbNull = (bool?)row["AllowDBNull"];
                 model.Columns.Add(new ColumnModel()
                                       {
                                           DatabaseName = row["ColumnName"] as string,
@@ -194,9 +195,9 @@ namespace SqlFramework.Data.Extractors.SqlServer
                 dataType.SqlDataType == SqlDataType.VarBinary ||
                 dataType.SqlDataType == SqlDataType.VarChar ||
                 dataType.SqlDataType == SqlDataType.VarBinaryMax ||
-                dataType.SqlDataType == SqlDataType.VarCharMax ?
-                    new int?(dataType.MaximumLength) :
-                    null;
+                dataType.SqlDataType == SqlDataType.VarCharMax
+                    ? new int?(dataType.MaximumLength)
+                    : null;
         }
 
         private StoredProcedureModel ToModel(SqlConnection connection, DatabaseConfiguration configuration, StoredProcedure procedure)

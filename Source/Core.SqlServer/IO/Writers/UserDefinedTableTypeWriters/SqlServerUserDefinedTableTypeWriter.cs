@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using SqlFramework.Data.Models;
-using SqlFramework.IO.CodeBuilders;
-
-namespace SqlFramework.IO.Writers.UserDefinedTableTypeWriters
+﻿namespace SqlFramework.IO.Writers.UserDefinedTableTypeWriters
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using CodeBuilders;
+    using Data.Models;
+
     public sealed class SqlServerUserDefinedTableTypeWriter : ElementWriterBase
     {
         public SqlServerUserDefinedTableTypeWriter(ICodeBuilder builder)

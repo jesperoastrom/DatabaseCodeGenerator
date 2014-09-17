@@ -1,15 +1,16 @@
-﻿using System.Data.SqlClient;
-using Microsoft.SqlServer.Management.Common;
-using Microsoft.SqlServer.Management.Smo;
-using SqlFramework.Configuration;
-using SqlFramework.Data.Models;
-
-namespace SqlFramework.Data.Extractors.SqlServer
+﻿namespace SqlFramework.Data.Extractors.SqlServer
 {
+    using System.Data.SqlClient;
+    using Configuration;
+    using Microsoft.SqlServer.Management.Common;
+    using Microsoft.SqlServer.Management.Smo;
+    using Models;
+
     public sealed class DatabaseExtractor : IDatabaseExtractor
     {
-        public DatabaseExtractor(IConnectionStringProvider connectionStringProvider,
-                                 IStoredProcedureExtractor storedProcedureExtractor)
+        public DatabaseExtractor(
+            IConnectionStringProvider connectionStringProvider,
+            IStoredProcedureExtractor storedProcedureExtractor)
         {
             _connectionStringProvider = connectionStringProvider;
             _storedProcedureExtractor = storedProcedureExtractor;

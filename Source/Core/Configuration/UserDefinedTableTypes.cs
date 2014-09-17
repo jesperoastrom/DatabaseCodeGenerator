@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace SqlFramework.Configuration
+﻿namespace SqlFramework.Configuration
 {
+    using System.Collections.Generic;
+
     public sealed class UserDefinedTableTypes
     {
         [System.Xml.Serialization.XmlAttribute("Namespace")]

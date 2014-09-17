@@ -1,19 +1,19 @@
-﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using System.Reflection;
-using Autofac;
-using FluentAssertions;
-using Microsoft.CSharp;
-using Microsoft.SqlServer.Management.Common;
-using Microsoft.SqlServer.Management.Smo;
-using Xunit;
-
-namespace SqlFramework.IO.Tests
+﻿namespace SqlFramework.IO.Tests
 {
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data;
+    using System.Data.SqlClient;
+    using System.Reflection;
+    using Autofac;
+    using FluentAssertions;
+    using Microsoft.CSharp;
+    using Microsoft.SqlServer.Management.Common;
+    using Microsoft.SqlServer.Management.Smo;
+    using Xunit;
+
     public sealed class DatabaseWriterTests : IDisposable
     {
         public DatabaseWriterTests()
@@ -88,16 +88,22 @@ namespace SqlFramework.IO.Tests
 
             var codeProvider = new CSharpCodeProvider(new Dictionary<string, string>
                                                           {
-                                                              {"CompilerVersion", "v4.0"}
+                                                              { "CompilerVersion", "v4.0" }
                                                           });
-            var parameters = new CompilerParameters(new[]
-                                                        {
-                                                            "mscorlib.dll",
-                                                            "System.dll",
-                                                            "System.Core.dll",
-                                                            "System.Data.dll",
-                                                            "System.Xml.dll"
-                                                        }, "DatabaseTest.exe", true) {GenerateExecutable = true};
+            var parameters = new CompilerParameters(
+                new[]
+                    {
+                        "mscorlib.dll",
+                        "System.dll",
+                        "System.Core.dll",
+                        "System.Data.dll",
+                        "System.Xml.dll"
+                    },
+                "DatabaseTest.exe",
+                true);
+
+            parameters.GenerateExecutable = true;
+
             CompilerResults results = codeProvider.CompileAssemblyFromSource(parameters, code);
             foreach (CompilerError error in results.Errors)
             {
@@ -120,10 +126,10 @@ namespace SqlFramework.IO.Tests
 
         private static void ExecuteResultFromConnectionString(Type spType, object sp)
         {
-            MethodInfo method = spType.GetMethod("ExecuteResult", new[] {typeof (string)});
+            MethodInfo method = spType.GetMethod("ExecuteResult", new[] { typeof(string) });
             method.Should().NotBeNull("Could not locate ExecuteResult method");
 
-            method.Invoke(sp, new object[] {TestConnectionString});
+            method.Invoke(sp, new object[] { TestConnectionString });
         }
 
         //private static void HasExecuteResultFromCommand(Type spType, object sp)

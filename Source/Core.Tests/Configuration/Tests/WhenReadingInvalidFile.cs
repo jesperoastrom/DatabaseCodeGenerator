@@ -1,9 +1,9 @@
-﻿using System.Xml.Schema;
-using SqlFramework.IO;
-using Xunit;
-
-namespace SqlFramework.Configuration.Tests
+﻿namespace SqlFramework.Configuration.Tests
 {
+    using System.Xml.Schema;
+    using IO;
+    using Xunit;
+
     public class WhenReadingInvalidFile : ConfigurationReaderTest
     {
         public WhenReadingInvalidFile()

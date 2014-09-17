@@ -1,7 +1,7 @@
-﻿using SqlFramework.IO.CodeBuilders;
-
-namespace SqlFramework.IO.Writers
+﻿namespace SqlFramework.IO.Writers
 {
+    using CodeBuilders;
+
     public interface IWriterFactory
     {
         IStoredProcedureWriter CreateStoredProcedureWriter(ICodeBuilder builder);

@@ -3,6 +3,7 @@
     public sealed class DatabaseModel
     {
         public SchemaCollection<UserDefinedTableTypeModel> UserDefinedTableTypes { get; set; }
+
         public SchemaCollection<StoredProcedureModel> StoredProcedures { get; set; }
     }
 }

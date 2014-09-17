@@ -1,9 +1,9 @@
-﻿using System.IO;
-using SqlFramework.IO;
-using Xunit;
-
-namespace SqlFramework.Configuration.Tests
+﻿namespace SqlFramework.Configuration.Tests
 {
+    using System.IO;
+    using IO;
+    using Xunit;
+
     public class WhenReadingFileThatDoesntExist : ConfigurationReaderTest
     {
         public WhenReadingFileThatDoesntExist()

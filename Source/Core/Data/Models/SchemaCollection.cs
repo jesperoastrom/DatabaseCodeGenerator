@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using SqlFramework.Data.Builders;
-
-namespace SqlFramework.Data.Models
+﻿namespace SqlFramework.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using Builders;
+
     public sealed class SchemaCollection<TElement>
     {
         public SchemaCollection(ISchemaElementCollectionBuilder collectionBuilder, string elementNamespace)

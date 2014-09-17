@@ -1,7 +1,7 @@
-﻿using SqlFramework.Data.Models;
-
-namespace SqlFramework.Data.Extractors
+﻿namespace SqlFramework.Data.Extractors
 {
+    using Models;
+
     public interface IDatabaseExtractor
     {
         DatabaseModel Extract(Configuration.DatabaseConfiguration configuration);

@@ -1,8 +1,8 @@
-﻿using System;
-using SqlFramework.IO.CodeBuilders;
-
-namespace SqlFramework.IO.Writers
+﻿namespace SqlFramework.IO.Writers
 {
+    using System;
+    using CodeBuilders;
+
     public abstract class ElementWriterBase
     {
         protected ElementWriterBase(ICodeBuilder builder)

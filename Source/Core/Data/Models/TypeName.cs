@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace SqlFramework.Data.Models
+﻿namespace SqlFramework.Data.Models
 {
+    using System;
+
     public sealed class TypeName : ITypeName, IComparable<TypeName>, IComparable
     {
         public override string ToString()
@@ -11,7 +11,7 @@ namespace SqlFramework.Data.Models
 
         int IComparable.CompareTo(object obj)
         {
-            return ((IComparable<TypeName>) this).CompareTo(obj as TypeName);
+            return ((IComparable<TypeName>)this).CompareTo(obj as TypeName);
         }
 
         int IComparable<TypeName>.CompareTo(TypeName other)
@@ -21,7 +21,7 @@ namespace SqlFramework.Data.Models
                 return 1;
             }
 
-            return String.CompareOrdinal(FullyQualifiedTypeName, other.FullyQualifiedTypeName);
+            return string.CompareOrdinal(FullyQualifiedTypeName, other.FullyQualifiedTypeName);
         }
 
         public string Namespace { get; set; }

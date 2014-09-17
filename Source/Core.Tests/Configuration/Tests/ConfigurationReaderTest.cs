@@ -1,9 +1,8 @@
-﻿using Moq;
-using SqlFramework.IO;
-using SqlFramework.IO.StorageProviders;
-
-namespace SqlFramework.Configuration.Tests
+﻿namespace SqlFramework.Configuration.Tests
 {
+    using IO.StorageProviders;
+    using Moq;
+
     public abstract class ConfigurationReaderTest
     {
         protected ConfigurationReaderTest()
@@ -14,7 +13,7 @@ namespace SqlFramework.Configuration.Tests
         }
 
         protected readonly ConfigurationReader ConfigurationReader;
-        protected readonly Mock<IStorageProvider> StorageProviderMock;
         protected readonly Mock<IDatabaseToCodeNameConverter> DatabaseToCodeNameConverter;
+        protected readonly Mock<IStorageProvider> StorageProviderMock;
     }
 }

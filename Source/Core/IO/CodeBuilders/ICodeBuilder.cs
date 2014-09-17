@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace SqlFramework.IO.CodeBuilders
+﻿namespace SqlFramework.IO.CodeBuilders
 {
+    using System;
+
     public interface ICodeBuilder : IDisposable
     {
         byte Indent { get; set; }

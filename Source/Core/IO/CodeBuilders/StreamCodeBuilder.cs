@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-namespace SqlFramework.IO.CodeBuilders
+﻿namespace SqlFramework.IO.CodeBuilders
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+
     public class StreamCodeBuilder : ICodeBuilder
     {
         public StreamCodeBuilder(Stream stream, string indentation)

@@ -1,13 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using SqlFramework.IO;
-using SqlFramework.IO.StorageProviders;
-
-namespace SqlFramework.Configuration
+﻿namespace SqlFramework.Configuration
 {
+    using System;
+    using System.IO;
+    using System.Xml;
+    using System.Xml.Schema;
+    using System.Xml.Serialization;
+    using IO.StorageProviders;
+
     public sealed class ConfigurationReader : IConfigurationReader
     {
         public ConfigurationReader(IStorageProvider storageProvider, IDatabaseToCodeNameConverter nameConverter)
@@ -60,8 +59,8 @@ namespace SqlFramework.Configuration
             {
                 using (XmlReader reader = XmlReader.Create(stream, settings))
                 {
-                    var serializer = new XmlSerializer(typeof (DatabaseConfiguration));
-                    configuration = (DatabaseConfiguration) serializer.Deserialize(reader);
+                    var serializer = new XmlSerializer(typeof(DatabaseConfiguration));
+                    configuration = (DatabaseConfiguration)serializer.Deserialize(reader);
                     configuration.TableTypeNamespaceFromStoredProcedure =
                         _nameConverter.GetShortestNamespaceTo(
                             configuration.StoredProcedures.Namespace,

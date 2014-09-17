@@ -1,10 +1,10 @@
-﻿using System;
-using FluentAssertions;
-using SqlFramework.Data.Extractors.SqlServer;
-using Xunit;
-
-namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConverterTests
+﻿namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConverterTests
 {
+    using System;
+    using FluentAssertions;
+    using SqlServer;
+    using Xunit;
+
     public class ToParameterNameTests
     {
         public ToParameterNameTests()
@@ -27,7 +27,7 @@ namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConv
         [Fact]
         public void WhenNameIsEmptyThenParameterNameThrows()
         {
-            Assert.Throws<ArgumentException>(() => _converter.ToParameterName(""));
+            Assert.Throws<ArgumentException>(() => _converter.ToParameterName(string.Empty));
         }
 
         [Fact]

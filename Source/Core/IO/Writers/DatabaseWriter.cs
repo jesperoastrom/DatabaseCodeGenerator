@@ -1,14 +1,13 @@
-﻿using System;
-using SqlFramework.Configuration;
-using SqlFramework.Data;
-using SqlFramework.Data.Extractors;
-using SqlFramework.Data.Models;
-using SqlFramework.IO.CodeBuilders;
-using SqlFramework.IO.OutputDestinations;
-using SqlFramework.IO.StorageProviders;
-
-namespace SqlFramework.IO.Writers
+﻿namespace SqlFramework.IO.Writers
 {
+    using System;
+    using CodeBuilders;
+    using Configuration;
+    using Data.Extractors;
+    using Data.Models;
+    using OutputDestinations;
+    using StorageProviders;
+
     public sealed class DatabaseWriter : IDatabaseWriter
     {
         public DatabaseWriter(

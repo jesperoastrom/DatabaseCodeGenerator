@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace SqlFramework.Data.Models
+﻿namespace SqlFramework.Data.Models
 {
+    using System.Collections.Generic;
+
     public sealed class StoredProcedureResultModel
     {
         public List<ColumnModel> Columns { get; set; }

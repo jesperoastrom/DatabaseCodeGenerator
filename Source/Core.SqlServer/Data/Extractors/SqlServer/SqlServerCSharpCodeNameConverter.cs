@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.CSharp;
-
-namespace SqlFramework.Data.Extractors.SqlServer
+﻿namespace SqlFramework.Data.Extractors.SqlServer
 {
+    using System;
+    using Microsoft.CSharp;
+
     public sealed class SqlServerCSharpCodeNameConverter : IDatabaseToCodeNameConverter
     {
         public string EscapeDatabaseName(params string[] names)
@@ -126,6 +126,7 @@ namespace SqlFramework.Data.Extractors.SqlServer
         {
             return CodeProvider.CreateValidIdentifier(value);
         }
+
         private static readonly CSharpCodeProvider CodeProvider = new CSharpCodeProvider();
     }
 }

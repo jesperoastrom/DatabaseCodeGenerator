@@ -1,10 +1,10 @@
-﻿using System;
-using FluentAssertions;
-using SqlFramework.Data.Extractors.SqlServer;
-using Xunit;
-
-namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConverterTests
+﻿namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConverterTests
 {
+    using System;
+    using FluentAssertions;
+    using SqlServer;
+    using Xunit;
+
     public class EscapeDatabaseNameTests
     {
         public EscapeDatabaseNameTests()
@@ -15,7 +15,7 @@ namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConv
         [Fact]
         public void WhenNameIsEmptyThenEscapedDatabaseNameThrows()
         {
-            Assert.Throws<ArgumentException>(() => _converter.EscapeDatabaseName(""));
+            Assert.Throws<ArgumentException>(() => _converter.EscapeDatabaseName(string.Empty));
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConv
         [Fact]
         public void WhenNameIsNullThenEscapedDatabaseNameThrows()
         {
-            Assert.Throws<ArgumentNullException>(() => (_converter.EscapeDatabaseName((string) null)));
+            Assert.Throws<ArgumentNullException>(() => _converter.EscapeDatabaseName((string)null));
         }
 
         [Fact]

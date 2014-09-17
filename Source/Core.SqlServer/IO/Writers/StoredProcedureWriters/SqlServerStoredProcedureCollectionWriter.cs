@@ -1,18 +1,34 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using SqlFramework.Data.Models;
-using SqlFramework.IO.CodeBuilders;
-
-namespace SqlFramework.IO.Writers.StoredProcedureWriters
+﻿namespace SqlFramework.IO.Writers.StoredProcedureWriters
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using CodeBuilders;
+    using Data.Models;
+
     public sealed class SqlServerStoredProcedureCollectionWriter : ElementWriterBase, IStoredProcedureWriter
     {
-        private readonly SqlServerStoredProcedureWriter _procedureWriter;
-
         public SqlServerStoredProcedureCollectionWriter(ICodeBuilder builder)
             : base(builder)
         {
             _procedureWriter = new SqlServerStoredProcedureWriter(builder);
+        }
+
+        private void WriteGetValueOrDefaultMethod()
+        {
+            Builder.WriteNewLine();
+            Builder.WriteIndentedLine("private static T GetValueOrDefault<T>(SqlDataReader reader, string columnName)");
+            Builder.WriteIndentedLine("{");
+            Builder.Indent++;
+            {
+                Builder.WriteIndentedLine("return reader.IsDBNull(reader.GetOrdinal(columnName)) ?");
+                Builder.Indent++;
+                {
+                    Builder.WriteIndentedLine("default(T) :");
+                    Builder.WriteIndentedLine("(T)reader[columnName];");
+                }
+                Builder.Indent--; //No block end here
+            }
+            WriteBlockEnd();
         }
 
         public void Write(SchemaCollection<StoredProcedureModel> storedProcedures)
@@ -39,22 +55,6 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
             WriteBlockEnd();
         }
 
-        private void WriteGetValueOrDefaultMethod()
-        {
-            Builder.WriteNewLine();
-            Builder.WriteIndentedLine("private static T GetValueOrDefault<T>(SqlDataReader reader, string columnName)");
-            Builder.WriteIndentedLine("{");
-            Builder.Indent++;
-            {
-                Builder.WriteIndentedLine("return reader.IsDBNull(reader.GetOrdinal(columnName)) ?");
-                Builder.Indent++;
-                {
-                    Builder.WriteIndentedLine("default(T) :");
-                    Builder.WriteIndentedLine("(T)reader[columnName];");
-                }
-                Builder.Indent--; //No block end here
-            }
-            WriteBlockEnd();
-        }
+        private readonly SqlServerStoredProcedureWriter _procedureWriter;
     }
 }

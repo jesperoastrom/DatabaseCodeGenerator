@@ -1,9 +1,9 @@
-﻿using System;
-using Moq;
-using SqlFramework.IO.OutputDestinations;
-
-namespace SqlFramework.IO
+﻿namespace SqlFramework.IO
 {
+    using System;
+    using Moq;
+    using OutputDestinations;
+
     internal static class TextWriterMockExtensions
     {
         public static void SimulateWriteLine(this Mock<IOutputDestination> mock, Action<string> action)

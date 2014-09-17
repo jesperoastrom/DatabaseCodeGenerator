@@ -18,6 +18,7 @@
 
             private const string Path = TestResources.Path + "Configuration.";
         }
+
         private const string Path = "SqlFramework.";
     }
 }

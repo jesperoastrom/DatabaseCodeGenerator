@@ -1,64 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Xml.Linq;
-using Microsoft.SqlServer.Management.Smo;
-using SqlFramework.Data.Models;
-
-namespace SqlFramework.Data.Extractors.SqlServer
+﻿namespace SqlFramework.Data.Extractors.SqlServer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Xml.Linq;
+    using Microsoft.SqlServer.Management.Smo;
+    using Models;
+
     public sealed class TypeConverter : ITypeConverter
     {
         static TypeConverter()
         {
             PrettyStringLookup = new Dictionary<Type, string>();
-            PrettyStringLookup.Add(typeof (Byte), "byte");
-            PrettyStringLookup.Add(typeof (Int16), "short");
-            PrettyStringLookup.Add(typeof (Int32), "int");
-            PrettyStringLookup.Add(typeof (Int64), "long");
-            PrettyStringLookup.Add(typeof (Boolean), "bool");
-            PrettyStringLookup.Add(typeof (Decimal), "decimal");
-            PrettyStringLookup.Add(typeof (Char), "char");
-            PrettyStringLookup.Add(typeof (String), "string");
+            PrettyStringLookup.Add(typeof(byte), "byte");
+            PrettyStringLookup.Add(typeof(short), "short");
+            PrettyStringLookup.Add(typeof(int), "int");
+            PrettyStringLookup.Add(typeof(long), "long");
+            PrettyStringLookup.Add(typeof(bool), "bool");
+            PrettyStringLookup.Add(typeof(decimal), "decimal");
+            PrettyStringLookup.Add(typeof(char), "char");
+            PrettyStringLookup.Add(typeof(string), "string");
 
             TypeLookup = new Dictionary<SqlDataType, Type>();
-            TypeLookup.Add(SqlDataType.BigInt, typeof (Int64));
-            TypeLookup.Add(SqlDataType.Bit, typeof (Boolean));
-            TypeLookup.Add(SqlDataType.Binary, typeof (Byte[]));
-            TypeLookup.Add(SqlDataType.Char, typeof (String));
-            TypeLookup.Add(SqlDataType.Date, typeof (DateTime));
-            TypeLookup.Add(SqlDataType.DateTime, typeof (DateTime));
-            TypeLookup.Add(SqlDataType.DateTime2, typeof (DateTime));
-            TypeLookup.Add(SqlDataType.DateTimeOffset, typeof (DateTimeOffset));
-            TypeLookup.Add(SqlDataType.Decimal, typeof (Decimal));
-            TypeLookup.Add(SqlDataType.Float, typeof (Double));
-            TypeLookup.Add(SqlDataType.Image, typeof (Byte[]));
-            TypeLookup.Add(SqlDataType.Int, typeof (Int32));
-            TypeLookup.Add(SqlDataType.Money, typeof (Decimal));
-            TypeLookup.Add(SqlDataType.NChar, typeof (String));
-            TypeLookup.Add(SqlDataType.NText, typeof (String));
-            TypeLookup.Add(SqlDataType.Numeric, typeof (Decimal));
-            TypeLookup.Add(SqlDataType.NVarChar, typeof (String));
-            TypeLookup.Add(SqlDataType.NVarCharMax, typeof (String));
-            TypeLookup.Add(SqlDataType.Real, typeof (Single));
-            TypeLookup.Add(SqlDataType.SmallDateTime, typeof (DateTime));
-            TypeLookup.Add(SqlDataType.SmallInt, typeof (Int16));
-            TypeLookup.Add(SqlDataType.SmallMoney, typeof (Decimal));
-            TypeLookup.Add(SqlDataType.SysName, typeof (String));
-            TypeLookup.Add(SqlDataType.Text, typeof (String));
-            TypeLookup.Add(SqlDataType.Time, typeof (TimeSpan));
-            TypeLookup.Add(SqlDataType.Timestamp, typeof (Byte[]));
-            TypeLookup.Add(SqlDataType.TinyInt, typeof (Byte));
-            TypeLookup.Add(SqlDataType.UniqueIdentifier, typeof (Guid));
-            TypeLookup.Add(SqlDataType.UserDefinedDataType, typeof (Object));
-            TypeLookup.Add(SqlDataType.UserDefinedTableType, typeof (DataTable));
-            TypeLookup.Add(SqlDataType.UserDefinedType, typeof (Object));
-            TypeLookup.Add(SqlDataType.VarBinary, typeof (Byte[]));
-            TypeLookup.Add(SqlDataType.VarBinaryMax, typeof (Byte[]));
-            TypeLookup.Add(SqlDataType.VarChar, typeof (String));
-            TypeLookup.Add(SqlDataType.VarCharMax, typeof (String));
-            TypeLookup.Add(SqlDataType.Variant, typeof (Object));
-            TypeLookup.Add(SqlDataType.Xml, typeof (XElement));
+            TypeLookup.Add(SqlDataType.BigInt, typeof(long));
+            TypeLookup.Add(SqlDataType.Bit, typeof(bool));
+            TypeLookup.Add(SqlDataType.Binary, typeof(byte[]));
+            TypeLookup.Add(SqlDataType.Char, typeof(string));
+            TypeLookup.Add(SqlDataType.Date, typeof(DateTime));
+            TypeLookup.Add(SqlDataType.DateTime, typeof(DateTime));
+            TypeLookup.Add(SqlDataType.DateTime2, typeof(DateTime));
+            TypeLookup.Add(SqlDataType.DateTimeOffset, typeof(DateTimeOffset));
+            TypeLookup.Add(SqlDataType.Decimal, typeof(decimal));
+            TypeLookup.Add(SqlDataType.Float, typeof(double));
+            TypeLookup.Add(SqlDataType.Image, typeof(byte[]));
+            TypeLookup.Add(SqlDataType.Int, typeof(int));
+            TypeLookup.Add(SqlDataType.Money, typeof(decimal));
+            TypeLookup.Add(SqlDataType.NChar, typeof(string));
+            TypeLookup.Add(SqlDataType.NText, typeof(string));
+            TypeLookup.Add(SqlDataType.Numeric, typeof(decimal));
+            TypeLookup.Add(SqlDataType.NVarChar, typeof(string));
+            TypeLookup.Add(SqlDataType.NVarCharMax, typeof(string));
+            TypeLookup.Add(SqlDataType.Real, typeof(float));
+            TypeLookup.Add(SqlDataType.SmallDateTime, typeof(DateTime));
+            TypeLookup.Add(SqlDataType.SmallInt, typeof(short));
+            TypeLookup.Add(SqlDataType.SmallMoney, typeof(decimal));
+            TypeLookup.Add(SqlDataType.SysName, typeof(string));
+            TypeLookup.Add(SqlDataType.Text, typeof(string));
+            TypeLookup.Add(SqlDataType.Time, typeof(TimeSpan));
+            TypeLookup.Add(SqlDataType.Timestamp, typeof(byte[]));
+            TypeLookup.Add(SqlDataType.TinyInt, typeof(byte));
+            TypeLookup.Add(SqlDataType.UniqueIdentifier, typeof(Guid));
+            TypeLookup.Add(SqlDataType.UserDefinedDataType, typeof(object));
+            TypeLookup.Add(SqlDataType.UserDefinedTableType, typeof(DataTable));
+            TypeLookup.Add(SqlDataType.UserDefinedType, typeof(object));
+            TypeLookup.Add(SqlDataType.VarBinary, typeof(byte[]));
+            TypeLookup.Add(SqlDataType.VarBinaryMax, typeof(byte[]));
+            TypeLookup.Add(SqlDataType.VarChar, typeof(string));
+            TypeLookup.Add(SqlDataType.VarCharMax, typeof(string));
+            TypeLookup.Add(SqlDataType.Variant, typeof(object));
+            TypeLookup.Add(SqlDataType.Xml, typeof(XElement));
 
             SqlDbTypeLookup = new Dictionary<SqlDataType, SqlDbType>();
             SqlDbTypeLookup.Add(SqlDataType.BigInt, SqlDbType.BigInt);
@@ -109,8 +109,11 @@ namespace SqlFramework.Data.Extractors.SqlServer
         {
             if (parameter.DataType.SqlDataType == SqlDataType.UserDefinedTableType)
             {
-                string typeName = _nameConverter.GetFullyQualifiedTypeName(ns, parameter.DataType.Schema,
-                                                                           parameter.DataType.Name);
+                string typeName = _nameConverter.GetFullyQualifiedTypeName(
+                    ns,
+                    parameter.DataType.Schema,
+                    parameter.DataType.Name);
+
                 return new ClrType
                            {
                                IsUserDefined = true,
@@ -125,8 +128,11 @@ namespace SqlFramework.Data.Extractors.SqlServer
         {
             if (column.DataType.SqlDataType == SqlDataType.UserDefinedTableType)
             {
-                string typeName = _nameConverter.GetFullyQualifiedTypeName(ns, column.DataType.Schema,
-                                                                           column.DataType.Name);
+                string typeName = _nameConverter.GetFullyQualifiedTypeName(
+                    ns,
+                    column.DataType.Schema,
+                    column.DataType.Name);
+
                 return new ClrType
                            {
                                IsUserDefined = true,

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.SqlServer.Management.Smo;
-using SqlFramework.Data.Builders;
-using SqlFramework.Data.Models;
-
-namespace SqlFramework.Data.Extractors.SqlServer
+﻿namespace SqlFramework.Data.Extractors.SqlServer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Builders;
+    using Microsoft.SqlServer.Management.Smo;
+    using Models;
+
     public sealed class UserDefinedTableTypeExtractor
     {
         public UserDefinedTableTypeExtractor(
@@ -30,7 +30,7 @@ namespace SqlFramework.Data.Extractors.SqlServer
                 .ToDictionary(t => _nameConverter.EscapeDatabaseName(t.Schema, t.Name), StringComparer.OrdinalIgnoreCase);
         }
 
-        public SchemaCollection<UserDefinedTableTypeModel> Extract(Configuration.DatabaseConfiguration configuration)
+        public SchemaCollection<UserDefinedTableTypeModel> Extract(SqlFramework.Configuration.DatabaseConfiguration configuration)
         {
             var collection = new SchemaCollection<UserDefinedTableTypeModel>(
                 _schemaElementCollectionBuilder,
@@ -74,9 +74,9 @@ namespace SqlFramework.Data.Extractors.SqlServer
 
         private readonly IDatabaseNameBuilder _databaseNameBuilder;
         private readonly IDatabaseToCodeNameConverter _nameConverter;
-        private readonly ITypeConverter _typeConverter;
         private readonly ISchemaElementCollectionBuilder _schemaElementCollectionBuilder;
         private readonly Dictionary<string, UserDefinedTableType> _tableTypeLookup;
+        private readonly ITypeConverter _typeConverter;
         private readonly ITypeNameBuilder _typeNameBuilder;
     }
 }

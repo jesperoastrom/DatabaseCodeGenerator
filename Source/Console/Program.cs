@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using Autofac;
-using NDesk.Options;
-using SqlFramework.Data;
-using SqlFramework.DependencyInjection;
-using SqlFramework.IO;
-using SqlFramework.IO.Writers;
-
-namespace SqlFramework.Console
+﻿namespace SqlFramework.Console
 {
+    using System.Collections.Generic;
+    using Autofac;
+    using Data;
+    using DependencyInjection;
+    using IO.Writers;
+    using NDesk.Options;
+
     internal class Program
     {
         public static void Main(string[] args)
@@ -21,7 +20,8 @@ namespace SqlFramework.Console
 
                     var writer = container.Resolve<IDatabaseWriter>();
 
-                    if (writer.WriteOutput(arguments.File, arguments.Output, "\t")) //TODO: parameterize indentation
+                    // TODO: parameterize indentation
+                    if (writer.WriteOutput(arguments.File, arguments.Output, "\t"))
                     {
                         System.Console.WriteLine("Finished! Press the any-key to continue");
                     }
@@ -47,12 +47,12 @@ namespace SqlFramework.Console
         {
             Arguments parsedArguments = new Arguments();
 
-            var optionSet = new OptionSet()
+            var optionSet = new OptionSet
                                 {
-                                    {"c|connectionString=", value => parsedArguments.ConnectionString = value},
-                                    {"f|file=", value => parsedArguments.File = value},
-                                    {"o|output=", value => parsedArguments.Output = value},
-                                    {"h|?|help", value => parsedArguments.ShowHelp = value != null},
+                                    { "c|connectionString=", value => parsedArguments.ConnectionString = value },
+                                    { "f|file=", value => parsedArguments.File = value },
+                                    { "o|output=", value => parsedArguments.Output = value },
+                                    { "h|?|help", value => parsedArguments.ShowHelp = value != null },
                                 };
 
             try

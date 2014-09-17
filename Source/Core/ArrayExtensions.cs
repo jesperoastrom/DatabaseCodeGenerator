@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace SqlFramework
+﻿namespace SqlFramework
 {
+    using System;
+
     public static class ArrayExtensions
     {
         public static TItem[] ForEach<TItem>(this TItem[] items, Action<TItem> action)

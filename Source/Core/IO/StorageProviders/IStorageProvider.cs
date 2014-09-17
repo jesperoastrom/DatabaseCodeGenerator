@@ -1,8 +1,8 @@
-﻿using System.IO;
-using SqlFramework.IO.CodeBuilders;
-
-namespace SqlFramework.IO.StorageProviders
+﻿namespace SqlFramework.IO.StorageProviders
 {
+    using System.IO;
+    using CodeBuilders;
+
     public interface IStorageProvider
     {
         string Combine(params string[] paths);

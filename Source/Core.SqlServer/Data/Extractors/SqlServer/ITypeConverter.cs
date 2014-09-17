@@ -1,10 +1,10 @@
-﻿using System;
-using System.Data;
-using Microsoft.SqlServer.Management.Smo;
-using SqlFramework.Data.Models;
-
-namespace SqlFramework.Data.Extractors.SqlServer
+﻿namespace SqlFramework.Data.Extractors.SqlServer
 {
+    using System;
+    using System.Data;
+    using Microsoft.SqlServer.Management.Smo;
+    using Models;
+
     public interface ITypeConverter
     {
         ClrType ToClrType(StoredProcedureParameter parameter, string ns);

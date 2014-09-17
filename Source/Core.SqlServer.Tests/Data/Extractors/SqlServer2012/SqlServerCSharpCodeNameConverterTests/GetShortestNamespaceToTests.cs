@@ -1,10 +1,10 @@
-﻿using System;
-using FluentAssertions;
-using SqlFramework.Data.Extractors.SqlServer;
-using Xunit;
-
-namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConverterTests
+﻿namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConverterTests
 {
+    using System;
+    using FluentAssertions;
+    using SqlServer;
+    using Xunit;
+
     public class GetShortestNamespaceToTests
     {
         public GetShortestNamespaceToTests()
@@ -21,7 +21,7 @@ namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConv
         [Fact]
         public void WhenFromIsEmptThenShortestNamespaceThrows()
         {
-            Assert.Throws<ArgumentException>(() => _converter.GetShortestNamespaceTo("", "any"));
+            Assert.Throws<ArgumentException>(() => _converter.GetShortestNamespaceTo(string.Empty, "any"));
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConv
         [Fact]
         public void WhenFromMatchesToThenShortestNamespaceIsEmpty()
         {
-            _converter.GetShortestNamespaceTo("company.product.namespace", "company.product.namespace").Should().Be("");
+            _converter.GetShortestNamespaceTo("company.product.namespace", "company.product.namespace").Should().Be(string.Empty);
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConv
         [Fact]
         public void WhenToIsEmptyThenShortestNamespaceIsFrom()
         {
-            Assert.Throws<ArgumentException>(() => _converter.GetShortestNamespaceTo("from", ""));
+            Assert.Throws<ArgumentException>(() => _converter.GetShortestNamespaceTo("from", string.Empty));
         }
 
         [Fact]

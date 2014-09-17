@@ -8,8 +8,11 @@
         }
 
         public string DatabaseName { get; set; }
+
         public string ParameterName { get; set; }
+
         public string PropertyName { get; set; }
+
         public ClrType ClrType { get; set; }
     }
 }

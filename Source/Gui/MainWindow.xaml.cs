@@ -1,33 +1,31 @@
-﻿using System;
-using System.IO;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using Autofac;
-using SqlFramework.Data;
-using SqlFramework.DependencyInjection;
-using SqlFramework.IO;
-using SqlFramework.IO.OutputDestinations;
-using SqlFramework.IO.StorageProviders;
-using SqlFramework.IO.Writers;
-using Tools.Database.CodeGenerator.Gui.Configuration;
-using Tools.Database.CodeGenerator.Gui.IO;
-using Tools.Database.CodeGenerator.Gui.ViewModels;
-
-namespace Tools.Database.CodeGenerator.Gui
+﻿namespace SqlFramework
 {
+    using System;
+    using System.IO;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using Autofac;
+    using Data;
+    using DependencyInjection;
+    using Gui.Configuration;
+    using Gui.IO;
+    using Gui.ViewModels;
+    using IO.OutputDestinations;
+    using IO.StorageProviders;
+    using IO.Writers;
+
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            this.model = new MainViewModel();
-            this.DataContext = this.model;
+            _model = new MainViewModel();
+            DataContext = _model;
 
-            this.guiConfigurationProvider = new GuiConfigurationProvider(new FileStorageProvider());
-            this.guiConfiguration = this.guiConfigurationProvider.LoadConfiguration();
-            this.guiConfiguration.PropertyChanged += ConfigurationPropertyChanged;
-            this.Loaded += OnLoaded;
+            _guiConfigurationProvider = new GuiConfigurationProvider(new FileStorageProvider());
+            _guiConfiguration = _guiConfigurationProvider.LoadConfiguration();
+            _guiConfiguration.PropertyChanged += ConfigurationPropertyChanged;
         }
 
         private IContainer CreateContainer(string connectionString)
@@ -35,29 +33,34 @@ namespace Tools.Database.CodeGenerator.Gui
             var builder = new ContainerBuilder();
             builder.Register(c => new ConnectionStringProvider(connectionString)).As<IConnectionStringProvider>().SingleInstance();
             builder.RegisterModule<CoreModule>();
-            builder.RegisterInstance<IOutputDestination>(new TextBoxOutputDestination(this.tbMessages));
+            builder.RegisterInstance<IOutputDestination>(new TextBoxOutputDestination(tbMessages));
             return builder.Build();
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            UpdateControlsWithValuesFromConfiguration();
         }
 
         private void UpdateConfigurationWithValuesFromControls()
         {
-            this.guiConfiguration.ConfigurationFilePath = tbConfiguration.Text;
-            this.guiConfiguration.ConnectionString = tbConnectionString.Text;
-            this.guiConfiguration.OutputFilename = tbFilename.Text;
-            this.guiConfiguration.OutputFolder = tbFolder.Text;
+            _guiConfiguration.ConfigurationFilePath = tbConfiguration.Text;
+            _guiConfiguration.ConnectionString = tbConnectionString.Text;
+            _guiConfiguration.OutputFilename = tbFilename.Text;
+            _guiConfiguration.OutputFolder = tbFolder.Text;
 
-            if (this.guiConfigurationHasChanged)
+            if (_guiConfigurationHasChanged)
             {
-                this.guiConfigurationProvider.SaveConfiguration(this.guiConfiguration);
+                _guiConfigurationProvider.SaveConfiguration(_guiConfiguration);
             }
         }
 
         private void UpdateControlsWithValuesFromConfiguration()
         {
-            tbConfiguration.Text = this.guiConfiguration.ConfigurationFilePath;
-            tbConnectionString.Text = this.guiConfiguration.ConnectionString;
-            tbFilename.Text = this.guiConfiguration.OutputFilename;
-            tbFolder.Text = this.guiConfiguration.OutputFolder;
+            tbConfiguration.Text = _guiConfiguration.ConfigurationFilePath;
+            tbConnectionString.Text = _guiConfiguration.ConnectionString;
+            tbFilename.Text = _guiConfiguration.OutputFilename;
+            tbFolder.Text = _guiConfiguration.OutputFolder;
         }
 
         private bool Validate(TextBox tb)
@@ -67,15 +70,10 @@ namespace Tools.Database.CodeGenerator.Gui
             return !expression.HasError;
         }
 
-        private readonly GuiConfiguration guiConfiguration;
-        private readonly GuiConfigurationProvider guiConfigurationProvider;
-        private readonly MainViewModel model;
-        private bool guiConfigurationHasChanged;
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            UpdateControlsWithValuesFromConfiguration();
-        }
+        private readonly GuiConfiguration _guiConfiguration;
+        private readonly GuiConfigurationProvider _guiConfigurationProvider;
+        private readonly MainViewModel _model;
+        private bool _guiConfigurationHasChanged;
 
         private void OnFileClick(object sender, RoutedEventArgs e)
         {
@@ -106,10 +104,10 @@ namespace Tools.Database.CodeGenerator.Gui
 
         private void OnGenerateClick(object sender, RoutedEventArgs e)
         {
-            bool valid = Validate(this.tbConfiguration);
-            valid = Validate(this.tbFilename) && valid;
-            valid = Validate(this.tbFolder) && valid;
-            valid = Validate(this.tbConnectionString) && valid;
+            bool valid = Validate(tbConfiguration);
+            valid = Validate(tbFilename) && valid;
+            valid = Validate(tbFolder) && valid;
+            valid = Validate(tbConnectionString) && valid;
 
             if (valid)
             {
@@ -137,7 +135,7 @@ namespace Tools.Database.CodeGenerator.Gui
 
         private void ConfigurationPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            this.guiConfigurationHasChanged = true;
+            _guiConfigurationHasChanged = true;
         }
     }
 }

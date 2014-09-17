@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
-using SqlFramework.IO;
-using Xunit;
-
-namespace SqlFramework.Configuration.Tests
+﻿namespace SqlFramework.Configuration.Tests
 {
+    using FluentAssertions;
+    using IO;
+    using Xunit;
+
     public class WhenReadingFileThatDoesExist : ConfigurationReaderTest
     {
         public WhenReadingFileThatDoesExist()

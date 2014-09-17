@@ -1,81 +1,71 @@
-﻿using System.Xml.Serialization;
-using SqlFramework.IO;
-using SqlFramework.IO.StorageProviders;
-
-namespace Tools.Database.CodeGenerator.Gui.Configuration
+﻿namespace SqlFramework.Gui.Configuration
 {
+    using System.Xml.Serialization;
+    using SqlFramework.IO.StorageProviders;
 
-	public sealed class GuiConfigurationProvider
-	{
+    public sealed class GuiConfigurationProvider
+    {
+        public GuiConfigurationProvider(IStorageProvider storageProvider)
+        {
+            _storageProvider = storageProvider;
+        }
 
-		public GuiConfigurationProvider(IStorageProvider storageProvider)
-		{
-			this.storageProvider = storageProvider;
-		}
+        public GuiConfiguration LoadConfiguration()
+        {
+            GuiConfiguration configuration;
+            if (!TryReadConfiguration(GetFilenameInCurrentExecutableFolder(ConfigurationFilename), out configuration))
+            {
+                return new GuiConfiguration
+                           {
+                               ConnectionString = "Data Source=localhost;Initial Catalog=<DatabaseName>;Integrated Security=SSPI;",
+                           };
+            }
+            return configuration;
+        }
 
+        public void SaveConfiguration(GuiConfiguration configuration)
+        {
+            var serializer = new XmlSerializer(typeof(GuiConfiguration));
 
-		public GuiConfiguration LoadConfiguration()
-		{
-			GuiConfiguration configuration;
-			if (!this.TryReadConfiguration(GetFilenameInCurrentExecutableFolder(GuiConfigurationProvider.configurationFilename), out configuration))
-			{
-				return new GuiConfiguration()
-				{
-					ConnectionString = "Data Source=localhost;Initial Catalog=<DatabaseName>;Integrated Security=SSPI;",
-				};
-			}
-			return configuration;
-		}
+            using (var stream = _storageProvider.CreateOrOpenStream(ConfigurationFilename))
+            {
+                serializer.Serialize(stream, configuration);
+            }
+        }
 
-		public void SaveConfiguration(GuiConfiguration configuration)
-		{
-			var serializer = new XmlSerializer(typeof(GuiConfiguration));
+        private string GetFilenameInCurrentExecutableFolder(string filename)
+        {
+            return _storageProvider.Combine(
+                _storageProvider.GetDirectoryName(typeof(GuiConfigurationProvider).Assembly.Location),
+                filename);
+        }
 
-			using (var stream = this.storageProvider.CreateOrOpenStream(GuiConfigurationProvider.configurationFilename))
-			{
-				serializer.Serialize(stream, configuration);
-			}
-		}
+        private bool TryReadConfiguration(string file, out GuiConfiguration configuration)
+        {
+            if (!_storageProvider.FileExists(file))
+            {
+                configuration = null;
+                return false;
+            }
 
+            var serializer = new XmlSerializer(typeof(GuiConfiguration));
 
+            try
+            {
+                using (var stream = _storageProvider.OpenStream(file))
+                {
+                    configuration = (GuiConfiguration)serializer.Deserialize(stream);
+                    return true;
+                }
+            }
+            catch
+            {
+                configuration = null;
+                return false;
+            }
+        }
 
-		private bool TryReadConfiguration(string file, out GuiConfiguration configuration)
-		{
-			if (!this.storageProvider.FileExists(file))
-			{
-				configuration = null;
-				return false;
-			}
-
-			var serializer = new XmlSerializer(typeof(GuiConfiguration));
-
-			try
-			{
-				using (var stream = this.storageProvider.OpenStream(file))
-				{
-					configuration = (GuiConfiguration)serializer.Deserialize(stream);
-					return true;
-				}
-			}
-			catch
-			{
-				configuration = null;
-				return false;
-			}
-		}
-
-		private string GetFilenameInCurrentExecutableFolder(string filename)
-		{
-			return this.storageProvider.Combine(
-				this.storageProvider.GetDirectoryName(typeof(GuiConfigurationProvider).Assembly.Location),
-				filename);
-		}
-
-
-
-		private const string configurationFilename = "gui-configuration.xml";
-		private readonly IStorageProvider storageProvider;
-
-	}
-
+        private const string ConfigurationFilename = "gui-configuration.xml";
+        private readonly IStorageProvider _storageProvider;
+    }
 }

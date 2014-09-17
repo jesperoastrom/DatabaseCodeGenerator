@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SqlFramework.IO.CodeBuilders
+﻿namespace SqlFramework.IO.CodeBuilders
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
     public sealed class StringCodeBuilder : ICodeBuilder
     {
         public StringCodeBuilder(string indentation)

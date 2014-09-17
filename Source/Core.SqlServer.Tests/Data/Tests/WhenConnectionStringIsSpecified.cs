@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
-using Xunit;
-
-namespace SqlFramework.Data.Tests
+﻿namespace SqlFramework.Data.Tests
 {
+    using FluentAssertions;
+    using Xunit;
+
     public class WhenConnectionStringIsSpecified
     {
         public WhenConnectionStringIsSpecified()

@@ -1,9 +1,9 @@
-using System.Globalization;
-using SqlFramework.Data.Models;
-using SqlFramework.IO.CodeBuilders;
-
 namespace SqlFramework.IO.Writers.StoredProcedureWriters
 {
+    using System.Globalization;
+    using CodeBuilders;
+    using Data.Models;
+
     public sealed class SqlServerStoredProcedureWriter : ElementWriterBase
     {
         public SqlServerStoredProcedureWriter(ICodeBuilder builder) : base(builder)
@@ -18,7 +18,6 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                 .Write(procedure.TypeName.Name)
                 .WriteNewLine()
                 .WriteIndentedLine("{");
-
 
             Builder.Indent++;
             {
@@ -462,7 +461,6 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
             }
         }
 
-
         private void WriteResultClass(StoredProcedureModel procedure)
         {
             Builder
@@ -546,6 +544,5 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                 WriteBlockEnd();
             }
         }
-
     }
 }

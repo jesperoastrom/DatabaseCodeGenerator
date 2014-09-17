@@ -1,10 +1,9 @@
-﻿using Autofac;
-using SqlFramework.Data;
-using SqlFramework.Data.Extractors;
-using SqlFramework.Data.Extractors.SqlServer;
-
-namespace SqlFramework.DependencyInjection
+﻿namespace SqlFramework.DependencyInjection
 {
+    using Autofac;
+    using Data.Extractors;
+    using Data.Extractors.SqlServer;
+
     public sealed class SqlServerModule : Module
     {
         protected override void Load(ContainerBuilder builder)

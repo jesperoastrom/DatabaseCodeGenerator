@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace SqlFramework.Data.Models
+﻿namespace SqlFramework.Data.Models
 {
+    using System;
+
     public sealed class DatabaseName : IDatabaseName, IComparable<DatabaseName>, IComparable
     {
         public override string ToString()
@@ -11,7 +11,7 @@ namespace SqlFramework.Data.Models
 
         int IComparable.CompareTo(object obj)
         {
-            return ((IComparable<DatabaseName>) this).CompareTo(obj as DatabaseName);
+            return ((IComparable<DatabaseName>)this).CompareTo(obj as DatabaseName);
         }
 
         int IComparable<DatabaseName>.CompareTo(DatabaseName other)

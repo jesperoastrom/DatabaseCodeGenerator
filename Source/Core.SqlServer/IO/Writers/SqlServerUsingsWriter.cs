@@ -1,7 +1,7 @@
-﻿using SqlFramework.IO.CodeBuilders;
-
-namespace SqlFramework.IO.Writers
+﻿namespace SqlFramework.IO.Writers
 {
+    using CodeBuilders;
+
     public class SqlServerUsingsWriter : ElementWriterBase, IUsingsWriter
     {
         public SqlServerUsingsWriter(ICodeBuilder builder) : base(builder)

@@ -1,17 +1,22 @@
-﻿using System.Data;
-
-//using Smo = Microsoft.SqlServer.Management.Smo;
+﻿// using Smo = Microsoft.SqlServer.Management.Smo;
 
 namespace SqlFramework.Data.Models
 {
+    using System.Data;
+
     public sealed class ParameterModel
     {
         public int? Size { get; set; }
+
         public int? Scale { get; set; }
+
         public int? Precision { get; set; }
+
         public bool IsOutput { get; set; }
-        //public Smo.SqlDataType SqlDataType { get; set; }
+
+        // public Smo.SqlDataType SqlDataType { get; set; }
         public SqlDbType SqlDbType { get; set; }
+
         public ColumnModel Column { get; set; }
 
         /// <summary>
@@ -19,7 +24,7 @@ namespace SqlFramework.Data.Models
         /// </summary>
         public bool IncludeInFmtOnlyQuery()
         {
-            //TODO More here
+            // TODO More here
             return false; // return this.SqlDataType != Smo.SqlDataType.UserDefinedTableType;
         }
     }

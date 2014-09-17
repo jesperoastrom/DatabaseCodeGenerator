@@ -1,14 +1,12 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Data;
-
-
-
-namespace Tools.Database.CodeGenerator.Gui.Controls
+﻿namespace SqlFramework.Gui.Controls
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Data;
+
     public class TextInputToVisibilityConverter : IMultiValueConverter
     {
-        public object Convert( object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture )
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             // Always test MultiValueConverter inputs for non-null
             // (to avoid crash bugs for views in the designer)
@@ -24,8 +22,7 @@ namespace Tools.Database.CodeGenerator.Gui.Controls
             return Visibility.Visible;
         }
 
-
-        public object[] ConvertBack( object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture )
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
         }

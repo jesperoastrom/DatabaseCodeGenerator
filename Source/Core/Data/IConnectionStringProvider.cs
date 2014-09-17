@@ -1,11 +1,7 @@
 ﻿namespace SqlFramework.Data
 {
-
-	public interface IConnectionStringProvider
-	{
-
-		string ConnectionString { get; }
-
-	}
-
+    public interface IConnectionStringProvider
+    {
+        string ConnectionString { get; }
+    }
 }

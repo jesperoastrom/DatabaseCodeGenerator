@@ -1,7 +1,7 @@
-﻿using SqlFramework.Data.Models;
-
-namespace SqlFramework.Data.Builders
+﻿namespace SqlFramework.Data.Builders
 {
+    using Models;
+
     public interface ITypeNameBuilder
     {
         ITypeName Build(string ns, string name);

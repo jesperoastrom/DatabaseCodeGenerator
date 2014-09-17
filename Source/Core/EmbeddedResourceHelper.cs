@@ -1,13 +1,13 @@
-﻿using System.IO;
-using System.Reflection;
-
-namespace SqlFramework
+﻿namespace SqlFramework
 {
+    using System.IO;
+    using System.Reflection;
+
     public static class EmbeddedResourceHelper
     {
         public static Stream GetStreamFromEmbeddedResource<TAssembly>(string resourceName)
         {
-            Assembly assembly = typeof (TAssembly).Assembly;
+            Assembly assembly = typeof(TAssembly).Assembly;
             return assembly.GetManifestResourceStream(resourceName);
         }
 

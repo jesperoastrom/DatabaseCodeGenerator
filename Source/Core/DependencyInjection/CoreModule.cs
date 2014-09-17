@@ -1,12 +1,11 @@
-﻿using Autofac;
-using SqlFramework.Configuration;
-using SqlFramework.IO;
-using SqlFramework.IO.OutputDestinations;
-using SqlFramework.IO.StorageProviders;
-using SqlFramework.IO.Writers;
-
-namespace SqlFramework.DependencyInjection
+﻿namespace SqlFramework.DependencyInjection
 {
+    using Autofac;
+    using Configuration;
+    using IO.OutputDestinations;
+    using IO.StorageProviders;
+    using IO.Writers;
+
     public sealed class CoreModule : Module
     {
         protected override void Load(ContainerBuilder builder)
