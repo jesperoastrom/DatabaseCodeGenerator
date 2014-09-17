@@ -1,41 +1,49 @@
-﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using SqlFramework.Data.Models;
 using SqlFramework.IO.CodeBuilders;
 
 namespace SqlFramework.IO.Writers.StoredProcedureWriters
 {
-    public sealed class SqlServerStoredProcedureWriter : ElementWriterBase, IStoredProcedureWriter
+    public sealed class SqlServerStoredProcedureWriter : ElementWriterBase
     {
-        public SqlServerStoredProcedureWriter(ICodeBuilder builder)
-            : base(builder)
+        public SqlServerStoredProcedureWriter(ICodeBuilder builder) : base(builder)
         {
         }
 
-        public void Write(SchemaCollection<StoredProcedureModel> storedProcedures)
+        public void Write(StoredProcedureModel procedure, bool isLast)
         {
-            WriteNamespaceStart(storedProcedures.ElementNamespace);
+            Builder
+                .WriteIndentation()
+                .Write("public partial class ")
+                .Write(procedure.TypeName.Name)
+                .WriteNewLine()
+                .WriteIndentedLine("{");
 
-            foreach (var schema in storedProcedures.SchemaElementCollections.OrderBy(s => s.SchemaName))
+
+            Builder.Indent++;
             {
-                BeginWriteStaticClass(schema.SchemaName);
+                if (procedure.Results.Count > 0)
                 {
-                    List<StoredProcedureModel> elements = schema.Elements.OrderBy(s => s.DatabaseName).ToList();
-                    int lastIndex = elements.Count - 1;
-
-                    for (int i = 0; i < elements.Count; i++)
-                    {
-                        var element = elements[i];
-                        WriteProcedure(element, i == lastIndex);
-                    }
-
-                    WriteGetValueOrDefaultMethod();
+                    WriteExecuteMethodOverload("ExecuteResult", procedure);
+                    WriteExecuteResultMethod(procedure);
                 }
-                WriteBlockEnd();
-            }
+                else
+                {
+                    WriteExecuteMethodOverload("ExecuteNonQuery", procedure);
+                    WriteExecuteNonQueryMethod(procedure);
+                }
 
+                WriteParameterClass(procedure);
+
+                Builder.WriteNewLine();
+                WriteResultClass(procedure);
+            }
             WriteBlockEnd();
+
+            if (!isLast)
+            {
+                Builder.WriteNewLine();
+            }
         }
 
         private void WriteExecuteAddParameters(StoredProcedureModel procedure)
@@ -371,24 +379,6 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
             WriteBlockEnd();
         }
 
-        private void WriteGetValueOrDefaultMethod()
-        {
-            Builder.WriteNewLine();
-            Builder.WriteIndentedLine("private static T GetValueOrDefault<T>(SqlDataReader reader, string columnName)");
-            Builder.WriteIndentedLine("{");
-            Builder.Indent++;
-            {
-                Builder.WriteIndentedLine("return reader.IsDBNull(reader.GetOrdinal(columnName)) ?");
-                Builder.Indent++;
-                {
-                    Builder.WriteIndentedLine("default(T) :");
-                    Builder.WriteIndentedLine("(T)reader[columnName];");
-                }
-                Builder.Indent--; //No block end here
-            }
-            WriteBlockEnd();
-        }
-
         private void WriteParameterClass(StoredProcedureModel procedure)
         {
             if (procedure.Parameters.Count > 0)
@@ -472,41 +462,6 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
             }
         }
 
-        private void WriteProcedure(StoredProcedureModel procedure, bool isLast)
-        {
-            Builder
-                .WriteIndentation()
-                .Write("public partial class ")
-                .Write(procedure.TypeName.Name)
-                .WriteNewLine()
-                .WriteIndentedLine("{");
-
-
-            Builder.Indent++;
-            {
-                if (procedure.Results.Count > 0)
-                {
-                    WriteExecuteMethodOverload("ExecuteResult", procedure);
-                    WriteExecuteResultMethod(procedure);
-                }
-                else
-                {
-                    WriteExecuteMethodOverload("ExecuteNonQuery", procedure);
-                    WriteExecuteNonQueryMethod(procedure);
-                }
-
-                WriteParameterClass(procedure);
-
-                Builder.WriteNewLine();
-                WriteResultClass(procedure);
-            }
-            WriteBlockEnd();
-
-            if (!isLast)
-            {
-                Builder.WriteNewLine();
-            }
-        }
 
         private void WriteResultClass(StoredProcedureModel procedure)
         {
@@ -591,5 +546,6 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                 WriteBlockEnd();
             }
         }
+
     }
 }

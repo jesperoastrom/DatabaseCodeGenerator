@@ -64,6 +64,7 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="IO\Writers\SqlServerUsingsWriter.cs" />
+    <Compile Include="IO\Writers\StoredProcedureWriters\SqlServerStoredProcedureCollectionWriter.cs" />
     <Compile Include="IO\Writers\StoredProcedureWriters\SqlServerStoredProcedureWriter.cs" />
     <Compile Include="IO\Writers\UserDefinedTableTypeWriters\SqlServerUserDefinedTableTypeWriter.cs" />
     <Compile Include="DependencyInjection\SqlServerModule.cs" />

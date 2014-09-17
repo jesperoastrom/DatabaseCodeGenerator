@@ -8,3 +8,5 @@ Source/TestResults/
 Build/Publish/
 Source/packages
 Source/_Resharper.*
+StyleCop.Cache
+Source/Core.SqlServer.Tests/App.config

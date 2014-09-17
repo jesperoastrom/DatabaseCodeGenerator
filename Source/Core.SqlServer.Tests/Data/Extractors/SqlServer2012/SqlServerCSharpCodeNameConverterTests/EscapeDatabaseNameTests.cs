@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentAssertions;
 using SqlFramework.Data.Extractors.SqlServer;
-using SqlFramework.Data.SqlServer;
 using Xunit;
 
 namespace SqlFramework.Data.Extractors.SqlServer2012.SqlServerCSharpCodeNameConverterTests
