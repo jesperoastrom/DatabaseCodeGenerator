@@ -16,26 +16,6 @@
             _storedProcedureExtractor = storedProcedureExtractor;
         }
 
-        private ConnectionDetails GetConnectionDetails()
-        {
-            try
-            {
-                using (var connection = new SqlConnection(_connectionStringProvider.ConnectionString))
-                {
-                    connection.Open();
-                    return new ConnectionDetails
-                               {
-                                   DataSource = connection.DataSource,
-                                   Database = connection.Database
-                               };
-                }
-            }
-            catch (SqlException sqlException)
-            {
-                throw new InvalidArgumentException(string.Format("Could not connect to database using connection string '{0}'.", _connectionStringProvider.ConnectionString), sqlException);
-            }
-        }
-
         public DatabaseModel Extract(DatabaseConfiguration configuration)
         {
             ConnectionDetails connectionDetails = GetConnectionDetails();
@@ -68,6 +48,26 @@
                 {
                     server.ConnectionContext.Disconnect();
                 }
+            }
+        }
+
+        private ConnectionDetails GetConnectionDetails()
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionStringProvider.ConnectionString))
+                {
+                    connection.Open();
+                    return new ConnectionDetails
+                               {
+                                   DataSource = connection.DataSource,
+                                   Database = connection.Database
+                               };
+                }
+            }
+            catch (SqlException sqlException)
+            {
+                throw new InvalidArgumentException(string.Format("Could not connect to database using connection string '{0}'.", _connectionStringProvider.ConnectionString), sqlException);
             }
         }
 

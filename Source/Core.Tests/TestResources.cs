@@ -8,9 +8,9 @@
             {
                 public static class Resources
                 {
-                    private const string Path = Tests.Path + "Resources.";
                     public const string DatabaseConfiguration_xml = Path + "DatabaseConfiguration.xml";
                     public const string InvalidDatabaseConfiguration_xml = Path + "InvalidDatabaseConfiguration.xml";
+                    private const string Path = Tests.Path + "Resources.";
                 }
 
                 private const string Path = Configuration.Path + "Tests.";

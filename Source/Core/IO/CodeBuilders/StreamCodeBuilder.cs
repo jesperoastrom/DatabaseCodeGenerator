@@ -16,6 +16,52 @@
             _writer = new StreamWriter(stream, Encoding.UTF8);
         }
 
+        public byte Indent { get; set; }
+
+        public ICodeBuilder WriteIndentation()
+        {
+            AssertNotDisposed();
+
+            _writer.Write(GetIndentation());
+
+            return this;
+        }
+
+        public ICodeBuilder Write(string s)
+        {
+            AssertNotDisposed();
+
+            _writer.Write(s);
+
+            return this;
+        }
+
+        public ICodeBuilder WriteNewLine()
+        {
+            AssertNotDisposed();
+
+            Write(System.Environment.NewLine);
+
+            return this;
+        }
+
+        public ICodeBuilder WriteIndentedLine(string s)
+        {
+            AssertNotDisposed();
+
+            WriteIndentation();
+            _writer.Write(s);
+            _writer.Write(Environment.NewLine);
+
+            return this;
+        }
+
+        void IDisposable.Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         private void AssertNotDisposed()
         {
             if (_disposed)
@@ -70,52 +116,6 @@
                 _indentLookup.Add(Indent, s);
                 return s;
             }
-        }
-
-        public byte Indent { get; set; }
-
-        public ICodeBuilder WriteIndentation()
-        {
-            AssertNotDisposed();
-
-            _writer.Write(GetIndentation());
-
-            return this;
-        }
-
-        public ICodeBuilder Write(string s)
-        {
-            AssertNotDisposed();
-
-            _writer.Write(s);
-
-            return this;
-        }
-
-        public ICodeBuilder WriteNewLine()
-        {
-            AssertNotDisposed();
-
-            Write(System.Environment.NewLine);
-
-            return this;
-        }
-
-        public ICodeBuilder WriteIndentedLine(string s)
-        {
-            AssertNotDisposed();
-
-            WriteIndentation();
-            _writer.Write(s);
-            _writer.Write(Environment.NewLine);
-
-            return this;
-        }
-
-        void IDisposable.Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         private readonly Dictionary<byte, string> _indentLookup;

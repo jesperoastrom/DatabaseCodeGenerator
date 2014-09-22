@@ -15,28 +15,6 @@
             _nameConverter = nameConverter;
         }
 
-        private XmlReaderSettings CreateSettings(XmlSchemaSet schemas)
-        {
-            return new XmlReaderSettings
-                       {
-                           Schemas = schemas,
-                           ValidationType = ValidationType.Schema,
-                           ValidationFlags =
-                               XmlSchemaValidationFlags.ProcessIdentityConstraints |
-                               XmlSchemaValidationFlags.ReportValidationWarnings
-                       };
-        }
-
-        private XmlSchemaSet GetSchemas()
-        {
-            using (var xsdStream = EmbeddedResourceHelper.GetStreamFromEmbeddedResource<Resources>(Resources.Configuration.DatabaseConfigurationXsd))
-            {
-                var schemas = new XmlSchemaSet();
-                schemas.Add(XmlSchema.Read(xsdStream, (sender, args) => { }));
-                return schemas;
-            }
-        }
-
         public DatabaseConfiguration Read(string file)
         {
             if (!_storageProvider.FileExists(file))
@@ -72,6 +50,28 @@
                 throw new XmlSchemaException("Configuration file does not confirm to schema definition", firstException);
             }
             return configuration;
+        }
+
+        private XmlReaderSettings CreateSettings(XmlSchemaSet schemas)
+        {
+            return new XmlReaderSettings
+            {
+                Schemas = schemas,
+                ValidationType = ValidationType.Schema,
+                ValidationFlags =
+                    XmlSchemaValidationFlags.ProcessIdentityConstraints |
+                    XmlSchemaValidationFlags.ReportValidationWarnings
+            };
+        }
+
+        private XmlSchemaSet GetSchemas()
+        {
+            using (var xsdStream = EmbeddedResourceHelper.GetStreamFromEmbeddedResource<Resources>(Resources.Configuration.DatabaseConfigurationXsd))
+            {
+                var schemas = new XmlSchemaSet();
+                schemas.Add(XmlSchema.Read(xsdStream, (sender, args) => { }));
+                return schemas;
+            }
         }
 
         private readonly IDatabaseToCodeNameConverter _nameConverter;

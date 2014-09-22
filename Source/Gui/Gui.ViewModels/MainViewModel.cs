@@ -7,7 +7,10 @@
     {
         public string Configuration
         {
-            get { return _configuration; }
+            get
+            {
+                return _configuration;
+            }
             set
             {
                 if (_configuration != value)
@@ -22,26 +25,12 @@
             }
         }
 
-        public string Folder
-        {
-            get { return _folder; }
-            set
-            {
-                if (_folder != value)
-                {
-                    _folder = value;
-                    RaisePropertyChanged("Folder");
-                    if (string.IsNullOrWhiteSpace(value))
-                    {
-                        throw new ApplicationException("Folder may not be empty");
-                    }
-                }
-            }
-        }
-
         public string Filename
         {
-            get { return _filename; }
+            get
+            {
+                return _filename;
+            }
             set
             {
                 if (_filename != value)
@@ -51,6 +40,26 @@
                     if (string.IsNullOrWhiteSpace(value))
                     {
                         throw new ApplicationException("Filename may not be empty");
+                    }
+                }
+            }
+        }
+
+        public string Folder
+        {
+            get
+            {
+                return _folder;
+            }
+            set
+            {
+                if (_folder != value)
+                {
+                    _folder = value;
+                    RaisePropertyChanged("Folder");
+                    if (string.IsNullOrWhiteSpace(value))
+                    {
+                        throw new ApplicationException("Folder may not be empty");
                     }
                 }
             }
@@ -66,9 +75,9 @@
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         private string _configuration;
         private string _filename;
         private string _folder;
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

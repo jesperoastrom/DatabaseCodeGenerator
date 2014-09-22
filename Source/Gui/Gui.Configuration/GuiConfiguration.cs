@@ -54,9 +54,13 @@
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        
         private string _configurationFilePath;
+        
         private string _connectionString;
+        
         private string _outputFilename;
+        
         private string _outputFolder;
     }
 }

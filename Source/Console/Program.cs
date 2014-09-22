@@ -104,9 +104,13 @@
         private sealed class Arguments
         {
             public string ConnectionString { get; set; }
+
             public string File { get; set; }
+            
             public string Output { get; set; }
+            
             public bool ShowHelp { get; set; }
+            
             public List<string> Extra { get; set; }
         }
     }

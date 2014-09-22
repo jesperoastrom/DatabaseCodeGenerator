@@ -191,14 +191,14 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         private void WriteExecuteMethodReadRow(StoredProcedureModel procedure, int i)
         {
             var result = procedure.Results[i];
-            string iString = (i + 1).ToString(CultureInfo.CurrentCulture);
+            string indexString = (i + 1).ToString(CultureInfo.CurrentCulture);
 
             Builder
                 .WriteIndentation()
                 .Write("var list")
-                .Write(iString)
+                .Write(indexString)
                 .Write("= new List<Result.ResultRow")
-                .Write(iString)
+                .Write(indexString)
                 .Write(">();")
                 .WriteNewLine();
 
@@ -211,16 +211,16 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                 Builder
                     .WriteIndentation()
                     .Write("list")
-                    .Write(iString)
+                    .Write(indexString)
                     .Write(".Add(new Result.ResultRow")
-                    .Write(iString)
+                    .Write(indexString)
                     .Write("()")
                     .WriteNewLine()
                     .WriteIndentedLine("{");
 
                 Builder.Indent++;
                 {
-                    WriteExecuteMethodReadValues(result, iString);
+                    WriteExecuteMethodReadValues(result, indexString);
                 }
                 Builder.Indent--;
                 Builder.WriteIndentedLine("});");
@@ -230,14 +230,14 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
             Builder
                 .WriteIndentation()
                 .Write("r.Rows")
-                .Write(iString)
+                .Write(indexString)
                 .Write(" = list")
-                .Write(iString)
+                .Write(indexString)
                 .Write(";")
                 .WriteNewLine();
         }
 
-        private void WriteExecuteMethodReadValues(StoredProcedureResultModel result, string iString)
+        private void WriteExecuteMethodReadValues(StoredProcedureResultModel result, string indexString)
         {
             foreach (var column in result.Columns)
             {

@@ -16,7 +16,9 @@
                 bool hasFocus = (bool)values[1];
 
                 if (hasFocus || hasText)
+                {
                     return Visibility.Collapsed;
+                }
             }
 
             return Visibility.Visible;

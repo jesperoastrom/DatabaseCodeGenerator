@@ -13,24 +13,6 @@
             _procedureWriter = new SqlServerStoredProcedureWriter(builder);
         }
 
-        private void WriteGetValueOrDefaultMethod()
-        {
-            Builder.WriteNewLine();
-            Builder.WriteIndentedLine("private static T GetValueOrDefault<T>(SqlDataReader reader, string columnName)");
-            Builder.WriteIndentedLine("{");
-            Builder.Indent++;
-            {
-                Builder.WriteIndentedLine("return reader.IsDBNull(reader.GetOrdinal(columnName)) ?");
-                Builder.Indent++;
-                {
-                    Builder.WriteIndentedLine("default(T) :");
-                    Builder.WriteIndentedLine("(T)reader[columnName];");
-                }
-                Builder.Indent--; //No block end here
-            }
-            WriteBlockEnd();
-        }
-
         public void Write(SchemaCollection<StoredProcedureModel> storedProcedures)
         {
             WriteNamespaceStart(storedProcedures.ElementNamespace);
@@ -51,6 +33,24 @@
                     WriteGetValueOrDefaultMethod();
                 }
                 WriteBlockEnd();
+            }
+            WriteBlockEnd();
+        }
+
+        private void WriteGetValueOrDefaultMethod()
+        {
+            Builder.WriteNewLine();
+            Builder.WriteIndentedLine("private static T GetValueOrDefault<T>(SqlDataReader reader, string columnName)");
+            Builder.WriteIndentedLine("{");
+            Builder.Indent++;
+            {
+                Builder.WriteIndentedLine("return reader.IsDBNull(reader.GetOrdinal(columnName)) ?");
+                Builder.Indent++;
+                {
+                    Builder.WriteIndentedLine("default(T) :");
+                    Builder.WriteIndentedLine("(T)reader[columnName];");
+                }
+                Builder.Indent--; //No block end here
             }
             WriteBlockEnd();
         }

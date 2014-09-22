@@ -19,17 +19,6 @@
             return _codeBuilder.ToString();
         }
 
-        private string GetIndentation()
-        {
-            if (_indentLookup.ContainsKey(Indent))
-            {
-                return _indentLookup[Indent];
-            }
-            string s = string.Concat(Enumerable.Repeat(_indentation, Indent));
-            _indentLookup.Add(Indent, s);
-            return s;
-        }
-
         public byte Indent { get; set; }
 
         public ICodeBuilder WriteIndentation()
@@ -65,6 +54,17 @@
         void IDisposable.Dispose()
         {
             GC.SuppressFinalize(obj: this);
+        }
+
+        private string GetIndentation()
+        {
+            if (_indentLookup.ContainsKey(Indent))
+            {
+                return _indentLookup[Indent];
+            }
+            string s = string.Concat(Enumerable.Repeat(_indentation, Indent));
+            _indentLookup.Add(Indent, s);
+            return s;
         }
 
         private readonly StringBuilder _codeBuilder;

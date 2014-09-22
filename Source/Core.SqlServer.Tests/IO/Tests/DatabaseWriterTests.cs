@@ -65,11 +65,11 @@
         //private void VerifyGetAllLargeTableItems(Type spStaticType)
         //{
         //    string spName = "GetAllLargeTableItems";
-        //    Type spType = spStaticType.GetNestedType(spName);
-        //    spType.Should().NotBeNull("Unable to locate stored procedure " + spStaticType.FullName + "." + spName);
+        //    Type procedureType = spStaticType.GetNestedType(spName);
+        //    procedureType.Should().NotBeNull("Unable to locate stored procedure " + spStaticType.FullName + "." + spName);
 
-        //    object sp = Activator.CreateInstance(spType);
-        //    ExecuteResultFromConnectionString(spType, sp);
+        //    object sp = Activator.CreateInstance(procedureType);
+        //    ExecuteResultFromConnectionString(procedureType, sp);
         //}
 
         void IDisposable.Dispose()
@@ -124,17 +124,17 @@
             return null;
         }
 
-        private static void ExecuteResultFromConnectionString(Type spType, object sp)
+        private static void ExecuteResultFromConnectionString(Type procedureType, object sp)
         {
-            MethodInfo method = spType.GetMethod("ExecuteResult", new[] { typeof(string) });
+            MethodInfo method = procedureType.GetMethod("ExecuteResult", new[] { typeof(string) });
             method.Should().NotBeNull("Could not locate ExecuteResult method");
 
             method.Invoke(sp, new object[] { TestConnectionString });
         }
 
-        //private static void HasExecuteResultFromCommand(Type spType, object sp)
+        //private static void HasExecuteResultFromCommand(Type procedureType, object sp)
         //{
-        //    MethodInfo method = spType.GetMethod("ExecuteResult", new[] {typeof (SqlCommand)});
+        //    MethodInfo method = procedureType.GetMethod("ExecuteResult", new[] {typeof (SqlCommand)});
         //    Assert.IsNotNull(method, "Could not locate ExecuteResult method");
         //}
 

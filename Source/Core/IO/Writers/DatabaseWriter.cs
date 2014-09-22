@@ -24,6 +24,30 @@
             _writerFactory = writerFactory;
         }
 
+        public bool WriteOutput(string configurationFile, string outputFile, string indentation)
+        {
+            string directory = _storageProvider.GetDirectoryName(outputFile);
+
+            if (!_storageProvider.DirectoryExists(directory))
+            {
+                throw new ArgumentException("Directory '" + directory + "' does not exist");
+            }
+
+            DatabaseConfiguration configuration;
+            if (!TryGetConfiguration(configurationFile, out configuration))
+            {
+                return false;
+            }
+
+            DatabaseModel databaseModel;
+            if (TryGetDatabaseModel(configuration, out databaseModel))
+            {
+                WriteOutput(outputFile, indentation, databaseModel);
+                return true;
+            }
+            return false;
+        }
+
         private bool TryGetConfiguration(string configurationFile, out DatabaseConfiguration configuration)
         {
             try
@@ -81,30 +105,6 @@
                         .Write(databaseModel.UserDefinedTableTypes);
                 }
             }
-        }
-
-        public bool WriteOutput(string configurationFile, string outputFile, string indentation)
-        {
-            string directory = _storageProvider.GetDirectoryName(outputFile);
-
-            if (!_storageProvider.DirectoryExists(directory))
-            {
-                throw new ArgumentException("Directory '" + directory + "' does not exist");
-            }
-
-            DatabaseConfiguration configuration;
-            if (!TryGetConfiguration(configurationFile, out configuration))
-            {
-                return false;
-            }
-
-            DatabaseModel databaseModel;
-            if (TryGetDatabaseModel(configuration, out databaseModel))
-            {
-                WriteOutput(outputFile, indentation, databaseModel);
-                return true;
-            }
-            return false;
         }
 
         private readonly IConfigurationReader _configurationReader;
