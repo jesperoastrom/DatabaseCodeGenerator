@@ -6,8 +6,13 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
 
     public sealed class SqlServerStoredProcedureWriter : ElementWriterBase
     {
-        public SqlServerStoredProcedureWriter(ICodeBuilder builder) : base(builder)
+        private readonly ParameterClassWriter _parameterClassWriter;
+
+        public SqlServerStoredProcedureWriter(
+            ICodeBuilder builder, 
+            ParameterClassWriter parameterClassWriter) : base(builder)
         {
+            _parameterClassWriter = parameterClassWriter;
         }
 
         public void Write(StoredProcedureModel procedure, bool isLast)
@@ -32,7 +37,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                     WriteExecuteNonQueryMethod(procedure);
                 }
 
-                WriteParameterClass(procedure);
+                _parameterClassWriter.Write(procedure);
 
                 Builder.WriteNewLine();
                 WriteResultClass(procedure);
@@ -376,89 +381,6 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                 WriteBlockEnd();
             }
             WriteBlockEnd();
-        }
-
-        private void WriteParameterClass(StoredProcedureModel procedure)
-        {
-            if (procedure.Parameters.Count > 0)
-            {
-                Builder
-                    .WriteNewLine()
-                    .WriteIndentedLine("public partial class Parameters")
-                    .WriteIndentedLine("{");
-
-                Builder.Indent++;
-                {
-                    WriteParameterClassConstructor(procedure);
-                    Builder.WriteNewLine();
-                    WriteParameterClassProperties(procedure);
-                }
-                WriteBlockEnd();
-            }
-        }
-
-        private void WriteParameterClassConstructor(StoredProcedureModel procedure)
-        {
-            Builder
-                .WriteIndentation()
-                .Write("public Parameters(");
-
-            WriteParameterClassConstructorArguments(procedure);
-
-            Builder
-                .Write(")")
-                .WriteNewLine()
-                .WriteIndentedLine("{");
-
-            Builder.Indent++;
-            {
-                foreach (var parameter in procedure.Parameters)
-                {
-                    Builder
-                        .WriteIndentation()
-                        .Write("this.")
-                        .Write(parameter.Column.PropertyName)
-                        .Write(" = ")
-                        .Write(parameter.Column.ParameterName)
-                        .Write(";")
-                        .WriteNewLine();
-                }
-            }
-            WriteBlockEnd();
-        }
-
-        private void WriteParameterClassConstructorArguments(StoredProcedureModel procedure)
-        {
-            int lastIndex = procedure.Parameters.Count - 1;
-            for (int i = 0; i < procedure.Parameters.Count; i++)
-            {
-                ParameterModel parameter = procedure.Parameters[i];
-
-                Builder
-                    .Write(parameter.Column.ClrType.TypeName)
-                    .Write(" ")
-                    .Write(parameter.Column.ParameterName);
-
-                if (i != lastIndex)
-                {
-                    Builder.Write(", ");
-                }
-            }
-        }
-
-        private void WriteParameterClassProperties(StoredProcedureModel procedure)
-        {
-            foreach (var parameter in procedure.Parameters)
-            {
-                Builder
-                    .WriteIndentation()
-                    .Write("public ")
-                    .Write(parameter.Column.ClrType.TypeName)
-                    .Write(" ")
-                    .Write(parameter.Column.PropertyName)
-                    .Write(" { get; private set; }")
-                    .WriteNewLine();
-            }
         }
 
         private void WriteResultClass(StoredProcedureModel procedure)

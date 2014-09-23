@@ -7,10 +7,12 @@
 
     public sealed class SqlServerStoredProcedureCollectionWriter : ElementWriterBase, IStoredProcedureWriter
     {
-        public SqlServerStoredProcedureCollectionWriter(ICodeBuilder builder)
+        public SqlServerStoredProcedureCollectionWriter(
+            ICodeBuilder builder,
+            SqlServerStoredProcedureWriter storedProcedureWriter)
             : base(builder)
         {
-            _procedureWriter = new SqlServerStoredProcedureWriter(builder);
+            _storedProcedureWriter = storedProcedureWriter;
         }
 
         public void Write(SchemaCollection<StoredProcedureModel> storedProcedures)
@@ -27,7 +29,7 @@
                     for (int i = 0; i < elements.Count; i++)
                     {
                         var element = elements[i];
-                        _procedureWriter.Write(element, i == lastIndex);
+                        _storedProcedureWriter.Write(element, i == lastIndex);
                     }
 
                     WriteGetValueOrDefaultMethod();
@@ -55,6 +57,6 @@
             WriteBlockEnd();
         }
 
-        private readonly SqlServerStoredProcedureWriter _procedureWriter;
+        private readonly SqlServerStoredProcedureWriter _storedProcedureWriter;
     }
 }
