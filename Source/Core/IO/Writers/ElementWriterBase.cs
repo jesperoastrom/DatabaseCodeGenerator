@@ -18,10 +18,15 @@
                 .WriteIndentation()
                 .Write("public static partial class ")
                 .Write(className)
-                .WriteNewLine()
-                .WriteIndentedLine("{");
+                .WriteNewLine();
 
+            WriteBlockStart();
+        }
+
+        protected void WriteBlockStart()
+        {
             Builder.Indent++;
+            Builder.WriteIndentedLine("{");
         }
 
         protected void WriteBlockEnd()
@@ -40,10 +45,9 @@
             Builder
                 .Write("namespace ")
                 .Write(ns)
-                .WriteNewLine()
-                .WriteIndentedLine("{");
+                .WriteNewLine();
 
-            Builder.Indent++;
+            WriteBlockStart();
         }
     }
 }

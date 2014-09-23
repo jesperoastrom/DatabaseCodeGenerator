@@ -21,10 +21,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                 .WriteIndentation()
                 .Write("public partial class ")
                 .Write(procedure.TypeName.Name)
-                .WriteNewLine()
-                .WriteIndentedLine("{");
+                .WriteNewLine();
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 if (procedure.Results.Count > 0)
                 {
@@ -139,22 +138,19 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
 
             Builder
                 .Write(")")
-                .WriteNewLine()
-                .WriteIndentedLine("{");
+                .WriteNewLine();
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 Builder
-                    .WriteIndentedLine("using (SqlConnection connection = new SqlConnection(connectionString))")
-                    .WriteIndentedLine("{");
+                    .WriteIndentedLine("using (SqlConnection connection = new SqlConnection(connectionString))");
 
-                Builder.Indent++;
+                WriteBlockStart();
                 {
                     Builder
-                        .WriteIndentedLine("using (SqlCommand command = new SqlCommand())")
-                        .WriteIndentedLine("{");
+                        .WriteIndentedLine("using (SqlCommand command = new SqlCommand())");
 
-                    Builder.Indent++;
+                    WriteBlockStart();
                     {
                         Builder
                             .WriteIndentedLine("connection.Open();")
@@ -208,10 +204,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                 .WriteNewLine();
 
             Builder
-                .WriteIndentedLine("while (reader.Read())")
-                .WriteIndentedLine("{");
+                .WriteIndentedLine("while (reader.Read())");
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 Builder
                     .WriteIndentation()
@@ -220,10 +215,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                     .Write(".Add(new Result.ResultRow")
                     .Write(indexString)
                     .Write("()")
-                    .WriteNewLine()
-                    .WriteIndentedLine("{");
+                    .WriteNewLine();
 
-                Builder.Indent++;
+                WriteBlockStart();
                 {
                     WriteExecuteMethodReadValues(result, indexString);
                 }
@@ -273,10 +267,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
 
             Builder
                 .Write(")")
-                .WriteNewLine()
-                .WriteIndentedLine("{");
+                .WriteNewLine();
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 Builder
                     .WriteIndentation()
@@ -342,10 +335,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
 
             Builder
                 .Write(")")
-                .WriteNewLine()
-                .WriteIndentedLine("{");
+                .WriteNewLine();
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 Builder
                     .WriteIndentation()
@@ -368,10 +360,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                 }
 
                 Builder
-                    .WriteIndentedLine("using(var reader = c.ExecuteReader())")
-                    .WriteIndentedLine("{");
+                    .WriteIndentedLine("using(var reader = c.ExecuteReader())");
 
-                Builder.Indent++;
+                WriteBlockStart();
                 {
                     Builder.WriteIndentedLine("var r = new Result();");
                     WriteExecuteMethodRead(procedure);
@@ -386,10 +377,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         private void WriteResultClass(StoredProcedureModel procedure)
         {
             Builder
-                .WriteIndentedLine("public partial class Result")
-                .WriteIndentedLine("{");
+                .WriteIndentedLine("public partial class Result");
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 if (procedure.Results.Count == 0)
                 {
@@ -445,10 +435,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                     .WriteIndentation()
                     .Write("public partial class ResultRow")
                     .Write((i + 1).ToString(CultureInfo.CurrentCulture))
-                    .WriteNewLine()
-                    .WriteIndentedLine("{");
+                    .WriteNewLine();
 
-                Builder.Indent++;
+                WriteBlockStart();
                 {
                     StoredProcedureResultModel result = procedure.Results[i];
                     foreach (ColumnModel column in result.Columns)

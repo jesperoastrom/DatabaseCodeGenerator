@@ -30,10 +30,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
             {
                 Builder
                     .WriteNewLine()
-                    .WriteIndentedLine("public partial class Parameters")
-                    .WriteIndentedLine("{");
+                    .WriteIndentedLine("public partial class Parameters");
 
-                Builder.Indent++;
+                WriteBlockStart();
                 {
                     WriteConstructor(procedure);
                     Builder.WriteNewLine();
@@ -53,10 +52,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
 
             Builder
                 .Write(")")
-                .WriteNewLine()
-                .WriteIndentedLine("{");
+                .WriteNewLine();
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 WriteConstructorBody(procedure);
             }

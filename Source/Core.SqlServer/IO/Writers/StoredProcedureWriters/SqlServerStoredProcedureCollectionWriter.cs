@@ -43,8 +43,7 @@
         {
             Builder.WriteNewLine();
             Builder.WriteIndentedLine("private static T GetValueOrDefault<T>(SqlDataReader reader, string columnName)");
-            Builder.WriteIndentedLine("{");
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 Builder.WriteIndentedLine("return reader.IsDBNull(reader.GetOrdinal(columnName)) ?");
                 Builder.Indent++;

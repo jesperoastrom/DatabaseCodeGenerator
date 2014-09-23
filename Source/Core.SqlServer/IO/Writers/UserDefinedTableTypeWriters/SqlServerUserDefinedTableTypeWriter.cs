@@ -38,10 +38,9 @@
         {
             Builder
                 .WriteNewLine()
-                .WriteIndentedLine("public void AddRow(Row row)")
-                .WriteIndentedLine("{");
+                .WriteIndentedLine("public void AddRow(Row row)");
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 Builder
                     .WriteIndentedLine("this.rows.Add(row);");
@@ -56,10 +55,9 @@
                 .Write("public ")
                 .Write(type.TypeName.Name)
                 .Write("()")
-                .WriteNewLine()
-                .WriteIndentedLine("{");
+                .WriteNewLine();
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 Builder.WriteIndentedLine("this.rows = new List<Row>();");
             }
@@ -70,10 +68,9 @@
         {
             Builder
                 .WriteNewLine()
-                .WriteIndentedLine("public DataTable GetDataTable()")
-                .WriteIndentedLine("{");
+                .WriteIndentedLine("public DataTable GetDataTable()");
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 WriteGetDataTableMethodBody(type);
             }
@@ -99,10 +96,9 @@
 
             Builder
                 .WriteNewLine()
-                .WriteIndentedLine("foreach (Row row in this.rows)")
-                .WriteIndentedLine("{");
+                .WriteIndentedLine("foreach (Row row in this.rows)");
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 Builder.WriteIndentedLine("DataRow dataRow = table.NewRow();");
 
@@ -151,10 +147,9 @@
         {
             Builder
                 .WriteNewLine()
-                .WriteIndentedLine("public partial class Row")
-                .WriteIndentedLine("{");
+                .WriteIndentedLine("public partial class Row");
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 WriteRowClassBody(type);
             }
@@ -171,10 +166,9 @@
 
             Builder
                 .Write(")")
-                .WriteNewLine()
-                .WriteIndentedLine("{");
+                .WriteNewLine();
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 WriteRowClassConstructorBody(type);
             }
@@ -238,10 +232,9 @@
                 .WriteIndentation()
                 .Write("public partial class ")
                 .Write(type.TypeName.Name)
-                .WriteNewLine()
-                .WriteIndentedLine("{");
+                .WriteNewLine();
 
-            Builder.Indent++;
+            WriteBlockStart();
             {
                 WriteConstructor(type);
                 WriteAddRowMethod();
