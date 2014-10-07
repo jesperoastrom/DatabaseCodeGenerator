@@ -14,7 +14,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         {
             Builder
                 .WriteIndentation()
-                .Write("public Result ExecuteNonQuery(SqlCommand c");
+                .Write("public Result ExecuteNonQuery(SqlCommand command");
 
             if (procedure.Parameters.Count > 0)
             {
@@ -29,34 +29,34 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
             {
                 Builder
                     .WriteIndentation()
-                    .Write("c.CommandText = \"")
+                    .Write("command.CommandText = \"")
                     .Write(procedure.DatabaseName.EscapedFullName)
                     .Write("\";")
                     .WriteNewLine();
 
                 Builder
                     .WriteIndentation()
-                    .Write("c.CommandType = CommandType.StoredProcedure;")
+                    .Write("command.CommandType = CommandType.StoredProcedure;")
                     .WriteNewLine();
 
                 if (procedure.Parameters.Count > 0)
                 {
                     Builder
                         .WriteIndentation()
-                        .Write("SqlParameter p = null;")
+                        .Write("SqlParameter parameter = null;")
                         .WriteNewLine();
 
                     WriteAddParameters(procedure);
                 }
 
                 Builder
-                    .WriteIndentedLine("var r = new Result();")
-                    .WriteIndentedLine("r.AffectedRows = c.ExecuteNonQuery();");
+                    .WriteIndentedLine("var result = new Result();")
+                    .WriteIndentedLine("result.AffectedRows = command.ExecuteNonQuery();");
 
                 WriteOutputParameters(procedure);
 
                 Builder
-                    .WriteIndentedLine("return r;");
+                    .WriteIndentedLine("return result;");
             }
             WriteBlockEnd();
         }

@@ -66,10 +66,10 @@
         private List<ColumnModel> ToModel(string typeNamespace, ColumnCollection columns)
         {
             return columns.Cast<Column>().Select(c => new ColumnModel
-                                                          {
-                                                              DatabaseName = c.Name,
-                                                              ClrType = _typeConverter.ToClrType(c, typeNamespace)
-                                                          }).ToList();
+            {
+                DatabaseName = c.Name,
+                ClrType = _typeConverter.ToClrType(c, typeNamespace)
+            }).ToList();
         }
 
         private readonly IDatabaseNameBuilder _databaseNameBuilder;

@@ -13,12 +13,12 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         }
 
         /* Example:
-         * p = c.Parameters.AddWithValue("Products", parameters.Name.GetDataTable());
-         * p.SqlDbType = SqlDbType.Structured;
+         * parameter = command.Parameters.AddWithValue("Products", parameters.Name.GetDataTable());
+         * parameter.SqlDbType = SqlDbType.Structured;
          * 
-         * p = c.Parameters.AddWithValue("Name", parameters.Name);
-         * p.SqlDbType = SqlDbType.VarChar;
-         * p.Size = 50;
+         * parameter = command.Parameters.AddWithValue("Name", parameters.Name);
+         * parameter.SqlDbType = SqlDbType.VarChar;
+         * parameter.Size = 50;
          * 
          */
         protected void WriteAddParameters(StoredProcedureModel procedure)
@@ -61,8 +61,8 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         }
 
         /* Example: 
-         * r.Id = (Guid)c.Parameters["Id"].Value;
-         * r.Timestamp = (DateTime)c.Parameters["Timestamp"];
+         * result.Id = (Guid)command.Parameters["Id"].Value;
+         * result.Timestamp = (DateTime)command.Parameters["Timestamp"];
          */
         protected void WriteOutputParameters(StoredProcedureModel procedure)
         {
@@ -70,11 +70,11 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
             {
                 Builder
                     .WriteIndentation()
-                    .Write("r.")
+                    .Write("result.")
                     .Write(parameter.Column.PropertyName)
                     .Write(" = (")
                     .Write(parameter.Column.ClrType.TypeName)
-                    .Write(")c.Parameters[\"")
+                    .Write(")command.Parameters[\"")
                     .Write(parameter.Column.DatabaseName)
                     .Write("\"].Value;")
                     .WriteNewLine();
@@ -85,7 +85,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         {
             Builder
                 .WriteIndentation()
-                .Write("p = c.Parameters.AddWithValue(\"")
+                .Write("parameter = command.Parameters.AddWithValue(\"")
                 .Write(parameter.Column.DatabaseName)
                 .Write("\", parameters.")
                 .Write(parameter.Column.PropertyName)
@@ -97,7 +97,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         {
             Builder
                 .WriteIndentation()
-                .Write("p = c.Parameters.AddWithValue(\"")
+                .Write("parameter = command.Parameters.AddWithValue(\"")
                 .Write(parameter.Column.DatabaseName)
                 .Write("\", parameters.")
                 .Write(parameter.Column.PropertyName)
@@ -109,7 +109,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         {
             Builder
                 .WriteIndentation()
-                .Write("p.Direction = ParameterDirection.Output;")
+                .Write("parameter.Direction = ParameterDirection.Output;")
                 .WriteNewLine();
         }
 
@@ -117,7 +117,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         {
             Builder
                 .WriteIndentation()
-                .Write("p.Precision = ")
+                .Write("parameter.Precision = ")
                 .Write(precision.ToString(CultureInfo.InvariantCulture))
                 .Write(";")
                 .WriteNewLine();
@@ -127,7 +127,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         {
             Builder
                 .WriteIndentation()
-                .Write("p.Scale = ")
+                .Write("parameter.Scale = ")
                 .Write(scale.ToString(CultureInfo.InvariantCulture))
                 .Write(";")
                 .WriteNewLine();
@@ -137,7 +137,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         {
             Builder
                 .WriteIndentation()
-                .Write("p.Size = ")
+                .Write("parameter.Size = ")
                 .Write(size.ToString(CultureInfo.InvariantCulture))
                 .Write(";")
                 .WriteNewLine();
@@ -147,7 +147,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         {
             Builder
                 .WriteIndentation()
-                .Write("p.SqlDbType = SqlDbType.")
+                .Write("parameter.SqlDbType = SqlDbType.")
                 .Write(sqlDbType.ToString())
                 .Write(";")
                 .WriteNewLine();

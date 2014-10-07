@@ -211,21 +211,21 @@
             return model;
         }
 
-        private ParameterModel ToModel(DatabaseConfiguration configuration, StoredProcedureParameter p)
+        private ParameterModel ToModel(DatabaseConfiguration configuration, StoredProcedureParameter parameter)
         {
             return new ParameterModel
             {
-                Scale = GetNumericScale(p.DataType),
-                Precision = GetNumericPrecision(p.DataType),
-                Size = GetSize(p.DataType),
-                IsOutput = p.IsOutputParameter,
+                Scale = GetNumericScale(parameter.DataType),
+                Precision = GetNumericPrecision(parameter.DataType),
+                Size = GetSize(parameter.DataType),
+                IsOutput = parameter.IsOutputParameter,
                 //todo
                 //SqlDataType = p.DataType.SqlDataType,
-                SqlDbType = _typeConverter.ToSqlDbDataType(p.DataType),
+                SqlDbType = _typeConverter.ToSqlDbDataType(parameter.DataType),
                 Column = new ColumnModel
                 {
-                    DatabaseName = p.Name,
-                    ClrType = _typeConverter.ToClrType(p, configuration.TableTypeNamespaceFromStoredProcedure)
+                    DatabaseName = parameter.Name,
+                    ClrType = _typeConverter.ToClrType(parameter, configuration.TableTypeNamespaceFromStoredProcedure)
                 }
             };
         }

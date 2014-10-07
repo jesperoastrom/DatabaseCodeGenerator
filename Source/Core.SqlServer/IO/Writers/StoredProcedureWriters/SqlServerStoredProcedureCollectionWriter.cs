@@ -39,7 +39,6 @@
             WriteBlockEnd();
         }
 
-
         /* Example:
          * private static T GetValueOrDefault<T>(SqlDataReader reader, string columnName)
          * {

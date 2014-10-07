@@ -1,3 +1,19 @@
+/* Example: 
+ * public Result ExecuteResult(SqlCommand command, Parameters parameters)
+ * {
+ *     command.CommandText = "[dbo].[GetOrders]";
+ *     command.CommandType = CommandType.StoredProcedure;
+ *     
+ *     SqlParameter parameter = null;
+ *     <Write Add Parameters>
+ *     
+ *     using(var reader = command.ExecuteReader())
+ *     {
+ *         reader.
+ *     }
+ * }
+ * */
+
 namespace SqlFramework.IO.Writers.StoredProcedureWriters
 {
     using System.Globalization;
@@ -14,7 +30,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
         {
             Builder
                 .WriteIndentation()
-                .Write("public Result ExecuteResult(SqlCommand c");
+                .Write("public Result ExecuteResult(SqlCommand command");
 
             if (procedure.Parameters.Count > 0)
             {
@@ -29,33 +45,34 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
             {
                 Builder
                     .WriteIndentation()
-                    .Write("c.CommandText = \"")
+                    .Write("command.CommandText = \"")
                     .Write(procedure.DatabaseName.EscapedFullName)
                     .Write("\";")
                     .WriteNewLine();
 
                 Builder
                     .WriteIndentation()
-                    .Write("c.CommandType = CommandType.StoredProcedure;")
+                    .Write("command.CommandType = CommandType.StoredProcedure;")
+                    .WriteNewLine()
                     .WriteNewLine();
 
                 if (procedure.Parameters.Count > 0)
                 {
                     Builder
-                        .WriteIndentedLine("SqlParameter p = null;");
+                        .WriteIndentedLine("SqlParameter parameter = null;");
 
                     WriteAddParameters(procedure);
                 }
 
                 Builder
-                    .WriteIndentedLine("using(var reader = c.ExecuteReader())");
+                    .WriteIndentedLine("using(var reader = command.ExecuteReader())");
 
                 WriteBlockStart();
                 {
-                    Builder.WriteIndentedLine("var r = new Result();");
+                    Builder.WriteIndentedLine("var result = new Result();");
                     WriteReadingResults(procedure);
                     WriteOutputParameters(procedure);
-                    Builder.WriteIndentedLine("return r;");
+                    Builder.WriteIndentedLine("return result;");
                 }
                 WriteBlockEnd();
             }
@@ -114,7 +131,7 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
 
             Builder
                 .WriteIndentation()
-                .Write("r.Rows")
+                .Write("result.Rows")
                 .Write(indexString)
                 .Write(" = list")
                 .Write(indexString)
