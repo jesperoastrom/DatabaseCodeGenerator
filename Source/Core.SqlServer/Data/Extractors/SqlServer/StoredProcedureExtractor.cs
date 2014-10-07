@@ -63,13 +63,13 @@
         private DatabaseName CreateDatabaseName(StoredProcedure procedure)
         {
             return new DatabaseName
-                       {
-                           SchemaName = procedure.Schema,
-                           EscapedSchemaName = _nameConverter.EscapeDatabaseName(procedure.Name),
-                           Name = procedure.Name,
-                           EscapedName = _nameConverter.EscapeDatabaseName(procedure.Name),
-                           EscapedFullName = _nameConverter.EscapeDatabaseName(procedure.Schema, procedure.Name)
-                       };
+            {
+                SchemaName = procedure.Schema,
+                EscapedSchemaName = _nameConverter.EscapeDatabaseName(procedure.Name),
+                Name = procedure.Name,
+                EscapedName = _nameConverter.EscapeDatabaseName(procedure.Name),
+                EscapedFullName = _nameConverter.EscapeDatabaseName(procedure.Schema, procedure.Name)
+            };
         }
 
         private Dictionary<string, StoredProcedure> CreateLookup(StoredProcedureCollection procedures)
@@ -126,11 +126,11 @@
             {
                 var type = (Type)row["DataType"];
                 var allowDbNull = (bool?)row["AllowDBNull"];
-                model.Columns.Add(new ColumnModel()
-                                      {
-                                          DatabaseName = row["ColumnName"] as string,
-                                          ClrType = _typeConverter.ToClrType(type, allowDbNull == true)
-                                      });
+                model.Columns.Add(new ColumnModel
+                {
+                    DatabaseName = row["ColumnName"] as string,
+                    ClrType = _typeConverter.ToClrType(type, allowDbNull == true)
+                });
             }
 
             return model;
@@ -214,20 +214,20 @@
         private ParameterModel ToModel(DatabaseConfiguration configuration, StoredProcedureParameter p)
         {
             return new ParameterModel
-                       {
-                           Scale = GetNumericScale(p.DataType),
-                           Precision = GetNumericPrecision(p.DataType),
-                           Size = GetSize(p.DataType),
-                           IsOutput = p.IsOutputParameter,
-                           //todo
-                           //SqlDataType = p.DataType.SqlDataType,
-                           SqlDbType = _typeConverter.ToSqlDbDataType(p.DataType),
-                           Column = new ColumnModel()
-                                        {
-                                            DatabaseName = p.Name,
-                                            ClrType = _typeConverter.ToClrType(p, configuration.TableTypeNamespaceFromStoredProcedure)
-                                        }
-                       };
+            {
+                Scale = GetNumericScale(p.DataType),
+                Precision = GetNumericPrecision(p.DataType),
+                Size = GetSize(p.DataType),
+                IsOutput = p.IsOutputParameter,
+                //todo
+                //SqlDataType = p.DataType.SqlDataType,
+                SqlDbType = _typeConverter.ToSqlDbDataType(p.DataType),
+                Column = new ColumnModel
+                {
+                    DatabaseName = p.Name,
+                    ClrType = _typeConverter.ToClrType(p, configuration.TableTypeNamespaceFromStoredProcedure)
+                }
+            };
         }
 
         private readonly IConnectionStringProvider _connectionStringProvider;

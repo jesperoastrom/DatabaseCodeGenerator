@@ -64,7 +64,12 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="IO\Writers\SqlServerUsingsWriter.cs" />
+    <Compile Include="IO\Writers\StoredProcedureWriters\ExecuteNonQueryWithSqlCommandMethodWriter.cs" />
+    <Compile Include="IO\Writers\StoredProcedureWriters\ExecuteWithConnectionStringMethodWriter.cs" />
+    <Compile Include="IO\Writers\StoredProcedureWriters\ExecuteResultWithSqlCommandMethodWriter.cs" />
+    <Compile Include="IO\Writers\StoredProcedureWriters\ExecuteUsingCommandWriter.cs" />
     <Compile Include="IO\Writers\StoredProcedureWriters\ParameterClassWriter.cs" />
+    <Compile Include="IO\Writers\StoredProcedureWriters\ResultClassWriter.cs" />
     <Compile Include="IO\Writers\StoredProcedureWriters\SqlServerStoredProcedureCollectionWriter.cs" />
     <Compile Include="IO\Writers\StoredProcedureWriters\SqlServerStoredProcedureWriter.cs" />
     <Compile Include="IO\Writers\UserDefinedTableTypeWriters\SqlServerUserDefinedTableTypeWriter.cs" />

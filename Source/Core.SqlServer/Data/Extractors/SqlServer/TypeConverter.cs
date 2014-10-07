@@ -115,11 +115,11 @@
                     parameter.DataType.Name);
 
                 return new ClrType
-                           {
-                               IsUserDefined = true,
-                               InnerTypeName = typeName,
-                               TypeName = typeName
-                           };
+                {
+                    IsUserDefined = true,
+                    InnerTypeName = typeName,
+                    TypeName = typeName
+                };
             }
             return ToClrType(GetType(parameter.DataType.SqlDataType), true);
         }
@@ -134,11 +134,11 @@
                     column.DataType.Name);
 
                 return new ClrType
-                           {
-                               IsUserDefined = true,
-                               InnerTypeName = typeName,
-                               TypeName = typeName
-                           };
+                {
+                    IsUserDefined = true,
+                    InnerTypeName = typeName,
+                    TypeName = typeName
+                };
             }
             return ToClrType(GetType(column.DataType.SqlDataType), column.Nullable);
         }

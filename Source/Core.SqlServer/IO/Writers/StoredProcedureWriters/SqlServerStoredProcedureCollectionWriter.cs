@@ -39,6 +39,15 @@
             WriteBlockEnd();
         }
 
+
+        /* Example:
+         * private static T GetValueOrDefault<T>(SqlDataReader reader, string columnName)
+         * {
+         *     return reader.IsDBNull(reader.GetOrdinal(columnName)) ?
+         *         default(T) :
+         *         (T)reader[columnName];
+         * }
+         */
         private void WriteGetValueOrDefaultMethod()
         {
             Builder.WriteNewLine();
