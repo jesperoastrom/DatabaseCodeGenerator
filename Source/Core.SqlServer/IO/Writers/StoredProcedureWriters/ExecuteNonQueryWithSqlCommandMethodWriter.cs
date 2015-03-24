@@ -1,3 +1,19 @@
+/* Example:
+ * public Result ExecuteNonQuery(SqlCommand command, Parameters parameters)
+ * {
+ *     command.CommandText = "[dbo].[GetOrders]";
+ *     command.CommandType = CommandType.StoredProcedure;
+ *     
+ *     SqlParameter parameter = null;
+ *     <Write Add Parameters>
+ *     
+ *     using(var reader = command.ExecuteReader())
+ *     {
+ *         reader.
+ *     }
+ * }
+ */
+
 namespace SqlFramework.IO.Writers.StoredProcedureWriters
 {
     using CodeBuilders;

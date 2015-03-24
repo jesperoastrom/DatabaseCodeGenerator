@@ -9,7 +9,28 @@
  *     
  *     using(var reader = command.ExecuteReader())
  *     {
- *         reader.
+ *         var result = new Result();
+ *         result.Rows1 = new List<Result.Row>();
+ *         while (reader.Read())
+ *         {
+ *             result.Rows1.Add(new Row1()
+ *             {
+ *                 Id = reader.GetValueOrDefault<Guid>("Id"),
+ *                 Name = reader.GetValueOrDefault<string>("Name"),
+ *                 Age = reader.GetValueOrDefault<int>("Age")
+ *             });
+ *         }
+ *         reader.NextResult();
+ *         while (reader.Read())
+ *         {
+ *             result.Rows2.Add(new Row2()
+ *             {
+ *                 RelatedId = reader.GetValueOrDefault<Guid>("RelatedId"),
+ *                 SiblingName = reader.GetValueOrDefault<string>("SiblingName"),
+ *                 SiblingAge = reader.GetValueOrDefault<int>("SiblingAge")
+ *             });
+ *         }         
+ *         return result;
  *     }
  * }
  * */
@@ -58,14 +79,12 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
 
                 if (procedure.Parameters.Count > 0)
                 {
-                    Builder
-                        .WriteIndentedLine("SqlParameter parameter = null;");
+                    Builder.WriteIndentedLine("SqlParameter parameter = null;");
 
                     WriteAddParameters(procedure);
                 }
 
-                Builder
-                    .WriteIndentedLine("using(var reader = command.ExecuteReader())");
+                Builder.WriteIndentedLine("using(var reader = command.ExecuteReader())");
 
                 WriteBlockStart();
                 {
@@ -81,11 +100,12 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
 
         private void WriteReadingResults(StoredProcedureModel procedure)
         {
+            int lastIndex = procedure.Results.Count - 1;
             for (int i = 0; i < procedure.Results.Count; i++)
             {
                 WriteReadingRows(procedure, i);
-
-                if (i < procedure.Results.Count - 1)
+                
+                if (i != lastIndex)
                 {
                     Builder.WriteIndentedLine("reader.NextResult();");
                 }
@@ -99,9 +119,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
 
             Builder
                 .WriteIndentation()
-                .Write("var list")
+                .Write("result.Rows")
                 .Write(indexString)
-                .Write("= new List<Result.ResultRow")
+                .Write("= new List<Result.Row")
                 .Write(indexString)
                 .Write(">();")
                 .WriteNewLine();
@@ -113,9 +133,9 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
             {
                 Builder
                     .WriteIndentation()
-                    .Write("list")
+                    .Write("result.Rows")
                     .Write(indexString)
-                    .Write(".Add(new Result.ResultRow")
+                    .Write(".Add(new Result.Row")
                     .Write(indexString)
                     .Write("()")
                     .WriteNewLine();
@@ -128,22 +148,13 @@ namespace SqlFramework.IO.Writers.StoredProcedureWriters
                 Builder.WriteIndentedLine("});");
             }
             WriteBlockEnd();
-
-            Builder
-                .WriteIndentation()
-                .Write("result.Rows")
-                .Write(indexString)
-                .Write(" = list")
-                .Write(indexString)
-                .Write(";")
-                .WriteNewLine();
         }
 
         private void WriteExecuteMethodReadValues(StoredProcedureResultModel result)
         {
             foreach (var column in result.Columns)
             {
-                //Example: FirstName = GetValueOrDefault<string>(reader, "Name"),
+                
                 Builder
                     .WriteIndentation()
                     .Write(column.PropertyName)

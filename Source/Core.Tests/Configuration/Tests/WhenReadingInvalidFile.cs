@@ -9,6 +9,7 @@
         public WhenReadingInvalidFile()
         {
             GivenFileExists();
+            GivenShortestNamespacesCanBeCalculated();
             GivenFileHasInvalidContent();
         }
 
@@ -30,7 +31,12 @@
 
         private void GivenFileHasInvalidContent()
         {
-            StorageProviderMock.SimulateOpenStream("file", TestResources.Configuration.Tests.Resources.InvalidDatabaseConfiguration_xml);
+            StorageProviderMock.SimulateOpenStream("file", Properties.Resources.InvalidDatabaseConfiguration);
+        }
+
+        private void GivenShortestNamespacesCanBeCalculated()
+        {
+            DatabaseToCodeNameConverter.SimulateGetShortestNamespaceTo("SpNs", "UdtNs", "SpNs");
         }
     }
 }

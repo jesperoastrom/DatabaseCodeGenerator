@@ -1,6 +1,7 @@
 ﻿namespace SqlFramework.Configuration
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Xml;
     using System.Xml.Schema;
@@ -26,12 +27,12 @@
             XmlSchemaSet schemas = GetSchemas();
             XmlReaderSettings settings = CreateSettings(schemas);
             settings.ValidationEventHandler += (sender, args) =>
-                                                   {
-                                                       if (args.Severity == XmlSeverityType.Error && firstException == null)
-                                                       {
-                                                           firstException = args.Exception;
-                                                       }
-                                                   };
+            {
+                if (args.Severity == XmlSeverityType.Error && firstException == null)
+                {
+                    firstException = args.Exception;
+                }
+            };
             DatabaseConfiguration configuration;
             using (var stream = _storageProvider.OpenStream(file))
             {
@@ -66,12 +67,9 @@
 
         private XmlSchemaSet GetSchemas()
         {
-            using (var xsdStream = EmbeddedResourceHelper.GetStreamFromEmbeddedResource<Resources>(Resources.Configuration.DatabaseConfigurationXsd))
-            {
-                var schemas = new XmlSchemaSet();
-                schemas.Add(XmlSchema.Read(xsdStream, (sender, args) => { }));
-                return schemas;
-            }
+            var schemas = new XmlSchemaSet();
+            schemas.Add(XmlSchema.Read(new StringReader(Properties.Resources.DatabaseConfiguration), (sender, args) => { }));
+            return schemas;
         }
 
         private readonly IDatabaseToCodeNameConverter _nameConverter;

@@ -1,6 +1,8 @@
 ﻿namespace SqlFramework.IO
 {
+    using System.Diagnostics;
     using System.IO;
+    using System.Text;
     using Moq;
     using StorageProviders;
 
@@ -11,10 +13,10 @@
             mock.Setup(x => x.FileExists(fileName)).Returns(returnValue);
         }
 
-        public static void SimulateOpenStream(this Mock<IStorageProvider> mock, string fileName, string resourceName)
+        public static void SimulateOpenStream(this Mock<IStorageProvider> mock, string fileName, string s)
         {
-            Stream stream = EmbeddedResourceHelper.GetStreamFromEmbeddedResource<TestResources>(resourceName);
-            mock.Setup(x => x.OpenStream(fileName)).Returns(stream);
+            Debug.Assert(s != null, string.Format("Resource {0} is null", s));
+            mock.Setup(x => x.OpenStream(fileName)).Returns(new MemoryStream(Encoding.UTF8.GetBytes(s)));
         }
     }
 }

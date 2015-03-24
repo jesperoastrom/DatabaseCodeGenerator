@@ -106,7 +106,6 @@
     <Compile Include="Data\Models\TypeName.cs" />
     <Compile Include="Data\Models\UserDefinedTableTypeModel.cs" />
     <Compile Include="DependencyInjection\CoreModule.cs" />
-    <Compile Include="EmbeddedResourceHelper.cs" />
     <Compile Include="IO\OutputDestinations\ConsoleOutputDestination.cs" />
     <Compile Include="IO\Writers\DatabaseWriter.cs" />
     <Compile Include="IO\Writers\ElementWriterBase.cs" />
@@ -125,11 +124,20 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\DatabaseConfiguration.xsd">
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -4,13 +4,14 @@
     using IO;
     using Xunit;
 
-    public class WhenReadingFileThatDoesExist : ConfigurationReaderTest
+    public class ForFileThatDoesExist : ConfigurationReaderTest
     {
-        public WhenReadingFileThatDoesExist()
+        public ForFileThatDoesExist()
         {
             GivenFileExists();
             GivenFileHasContent();
-            Act();
+            GivenShortestNamespacesCanBeCalculated();
+            WhenReadingFileThatExists();
         }
 
         [Fact]
@@ -50,7 +51,7 @@
             _configuration.Should().NotBeNull();
         }
 
-        private void Act()
+        private void WhenReadingFileThatExists()
         {
             _configuration = ConfigurationReader.Read("file");
         }
@@ -62,7 +63,12 @@
 
         private void GivenFileHasContent()
         {
-            StorageProviderMock.SimulateOpenStream("file", TestResources.Configuration.Tests.Resources.DatabaseConfiguration_xml);
+            StorageProviderMock.SimulateOpenStream("file", Properties.Resources.DatabaseConfiguration);
+        }
+
+        private void GivenShortestNamespacesCanBeCalculated()
+        {
+            DatabaseToCodeNameConverter.SimulateGetShortestNamespaceTo("SpNs", "UdtNs", "SpNs");
         }
 
         private DatabaseConfiguration _configuration;

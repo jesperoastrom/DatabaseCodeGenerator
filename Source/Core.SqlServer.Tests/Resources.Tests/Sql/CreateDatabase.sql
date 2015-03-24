@@ -1,18 +1,18 @@
 ﻿use [master];
 
-if db_id('CodeGeneratorTests') is not null
+if db_id('SqlFramework') is not null
 begin
-	alter database [CodeGeneratorTests] set single_user with rollback immediate;
-	drop database [CodeGeneratorTests];
+	alter database [SqlFramework] set single_user with rollback immediate;
+	drop database [SqlFramework];
 end
 go
 
-create database [CodeGeneratorTests];
-alter database  [CodeGeneratorTests] set recovery simple;
-alter database  [CodeGeneratorTests] set compatibility_level = 100;
+create database [SqlFramework];
+alter database  [SqlFramework] set recovery simple;
+alter database  [SqlFramework] set compatibility_level = 100;
 go
 
-use [CodeGeneratorTests];
+use [SqlFramework];
 go
 
 create schema Core;

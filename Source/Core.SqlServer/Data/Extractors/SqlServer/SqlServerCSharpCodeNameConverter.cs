@@ -86,10 +86,7 @@
             {
                 return name.ToUpper();
             }
-            else
-            {
-                return char.ToUpper(name[0]) + name.Substring(1);
-            }
+            return char.ToUpper(name[0]) + name.Substring(1);
         }
 
         public string GetFullyQualifiedTypeName(string ns, string schemaName, string name)
